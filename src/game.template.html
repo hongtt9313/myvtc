@@ -1,0 +1,423 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8"/>
+    <meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+    <title>VTC Games</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="styles/main.css" rel="stylesheet"/>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet"/>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" rel="stylesheet"/>
+</head>
+<body>
+{{HEADER}}
+
+<main class="game-page">
+    <section class="game-hero">
+        <div class="site-container game-hero-inner">
+            <p class="game-kicker">VTC Services</p>
+            <h1>Level up your life</h1>
+            <p>Khám phá danh sách dịch vụ của VTC. Tìm dịch vụ theo tên, thể loại và nền tảng.</p>
+
+            <div class="game-search-box">
+                <i class="fas fa-search"></i>
+                <input type="text" id="game-search-input" placeholder="Tìm kiếm game" oninput="filterGameList()"/>
+            </div>
+        </div>
+    </section>
+
+    <section class="site-container game-content">
+        <div class="game-section-head">
+            <div>
+                <h2>Danh sách game</h2>
+                <p>Game PC có nút Website và Tải game. Game Mobile có Website, iOS và Android.</p>
+            </div>
+            <div class="game-filter-tabs">
+                <button type="button" class="active" data-game-filter="all" onclick="setGameFilter('all')">Tất cả</button>
+                <button type="button" data-game-filter="pc" onclick="setGameFilter('pc')">PC Games</button>
+                <button type="button" data-game-filter="mobile" onclick="setGameFilter('mobile')">Mobile Games</button>
+            </div>
+        </div>
+
+        <div class="game-grid" id="game-list">
+            <article class="game-card" data-type="pc" data-name="Audition PC">
+                <div class="game-icon">AU</div>
+                <div class="game-info">
+                    <span>PC Games</span>
+                    <h3>Audition PC</h3>
+                    <p>Game âm nhạc, thời trang và vũ đạo trực tuyến.</p>
+                    <div class="game-actions">
+                        <a href="#" target="_blank">Website</a>
+                        <a href="#" target="_blank">Tải game</a>
+                    </div>
+                </div>
+            </article>
+
+            <article class="game-card" data-type="pc" data-name="Đột Kích Crossfire">
+                <div class="game-icon">CF</div>
+                <div class="game-info">
+                    <span>PC Games</span>
+                    <h3>Đột Kích (Crossfire)</h3>
+                    <p>Game bắn súng góc nhìn thứ nhất với nhiều chế độ thi đấu.</p>
+                    <div class="game-actions">
+                        <a href="#" target="_blank">Website</a>
+                        <a href="#" target="_blank">Tải game</a>
+                    </div>
+                </div>
+            </article>
+
+            <article class="game-card" data-type="pc" data-name="Truy Kích PC Battle Teams 2">
+                <div class="game-icon">TK</div>
+                <div class="game-info">
+                    <span>PC Games</span>
+                    <h3>Truy Kích PC (Battle Teams 2)</h3>
+                    <p>Game FPS trên PC, tập trung vào đấu đội và kỹ năng bắn súng.</p>
+                    <div class="game-actions">
+                        <a href="#" target="_blank">Website</a>
+                        <a href="#" target="_blank">Tải game</a>
+                    </div>
+                </div>
+            </article>
+
+            <article class="game-card" data-type="pc" data-name="Phi Đội Ace Online">
+                <div class="game-icon">AO</div>
+                <div class="game-info">
+                    <span>PC Games</span>
+                    <h3>Phi Đội (Ace Online)</h3>
+                    <p>Game không chiến trực tuyến với chiến cơ và nhiệm vụ phe phái.</p>
+                    <div class="game-actions">
+                        <a href="#" target="_blank">Website</a>
+                        <a href="#" target="_blank">Tải game</a>
+                    </div>
+                </div>
+            </article>
+
+            <article class="game-card" data-type="pc" data-name="Silkroad Origin VTC Con Đường Tơ Lụa">
+                <div class="game-icon">SR</div>
+                <div class="game-info">
+                    <span>PC Games</span>
+                    <h3>Silkroad Origin VTC</h3>
+                    <p>Game nhập vai lấy bối cảnh Con Đường Tơ Lụa.</p>
+                    <div class="game-actions">
+                        <a href="#" target="_blank">Website</a>
+                        <a href="#" target="_blank">Tải game</a>
+                    </div>
+                </div>
+            </article>
+
+            <article class="game-card" data-type="pc" data-name="Ghost Online PC VTC">
+                <div class="game-icon">GO</div>
+                <div class="game-info">
+                    <span>PC Games</span>
+                    <h3>Ghost Online PC VTC</h3>
+                    <p>Game nhập vai màn hình ngang với phong cách võ hiệp kỳ ảo.</p>
+                    <div class="game-actions">
+                        <a href="#" target="_blank">Website</a>
+                        <a href="#" target="_blank">Tải game</a>
+                    </div>
+                </div>
+            </article>
+
+            <article class="game-card" data-type="pc" data-name="Mật Lệnh FPS PC">
+                <div class="game-icon">ML</div>
+                <div class="game-info">
+                    <span>PC Games</span>
+                    <h3>Mật Lệnh FPS PC</h3>
+                    <p>Game bắn súng PC với nhịp trận nhanh và nhiều chế độ chơi.</p>
+                    <div class="game-actions">
+                        <a href="#" target="_blank">Website</a>
+                        <a href="#" target="_blank">Tải game</a>
+                    </div>
+                </div>
+            </article>
+
+            <article class="game-card" data-type="pc" data-name="Ragnarok Online">
+                <div class="game-icon">RO</div>
+                <div class="game-info">
+                    <span>PC Games</span>
+                    <h3>Ragnarok Online</h3>
+                    <p>Game nhập vai trực tuyến với lớp nhân vật và hệ thống nhiệm vụ.</p>
+                    <div class="game-actions">
+                        <a href="#" target="_blank">Website</a>
+                        <a href="#" target="_blank">Tải game</a>
+                    </div>
+                </div>
+            </article>
+
+            <article class="game-card" data-type="pc" data-name="Hiệp Khách Giang Hồ PC">
+                <div class="game-icon">HK</div>
+                <div class="game-info">
+                    <span>PC Games</span>
+                    <h3>Hiệp Khách Giang Hồ PC</h3>
+                    <p>Game võ hiệp trực tuyến với môn phái, nhiệm vụ và giao tranh.</p>
+                    <div class="game-actions">
+                        <a href="#" target="_blank">Website</a>
+                        <a href="#" target="_blank">Tải game</a>
+                    </div>
+                </div>
+            </article>
+
+            <article class="game-card" data-type="mobile" data-name="Giang Hồ Bát Phái Phân Tranh">
+                <div class="game-icon">GH</div>
+                <div class="game-info">
+                    <span>Mobile Games</span>
+                    <h3>Giang Hồ: Bát Phái Phân Tranh</h3>
+                    <p>Game mobile võ hiệp với hệ thống môn phái và tranh đấu.</p>
+                    <div class="game-actions">
+                        <a href="#" target="_blank">Website</a>
+                        <a href="#" target="_blank">iOS</a>
+                        <a href="#" target="_blank">Android</a>
+                    </div>
+                </div>
+            </article>
+
+            <article class="game-card" data-type="mobile" data-name="Be A Pro Football">
+                <div class="game-icon">BP</div>
+                <div class="game-info">
+                    <span>Mobile Games</span>
+                    <h3>Be A Pro: Football</h3>
+                    <p>Game bóng đá mobile, mô phỏng thi đấu và phát triển đội hình.</p>
+                    <div class="game-actions">
+                        <a href="#" target="_blank">Website</a>
+                        <a href="#" target="_blank">iOS</a>
+                        <a href="#" target="_blank">Android</a>
+                    </div>
+                </div>
+            </article>
+
+            <article class="game-card" data-type="mobile" data-name="Football Pro VTC">
+                <div class="game-icon">FP</div>
+                <div class="game-info">
+                    <span>Mobile Games</span>
+                    <h3>Football Pro VTC</h3>
+                    <p>Game quản lý và thi đấu bóng đá trên điện thoại.</p>
+                    <div class="game-actions">
+                        <a href="#" target="_blank">Website</a>
+                        <a href="#" target="_blank">iOS</a>
+                        <a href="#" target="_blank">Android</a>
+                    </div>
+                </div>
+            </article>
+
+            <article class="game-card" data-type="mobile" data-name="Đại Chiến Tam Quốc">
+                <div class="game-icon">TQ</div>
+                <div class="game-info">
+                    <span>Mobile Games</span>
+                    <h3>Đại Chiến Tam Quốc</h3>
+                    <p>Game chiến thuật lấy bối cảnh Tam Quốc.</p>
+                    <div class="game-actions">
+                        <a href="#" target="_blank">Website</a>
+                        <a href="#" target="_blank">iOS</a>
+                        <a href="#" target="_blank">Android</a>
+                    </div>
+                </div>
+            </article>
+
+            <article class="game-card" data-type="mobile" data-name="Gogo Tam Quốc">
+                <div class="game-icon">GG</div>
+                <div class="game-info">
+                    <span>Mobile Games</span>
+                    <h3>Gogo Tam Quốc</h3>
+                    <p>Game thẻ tướng Tam Quốc với lối chơi nhanh trên mobile.</p>
+                    <div class="game-actions">
+                        <a href="#" target="_blank">Website</a>
+                        <a href="#" target="_blank">iOS</a>
+                        <a href="#" target="_blank">Android</a>
+                    </div>
+                </div>
+            </article>
+
+            <article class="game-card" data-type="mobile" data-name="AU BEAT AU TOP">
+                <div class="game-icon">AU</div>
+                <div class="game-info">
+                    <span>Mobile Games</span>
+                    <h3>AU BEAT / AU TOP</h3>
+                    <p>Game âm nhạc, nhảy và thời trang trên điện thoại.</p>
+                    <div class="game-actions">
+                        <a href="#" target="_blank">Website</a>
+                        <a href="#" target="_blank">iOS</a>
+                        <a href="#" target="_blank">Android</a>
+                    </div>
+                </div>
+            </article>
+
+            <article class="game-card" data-type="mobile" data-name="Supersus">
+                <div class="game-icon">SS</div>
+                <div class="game-info">
+                    <span>Mobile Games</span>
+                    <h3>Supersus</h3>
+                    <p>Game suy luận xã hội, tìm người ẩn danh trong nhóm chơi.</p>
+                    <div class="game-actions">
+                        <a href="#" target="_blank">Website</a>
+                        <a href="#" target="_blank">iOS</a>
+                        <a href="#" target="_blank">Android</a>
+                    </div>
+                </div>
+            </article>
+
+            <article class="game-card" data-type="mobile" data-name="War and Order">
+                <div class="game-icon">WO</div>
+                <div class="game-info">
+                    <span>Mobile Games</span>
+                    <h3>War and Order</h3>
+                    <p>Game chiến thuật xây dựng vương quốc và liên minh.</p>
+                    <div class="game-actions">
+                        <a href="#" target="_blank">Website</a>
+                        <a href="#" target="_blank">iOS</a>
+                        <a href="#" target="_blank">Android</a>
+                    </div>
+                </div>
+            </article>
+
+            <article class="game-card" data-type="mobile" data-name="Trảm Tiên Quyết VTC">
+                <div class="game-icon">TT</div>
+                <div class="game-info">
+                    <span>Mobile Games</span>
+                    <h3>Trảm Tiên Quyết VTC</h3>
+                    <p>Game tiên hiệp mobile với nhiệm vụ, trang bị và tu luyện.</p>
+                    <div class="game-actions">
+                        <a href="#" target="_blank">Website</a>
+                        <a href="#" target="_blank">iOS</a>
+                        <a href="#" target="_blank">Android</a>
+                    </div>
+                </div>
+            </article>
+
+            <article class="game-card" data-type="mobile" data-name="Giang Hồ Ngũ Tuyệt">
+                <div class="game-icon">NT</div>
+                <div class="game-info">
+                    <span>Mobile Games</span>
+                    <h3>Giang Hồ Ngũ Tuyệt</h3>
+                    <p>Game kiếm hiệp mobile với hệ thống nhân vật và võ học.</p>
+                    <div class="game-actions">
+                        <a href="#" target="_blank">Website</a>
+                        <a href="#" target="_blank">iOS</a>
+                        <a href="#" target="_blank">Android</a>
+                    </div>
+                </div>
+            </article>
+
+            <article class="game-card" data-type="mobile" data-name="Vô Địch Tu Tiên Giới">
+                <div class="game-icon">VD</div>
+                <div class="game-info">
+                    <span>Mobile Games</span>
+                    <h3>Vô Địch Tu Tiên Giới</h3>
+                    <p>Game tu tiên mobile với tăng cấp, pháp bảo và vượt ải.</p>
+                    <div class="game-actions">
+                        <a href="#" target="_blank">Website</a>
+                        <a href="#" target="_blank">iOS</a>
+                        <a href="#" target="_blank">Android</a>
+                    </div>
+                </div>
+            </article>
+
+            <article class="game-card" data-type="mobile" data-name="Ta Là Đạo Sĩ Xuất Quan">
+                <div class="game-icon">DS</div>
+                <div class="game-info">
+                    <span>Mobile Games</span>
+                    <h3>Ta Là Đạo Sĩ Xuất Quan</h3>
+                    <p>Game nhập vai chủ đề đạo sĩ, trừ yêu và vượt phụ bản.</p>
+                    <div class="game-actions">
+                        <a href="#" target="_blank">Website</a>
+                        <a href="#" target="_blank">iOS</a>
+                        <a href="#" target="_blank">Android</a>
+                    </div>
+                </div>
+            </article>
+
+            <article class="game-card" data-type="mobile" data-name="Age of Empires Mobile VTC">
+                <div class="game-icon">AOE</div>
+                <div class="game-info">
+                    <span>Mobile Games</span>
+                    <h3>Age of Empires Mobile (VTC)</h3>
+                    <p>Game chiến thuật xây dựng đế chế trên điện thoại.</p>
+                    <div class="game-actions">
+                        <a href="#" target="_blank">Website</a>
+                        <a href="#" target="_blank">iOS</a>
+                        <a href="#" target="_blank">Android</a>
+                    </div>
+                </div>
+            </article>
+
+            <article class="game-card" data-type="mobile" data-name="Phục Kích Mobile">
+                <div class="game-icon">PK</div>
+                <div class="game-info">
+                    <span>Mobile Games</span>
+                    <h3>Phục Kích Mobile</h3>
+                    <p>Game bắn súng mobile với nhiều chế độ thi đấu.</p>
+                    <div class="game-actions">
+                        <a href="#" target="_blank">Website</a>
+                        <a href="#" target="_blank">iOS</a>
+                        <a href="#" target="_blank">Android</a>
+                    </div>
+                </div>
+            </article>
+
+            <article class="game-card" data-type="mobile" data-name="Tập Kích">
+                <div class="game-icon">TK</div>
+                <div class="game-info">
+                    <span>Mobile Games</span>
+                    <h3>Tập Kích</h3>
+                    <p>Game FPS mobile, phù hợp người chơi thích đấu súng nhanh.</p>
+                    <div class="game-actions">
+                        <a href="#" target="_blank">Website</a>
+                        <a href="#" target="_blank">iOS</a>
+                        <a href="#" target="_blank">Android</a>
+                    </div>
+                </div>
+            </article>
+
+            <article class="game-card" data-type="mobile" data-name="Truy Kích Mobile">
+                <div class="game-icon">TKM</div>
+                <div class="game-info">
+                    <span>Mobile Games</span>
+                    <h3>Truy Kích Mobile</h3>
+                    <p>Game bắn súng mobile chuyển thể từ dòng Truy Kích.</p>
+                    <div class="game-actions">
+                        <a href="#" target="_blank">Website</a>
+                        <a href="#" target="_blank">iOS</a>
+                        <a href="#" target="_blank">Android</a>
+                    </div>
+                </div>
+            </article>
+
+            <article class="game-card" data-type="mobile" data-name="GoKart VTC">
+                <div class="game-icon">GK</div>
+                <div class="game-info">
+                    <span>Mobile Games</span>
+                    <h3>GoKart VTC</h3>
+                    <p>Game đua xe kart với nhân vật, đường đua và vật phẩm.</p>
+                    <div class="game-actions">
+                        <a href="#" target="_blank">Website</a>
+                        <a href="#" target="_blank">iOS</a>
+                        <a href="#" target="_blank">Android</a>
+                    </div>
+                </div>
+            </article>
+
+            <article class="game-card" data-type="mobile" data-name="Cờ Tướng VTC">
+                <div class="game-icon">CT</div>
+                <div class="game-info">
+                    <span>Mobile Games</span>
+                    <h3>Cờ Tướng VTC</h3>
+                    <p>Game cờ tướng mobile, hỗ trợ chơi nhanh và đấu trí.</p>
+                    <div class="game-actions">
+                        <a href="#" target="_blank">Website</a>
+                        <a href="#" target="_blank">iOS</a>
+                        <a href="#" target="_blank">Android</a>
+                    </div>
+                </div>
+            </article>
+        </div>
+
+        <div class="game-empty hidden" id="game-empty">
+            Không tìm thấy game phù hợp.
+        </div>
+    </section>
+</main>
+
+{{FOOTER}}
+{{AUTH_MODAL}}
+<script src="scripts/app.js"></script>
+</body>
+</html>

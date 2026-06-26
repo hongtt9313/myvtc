@@ -1,0 +1,67 @@
+<div class="hidden" id="auth-modal" style="display:none;">
+    <div class="modal-card auth-page-card">
+
+        <div class="auth-left-bg">
+            <div class="auth-left-logo">
+                <img alt="myVTC Logo" src="https://sso.myvtc.vn/img/form-logo.b014d41f.png">
+            </div>
+
+            <div class="auth-left-visual">
+                <div class="security-visual">
+                    <div class="security-orbit"></div>
+
+                    <div class="security-card security-card-left">
+                        <i class="fas fa-user-circle"></i>
+                        <span></span>
+                        <span></span>
+                    </div>
+
+                    <div class="security-shield">
+                        <i class="fas fa-lock"></i>
+                    </div>
+
+                    <div class="security-card security-card-right">
+                        <strong>••••</strong>
+                        <small>***</small>
+                    </div>
+
+                    <div class="security-check">
+                        <i class="fas fa-check"></i>
+                    </div>
+                </div>
+
+                <div class="auth-left-copy">
+                    <h2>Đăng nhập để khám phá MyVTC</h2>
+                    <p>Truy cập nhanh vào hệ sinh thái dịch vụ số an toàn, tiện lợi và bảo mật tuyệt đối</p>
+                </div>
+            </div>
+        </div>
+
+<div class="auth-right-panel"> <div class="auth-right-shell"> <div class="lang-top"> <div class="relative"> <button class="auth-lang-btn" onclick="toggleAuthLangDropdown()"> <span id="auth-lang-flag">VN</span> <span id="auth-lang-text">Tiếng Việt</span> <i class="fas fa-chevron-down" id="auth-lang-arrow"></i> </button> <div class="hidden absolute right-0 mt-2 lang-dropdown z-20" id="auth-lang-dropdown"> <button onclick="changeAuthLanguage('vi')"><span>VN</span> Tiếng Việt</button> <button onclick="changeAuthLanguage('en')"><span>EN</span> English</button> </div> </div> </div>
+    <div class="auth-form-wrap">
+        <div class="auth-tabs" id="modal-tabs-header">
+            <button class="auth-tab active" id="tab-login" onclick="switchMode('login')">Đăng nhập</button>
+            <button class="auth-tab" id="tab-register" onclick="switchMode('register')">Đăng ký</button>
+        </div>
+
+        <div class="hidden my-2 p-3 rounded-xl text-sm font-semibold text-center transition-all leading-relaxed" id="modal-feedback"></div>
+
+        <div class="form-section" id="dynamic-modal-content"></div>
+    </div>
+
+    <div class="footer-links">
+        <div class="footer-left">
+            <a href="#">Bảo mật</a>
+            <span></span>
+            <a href="#">Điều khoản</a>
+        </div>
+
+        <button onclick="closeAuthModal()">
+            <i class="fas fa-home"></i>
+            <span>Trang chủ</span>
+        </button>
+    </div>
+</div>
+
+    </div>
+</div>
