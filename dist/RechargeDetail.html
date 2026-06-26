@@ -1,0 +1,247 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8"/>
+    <meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+    <title>Chi tiết nạp - MyVTC</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="styles/main.css" rel="stylesheet"/>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet"/>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" rel="stylesheet"/>
+</head>
+<body>
+<header>
+<!-- TOP BAR -->
+<div class="bg-gray-100 border-b border-gray-200 py-1.5">
+<div class="site-container flex items-center space-x-5 text-sm text-gray-600 overflow-x-auto">
+<a class="flex items-center space-x-1.5 whitespace-nowrap" href="Service.html"><i class="fas fa-cubes"></i><span class="top-bar-text">Services</span></a>
+<a class="flex items-center space-x-1.5 whitespace-nowrap" href="Shop.html"><i class="fas fa-store"></i><span class="top-bar-text">Shop</span></a>
+<a class="flex items-center space-x-1.5 whitespace-nowrap" href="#"><i class="fas fa-ticket-alt"></i><span class="top-bar-text">Code</span></a>
+<a class="flex items-center space-x-1.5 whitespace-nowrap" href="Support.html"><i class="fas fa-headset"></i><span class="top-bar-text">Hỗ trợ</span></a>
+</div>
+</div>
+<!-- MAIN NAV -->
+<div class="bg-white shadow-sm py-3">
+<div class="site-container main-nav flex items-center justify-between">
+<div class="flex items-center space-x-8">
+<a class="flex items-center" href="MyVTC_Home.html">
+<img alt="myVTC" class="h-8 w-auto object-contain" src="https://sso.myvtc.vn/img/form-logo.b014d41f.png"/>
+</a>
+<nav class="nav-links flex items-center gap-2" id="main-nav-links">
+<a class="nav-link text-gray-700 hover:text-blue-600 active:text-blue-600" href="MyVTC_Home.html">Trang chủ</a>
+</nav>
+</div>
+<div class="flex items-center space-x-4" id="nav-right">
+<!-- JS sẽ điền -->
+</div>
+</div>
+</div>
+</header>
+
+
+<main class="recharge-page" id="recharge-detail-page">
+    <section class="site-container recharge-shell">
+        <a class="recharge-back" href="Shop.html"><i class="fas fa-arrow-left"></i> Quay lại Shop</a>
+
+        <div class="recharge-service-head">
+            <div class="shop-service-icon" id="recharge-service-icon">AU</div>
+            <div>
+                <span>Nạp dịch vụ</span>
+                <h1 id="recharge-service-name">Audition PC</h1>
+            </div>
+        </div>
+
+        <div class="recharge-layout">
+            <div class="recharge-main">
+                <section class="recharge-card">
+                    <div class="recharge-card-head">
+                        <h2>Tài khoản nạp</h2>
+                        <p>Chọn đúng tài khoản sử dụng dịch vụ cần nạp.</p>
+                    </div>
+                    <div id="recharge-account-box"></div>
+                </section>
+
+                <section class="recharge-card">
+                    <div class="recharge-card-head">
+                        <h2>Danh sách gói</h2>
+                        <p>Chọn gói nạp phù hợp.</p>
+                    </div>
+		<div class="recharge-package-filters hidden" id="recharge-package-filters"></div>
+                    <div class="recharge-package-grid" id="recharge-package-list"></div>
+                </section>
+            </div>
+
+            <aside class="recharge-card recharge-order-card">
+                <div class="recharge-card-head">
+                    <h2>Thông tin đơn hàng</h2>
+                    <p>Kiểm tra đơn trước khi thanh toán.</p>
+                </div>
+
+                <div class="order-row">
+                    <span>Tên sản phẩm</span>
+                    <strong id="order-product-name">Chưa chọn gói</strong>
+                </div>
+
+                <div class="order-row">
+                    <span>Số lượng</span>
+                    <div class="order-qty">
+                        <button type="button" onclick="changeRechargeQty(-1)">-</button>
+                        <strong id="order-quantity">1</strong>
+                        <button type="button" onclick="changeRechargeQty(1)">+</button>
+                    </div>
+                </div>
+
+                                <details class="order-collapse">
+                    <summary>Phương thức thanh toán</summary>
+                    <div class="payment-method-grid" id="recharge-payment-methods">
+                        <button type="button" class="active" data-payment="Số dư MyVTC" onclick="selectRechargePayment('Số dư MyVTC')">Số dư MyVTC</button>
+                        <button type="button" data-payment="Chuyển khoản" onclick="selectRechargePayment('Chuyển khoản')">Chuyển khoản</button>
+                        <button type="button" data-payment="VTC Pay" onclick="selectRechargePayment('VTC Pay')">VTC Pay</button>
+                        <button type="button" data-payment="Ngân hàng nội địa" onclick="selectRechargePayment('Ngân hàng nội địa')">Ngân hàng nội địa</button>
+                        <button type="button" data-payment="Thẻ quốc tế" onclick="selectRechargePayment('Thẻ quốc tế')">Thẻ quốc tế</button>
+                    </div>
+                </details>
+
+                <details class="order-collapse">
+                    <summary>Voucher</summary>
+                    <div class="voucher-box">
+                        <label for="recharge-voucher">Nhập hoặc chọn mã voucher</label>
+                        <div class="voucher-line">
+                            <input id="recharge-voucher" placeholder="Nhập mã voucher">
+                            <select id="recharge-voucher-select" onchange="selectRechargeVoucherCode()">
+                                <option value="">Chọn mã có sẵn</option>
+                                <option value="MYVTC10">MYVTC10 - Giảm 10%</option>
+                                <option value="VTCPAY20">VTCPAY20 - Giảm 20.000đ</option>
+                                <option value="NEWUSER">NEWUSER - Giảm 30.000đ</option>
+                            </select>
+                            <button type="button" onclick="applyRechargeVoucher()">Dùng</button>
+                        </div>
+                        <p id="voucher-message"></p>
+                    </div>
+                </details>
+
+                <div class="order-total-box">
+                    <div>
+                        <span>Tạm tính</span>
+                        <strong id="order-subtotal">0đ</strong>
+                    </div>
+                    <div>
+                        <span>Giảm giá</span>
+                        <strong id="order-discount">0đ</strong>
+                    </div>
+                    <div class="final">
+                        <span>Tổng thanh toán</span>
+                        <strong id="order-total">0đ</strong>
+                    </div>
+                </div>
+
+                <button type="button" class="recharge-pay-btn" onclick="submitRechargeOrder()">Thanh toán ngay</button>
+            </aside>
+        </div>
+    </section>
+</main>
+
+<footer class="bg-white border-t border-gray-200 py-8 text-sm">
+<div class="site-container">
+<div class="flex items-center justify-between pb-5 border-b border-gray-100">
+<div class="flex items-center space-x-3">
+<img alt="myVTC" class="h-8 w-auto object-contain" src="https://sso.myvtc.vn/img/form-logo.b014d41f.png">
+</img></div>
+<div class="text-xs text-gray-400 hidden sm:block">Hệ sinh thái số đa dịch vụ</div>
+</div>
+<div class="flex flex-col sm:flex-row items-center justify-between gap-4 pt-5">
+<div class="flex items-center space-x-4">
+<div class="relative">
+<button class="flex items-center space-x-2 px-3 py-1.5 rounded-full border border-gray-200 bg-white hover:bg-gray-50 text-sm font-medium text-gray-700 transition-all shadow-sm hover:shadow" onclick="toggleFooterLangDropdown()">
+<span id="footer-lang-flag">🇻🇳</span>
+<span class="hidden sm:inline" id="footer-lang-text">Tiếng Việt</span>
+<i class="fas fa-chevron-down text-[10px] text-gray-400 transition-transform duration-200" id="footer-lang-arrow"></i>
+</button>
+<div class="hidden absolute left-0 mt-2 lang-dropdown z-20" id="footer-lang-dropdown">
+<button onclick="changeFooterLanguage('vi')"><span>🇻🇳</span> Tiếng Việt</button>
+<button onclick="changeFooterLanguage('en')"><span>🇺🇸</span> English</button>
+</div>
+</div>
+</div>
+<div class="flex flex-wrap items-center gap-x-6 gap-y-2 text-gray-500">
+<a class="hover:text-blue-600 transition-colors" href="#">Giới thiệu</a>
+<a class="hover:text-blue-600 transition-colors" href="#">Bảo mật</a>
+<a class="hover:text-blue-600 transition-colors" href="#">Điều khoản</a>
+</div>
+</div>
+<div class="text-center text-xs text-gray-400 pt-5 border-t border-gray-100 mt-5">
+                Copyright © 2026 VTC Multimedia Corp. All rights reserved.
+            </div>
+</div>
+</footer>
+
+<div class="hidden" id="auth-modal" style="display:none;">
+    <div class="modal-card auth-page-card">
+
+        <div class="auth-left-bg">
+            <div class="auth-left-logo">
+                <img alt="myVTC Logo" src="https://sso.myvtc.vn/img/form-logo.b014d41f.png">
+            </div>
+
+            <div class="auth-left-visual">
+                <div class="security-visual">
+                    <div class="security-orbit"></div>
+
+                    <div class="security-card security-card-left">
+                        <i class="fas fa-user-circle"></i>
+                        <span></span>
+                        <span></span>
+                    </div>
+
+                    <div class="security-shield">
+                        <i class="fas fa-lock"></i>
+                    </div>
+
+                    <div class="security-card security-card-right">
+                        <strong>••••</strong>
+                        <small>***</small>
+                    </div>
+
+                    <div class="security-check">
+                        <i class="fas fa-check"></i>
+                    </div>
+                </div>
+
+                <div class="auth-left-copy">
+                    <h2>Đăng nhập để khám phá MyVTC</h2>
+                    <p>Truy cập nhanh vào hệ sinh thái dịch vụ số an toàn, tiện lợi và bảo mật tuyệt đối</p>
+                </div>
+            </div>
+        </div>
+
+<div class="auth-right-panel"> <div class="auth-right-shell"> <div class="lang-top"> <div class="relative"> <button class="auth-lang-btn" onclick="toggleAuthLangDropdown()"> <span id="auth-lang-flag">VN</span> <span id="auth-lang-text">Tiếng Việt</span> <i class="fas fa-chevron-down" id="auth-lang-arrow"></i> </button> <div class="hidden absolute right-0 mt-2 lang-dropdown z-20" id="auth-lang-dropdown"> <button onclick="changeAuthLanguage('vi')"><span>VN</span> Tiếng Việt</button> <button onclick="changeAuthLanguage('en')"><span>EN</span> English</button> </div> </div> </div>
+    <div class="auth-form-wrap">
+        <div class="auth-tabs" id="modal-tabs-header">
+            <button class="auth-tab active" id="tab-login" onclick="switchMode('login')">Đăng nhập</button>
+            <button class="auth-tab" id="tab-register" onclick="switchMode('register')">Đăng ký</button>
+        </div>
+
+        <div class="hidden my-2 p-3 rounded-xl text-sm font-semibold text-center transition-all leading-relaxed" id="modal-feedback"></div>
+
+        <div class="form-section" id="dynamic-modal-content"></div>
+    </div>
+
+    <div class="footer-links">
+        <div class="footer-left">
+            <a href="#">Bảo mật</a>
+            <span></span>
+            <a href="#">Điều khoản</a>
+        </div>
+
+        <button onclick="closeAuthModal()">
+            <i class="fas fa-home"></i>
+            <span>Trang chủ</span>
+        </button>
+    </div>
+</div>
+
+    </div>
+</div>
+<script src="scripts/app.js"></script>
+</body>
+</html>

@@ -1,0 +1,331 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8"/>
+    <meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+    <title>VTC Services</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="styles/main.css" rel="stylesheet"/>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet"/>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" rel="stylesheet"/>
+</head>
+<body>
+<header>
+<!-- TOP BAR -->
+<div class="bg-gray-100 border-b border-gray-200 py-1.5">
+<div class="site-container flex items-center space-x-5 text-sm text-gray-600 overflow-x-auto">
+<a class="flex items-center space-x-1.5 whitespace-nowrap" href="Service.html"><i class="fas fa-cubes"></i><span class="top-bar-text">Services</span></a>
+<a class="flex items-center space-x-1.5 whitespace-nowrap" href="Shop.html"><i class="fas fa-store"></i><span class="top-bar-text">Shop</span></a>
+<a class="flex items-center space-x-1.5 whitespace-nowrap" href="#"><i class="fas fa-ticket-alt"></i><span class="top-bar-text">Code</span></a>
+<a class="flex items-center space-x-1.5 whitespace-nowrap" href="Support.html"><i class="fas fa-headset"></i><span class="top-bar-text">Hỗ trợ</span></a>
+</div>
+</div>
+<!-- MAIN NAV -->
+<div class="bg-white shadow-sm py-3">
+<div class="site-container main-nav flex items-center justify-between">
+<div class="flex items-center space-x-8">
+<a class="flex items-center" href="MyVTC_Home.html">
+<img alt="myVTC" class="h-8 w-auto object-contain" src="https://sso.myvtc.vn/img/form-logo.b014d41f.png"/>
+</a>
+<nav class="nav-links flex items-center gap-2" id="main-nav-links">
+<a class="nav-link text-gray-700 hover:text-blue-600 active:text-blue-600" href="MyVTC_Home.html">Trang chủ</a>
+</nav>
+</div>
+<div class="flex items-center space-x-4" id="nav-right">
+<!-- JS sẽ điền -->
+</div>
+</div>
+</div>
+</header>
+
+
+<main class="service-page">
+    <section class="service-hero">
+        <div class="site-container service-hero-inner">
+            <p class="service-kicker">VTC Services</p>
+            <h1>Level up your life</h1>
+            <p>Khám phá danh sách dịch vụ của VTC. Tìm dịch vụ theo tên, thể loại và nền tảng.</p>
+
+            <div class="service-search-box">
+                <i class="fas fa-search"></i>
+                <input type="text" id="service-search-input" placeholder="Tìm kiếm dịch vụ" oninput="filterServiceList()"/>
+            </div>
+        </div>
+    </section>
+
+    <section class="site-container service-content">
+        <div class="service-section-head">
+            <div>
+                <h2>Danh sách dịch vụ</h2>
+                <p>Chọn dịch vụ để mở trang thông tin chi tiết.</p>
+            </div>
+            <div class="service-filter-tabs">
+                <button type="button" class="active" data-service-filter="all" onclick="setServiceFilter('all')">Tất cả</button>
+                <button type="button" data-service-filter="pc" onclick="setServiceFilter('pc')">PC Services</button>
+                <button type="button" data-service-filter="mobile" onclick="setServiceFilter('mobile')">Mobile Services</button>
+            </div>
+        </div>
+
+                <div class="service-grid" id="service-list">
+            <article class="service-card" data-type="pc" data-name="Audition PC" onclick="window.location.href='https://nntm.vtcgame.vn/'">
+                <img class="service-thumb" src="thumbnail/thumb_001.png" alt="Audition PC">
+                <div class="service-info">
+                    <h3>Audition PC</h3>
+                    <p>Dịch vụ âm nhạc, thời trang và vũ đạo dành cho cộng đồng Audition.</p>
+                </div>
+            </article>
+
+            <article class="service-card" data-type="pc" data-name="Đột Kích Crossfire" onclick="window.location.href='https://nntm.vtcgame.vn/'">
+                <img class="service-thumb" src="thumbnail/thumb_002.png" alt="Đột Kích Crossfire">
+                <div class="service-info">
+                    <h3>Đột Kích (Crossfire)</h3>
+                    <p>Dịch vụ FPS chiến thuật với nhiều chế độ thi đấu.</p>
+                </div>
+            </article>
+
+            <article class="service-card" data-type="pc" data-name="Truy Kích PC" onclick="window.location.href='https://nntm.vtcgame.vn/'">
+                <img class="service-thumb" src="thumbnail/thumb_003.png" alt="Truy Kích PC">
+                <div class="service-info">
+                    <h3>Truy Kích PC</h3>
+                    <p>Dịch vụ bắn súng online, tối ưu cho người chơi PC.</p>
+                </div>
+            </article>
+
+            <article class="service-card" data-type="pc" data-name="Phi Đội Ace Online" onclick="window.location.href='https://nntm.vtcgame.vn/'">
+                <img class="service-thumb" src="thumbnail/thumb_004.png" alt="Phi Đội Ace Online">
+                <div class="service-info">
+                    <h3>Phi Đội (Ace Online)</h3>
+                    <p>Dịch vụ không chiến với hệ thống nhiệm vụ và phi đội.</p>
+                </div>
+            </article>
+
+            <article class="service-card" data-type="pc" data-name="Silkroad Origin VTC" onclick="window.location.href='https://nntm.vtcgame.vn/'">
+                <img class="service-thumb" src="thumbnail/thumb_005.png" alt="Silkroad Origin VTC">
+                <div class="service-info">
+                    <h3>Silkroad Origin VTC</h3>
+                    <p>Dịch vụ nhập vai lấy cảm hứng từ Con Đường Tơ Lụa.</p>
+                </div>
+            </article>
+
+            <article class="service-card" data-type="pc" data-name="Ghost Online PC VTC" onclick="window.location.href='https://nntm.vtcgame.vn/'">
+                <img class="service-thumb" src="thumbnail/thumb_006.png" alt="Ghost Online PC VTC">
+                <div class="service-info">
+                    <h3>Ghost Online PC VTC</h3>
+                    <p>Dịch vụ nhập vai hành động trên PC.</p>
+                </div>
+            </article>
+
+            <article class="service-card" data-type="pc" data-name="Mật Lệnh FPS PC" onclick="window.location.href='https://nntm.vtcgame.vn/'">
+                <img class="service-thumb" src="thumbnail/thumb_007.png" alt="Mật Lệnh FPS PC">
+                <div class="service-info">
+                    <h3>Mật Lệnh FPS PC</h3>
+                    <p>Dịch vụ bắn súng góc nhìn thứ nhất dành cho người chơi PC.</p>
+                </div>
+            </article>
+
+            <article class="service-card" data-type="pc" data-name="Ragnarok Online" onclick="window.location.href='https://nntm.vtcgame.vn/'">
+                <img class="service-thumb" src="thumbnail/thumb_008.png" alt="Ragnarok Online">
+                <div class="service-info">
+                    <h3>Ragnarok Online</h3>
+                    <p>Dịch vụ nhập vai với hệ thống lớp nhân vật và nhiệm vụ.</p>
+                </div>
+            </article>
+
+            <article class="service-card" data-type="pc" data-name="Hiệp Khách Giang Hồ PC" onclick="window.location.href='https://nntm.vtcgame.vn/'">
+                <img class="service-thumb" src="thumbnail/thumb_009.png" alt="Hiệp Khách Giang Hồ PC">
+                <div class="service-info">
+                    <h3>Hiệp Khách Giang Hồ PC</h3>
+                    <p>Dịch vụ kiếm hiệp trên PC với hệ thống bang hội.</p>
+                </div>
+            </article>
+
+            <article class="service-card" data-type="mobile" data-name="Giang Hồ Bát Phái" onclick="window.location.href='https://nntm.vtcgame.vn/'">
+                <img class="service-thumb" src="thumbnail/thumb_010.png" alt="Giang Hồ Bát Phái">
+                <div class="service-info">
+                    <h3>Giang Hồ: Bát Phái Phân Tranh</h3>
+                    <p>Dịch vụ kiếm hiệp mobile với nhiều môn phái.</p>
+                </div>
+            </article>
+
+            <article class="service-card" data-type="mobile" data-name="Be A Pro Football" onclick="window.location.href='https://nntm.vtcgame.vn/'">
+                <img class="service-thumb" src="thumbnail/thumb_011.png" alt="Be A Pro Football">
+                <div class="service-info">
+                    <h3>Be A Pro: Football</h3>
+                    <p>Dịch vụ bóng đá mobile với đội hình và chiến thuật.</p>
+                </div>
+            </article>
+
+            <article class="service-card" data-type="mobile" data-name="Football Pro VTC" onclick="window.location.href='https://nntm.vtcgame.vn/'">
+                <img class="service-thumb" src="thumbnail/thumb_012.png" alt="Football Pro VTC">
+                <div class="service-info">
+                    <h3>Football Pro VTC</h3>
+                    <p>Dịch vụ bóng đá mobile, nạp nhanh qua MyVTC.</p>
+                </div>
+            </article>
+
+            <article class="service-card" data-type="mobile" data-name="Đại Chiến Tam Quốc" onclick="window.location.href='https://nntm.vtcgame.vn/'">
+                <img class="service-thumb" src="thumbnail/thumb_013.png" alt="Đại Chiến Tam Quốc">
+                <div class="service-info">
+                    <h3>Đại Chiến Tam Quốc</h3>
+                    <p>Dịch vụ chiến thuật lấy bối cảnh Tam Quốc.</p>
+                </div>
+            </article>
+
+            <article class="service-card" data-type="mobile" data-name="Gogo Tam Quốc" onclick="window.location.href='https://nntm.vtcgame.vn/'">
+                <img class="service-thumb" src="thumbnail/thumb_014.png" alt="Gogo Tam Quốc">
+                <div class="service-info">
+                    <h3>Gogo Tam Quốc</h3>
+                    <p>Dịch vụ thẻ tướng Tam Quốc trên mobile.</p>
+                </div>
+            </article>
+
+            <article class="service-card" data-type="mobile" data-name="AU BEAT AU TOP" onclick="window.location.href='https://nntm.vtcgame.vn/'">
+                <img class="service-thumb" src="thumbnail/thumb_015.png" alt="AU BEAT AU TOP">
+                <div class="service-info">
+                    <h3>AU BEAT / AU TOP</h3>
+                    <p>Dịch vụ âm nhạc, nhảy và thời trang trên điện thoại.</p>
+                </div>
+            </article>
+
+            <article class="service-card" data-type="mobile" data-name="Supersus" onclick="window.location.href='https://nntm.vtcgame.vn/'">
+                <img class="service-thumb" src="thumbnail/thumb_016.png" alt="Supersus">
+                <div class="service-info">
+                    <h3>Supersus</h3>
+                    <p>Dịch vụ suy luận xã hội, tìm người ẩn danh.</p>
+                </div>
+            </article>
+
+            <article class="service-card" data-type="mobile" data-name="War and Order" onclick="window.location.href='https://nntm.vtcgame.vn/'">
+                <img class="service-thumb" src="thumbnail/thumb_017.png" alt="War and Order">
+                <div class="service-info">
+                    <h3>War and Order</h3>
+                    <p>Dịch vụ chiến thuật xây dựng vương quốc.</p>
+                </div>
+            </article>
+
+            <article class="service-card" data-type="mobile" data-name="Trảm Tiên Quyết VTC" onclick="window.location.href='https://nntm.vtcgame.vn/'">
+                <img class="service-thumb" src="thumbnail/thumb_018.png" alt="Trảm Tiên Quyết VTC">
+                <div class="service-info">
+                    <h3>Trảm Tiên Quyết VTC</h3>
+                    <p>Dịch vụ tiên hiệp mobile với nhiệm vụ và trang bị.</p>
+                </div>
+            </article>
+
+            <article class="service-card" data-type="mobile" data-name="Giang Hồ Ngũ Tuyệt" onclick="window.location.href='https://nntm.vtcgame.vn/'">
+                <img class="service-thumb" src="thumbnail/thumb_019.png" alt="Giang Hồ Ngũ Tuyệt">
+                <div class="service-info">
+                    <h3>Giang Hồ Ngũ Tuyệt</h3>
+                    <p>Dịch vụ kiếm hiệp mobile với hệ thống võ học.</p>
+                </div>
+            </article>
+        </div>
+        <div class="service-empty hidden" id="service-empty">
+            Không tìm thấy dịch vụ phù hợp.
+        </div>
+    </section>
+</main>
+
+<footer class="bg-white border-t border-gray-200 py-8 text-sm">
+<div class="site-container">
+<div class="flex items-center justify-between pb-5 border-b border-gray-100">
+<div class="flex items-center space-x-3">
+<img alt="myVTC" class="h-8 w-auto object-contain" src="https://sso.myvtc.vn/img/form-logo.b014d41f.png">
+</img></div>
+<div class="text-xs text-gray-400 hidden sm:block">Hệ sinh thái số đa dịch vụ</div>
+</div>
+<div class="flex flex-col sm:flex-row items-center justify-between gap-4 pt-5">
+<div class="flex items-center space-x-4">
+<div class="relative">
+<button class="flex items-center space-x-2 px-3 py-1.5 rounded-full border border-gray-200 bg-white hover:bg-gray-50 text-sm font-medium text-gray-700 transition-all shadow-sm hover:shadow" onclick="toggleFooterLangDropdown()">
+<span id="footer-lang-flag">🇻🇳</span>
+<span class="hidden sm:inline" id="footer-lang-text">Tiếng Việt</span>
+<i class="fas fa-chevron-down text-[10px] text-gray-400 transition-transform duration-200" id="footer-lang-arrow"></i>
+</button>
+<div class="hidden absolute left-0 mt-2 lang-dropdown z-20" id="footer-lang-dropdown">
+<button onclick="changeFooterLanguage('vi')"><span>🇻🇳</span> Tiếng Việt</button>
+<button onclick="changeFooterLanguage('en')"><span>🇺🇸</span> English</button>
+</div>
+</div>
+</div>
+<div class="flex flex-wrap items-center gap-x-6 gap-y-2 text-gray-500">
+<a class="hover:text-blue-600 transition-colors" href="#">Giới thiệu</a>
+<a class="hover:text-blue-600 transition-colors" href="#">Bảo mật</a>
+<a class="hover:text-blue-600 transition-colors" href="#">Điều khoản</a>
+</div>
+</div>
+<div class="text-center text-xs text-gray-400 pt-5 border-t border-gray-100 mt-5">
+                Copyright © 2026 VTC Multimedia Corp. All rights reserved.
+            </div>
+</div>
+</footer>
+
+<div class="hidden" id="auth-modal" style="display:none;">
+    <div class="modal-card auth-page-card">
+
+        <div class="auth-left-bg">
+            <div class="auth-left-logo">
+                <img alt="myVTC Logo" src="https://sso.myvtc.vn/img/form-logo.b014d41f.png">
+            </div>
+
+            <div class="auth-left-visual">
+                <div class="security-visual">
+                    <div class="security-orbit"></div>
+
+                    <div class="security-card security-card-left">
+                        <i class="fas fa-user-circle"></i>
+                        <span></span>
+                        <span></span>
+                    </div>
+
+                    <div class="security-shield">
+                        <i class="fas fa-lock"></i>
+                    </div>
+
+                    <div class="security-card security-card-right">
+                        <strong>••••</strong>
+                        <small>***</small>
+                    </div>
+
+                    <div class="security-check">
+                        <i class="fas fa-check"></i>
+                    </div>
+                </div>
+
+                <div class="auth-left-copy">
+                    <h2>Đăng nhập để khám phá MyVTC</h2>
+                    <p>Truy cập nhanh vào hệ sinh thái dịch vụ số an toàn, tiện lợi và bảo mật tuyệt đối</p>
+                </div>
+            </div>
+        </div>
+
+<div class="auth-right-panel"> <div class="auth-right-shell"> <div class="lang-top"> <div class="relative"> <button class="auth-lang-btn" onclick="toggleAuthLangDropdown()"> <span id="auth-lang-flag">VN</span> <span id="auth-lang-text">Tiếng Việt</span> <i class="fas fa-chevron-down" id="auth-lang-arrow"></i> </button> <div class="hidden absolute right-0 mt-2 lang-dropdown z-20" id="auth-lang-dropdown"> <button onclick="changeAuthLanguage('vi')"><span>VN</span> Tiếng Việt</button> <button onclick="changeAuthLanguage('en')"><span>EN</span> English</button> </div> </div> </div>
+    <div class="auth-form-wrap">
+        <div class="auth-tabs" id="modal-tabs-header">
+            <button class="auth-tab active" id="tab-login" onclick="switchMode('login')">Đăng nhập</button>
+            <button class="auth-tab" id="tab-register" onclick="switchMode('register')">Đăng ký</button>
+        </div>
+
+        <div class="hidden my-2 p-3 rounded-xl text-sm font-semibold text-center transition-all leading-relaxed" id="modal-feedback"></div>
+
+        <div class="form-section" id="dynamic-modal-content"></div>
+    </div>
+
+    <div class="footer-links">
+        <div class="footer-left">
+            <a href="#">Bảo mật</a>
+            <span></span>
+            <a href="#">Điều khoản</a>
+        </div>
+
+        <button onclick="closeAuthModal()">
+            <i class="fas fa-home"></i>
+            <span>Trang chủ</span>
+        </button>
+    </div>
+</div>
+
+    </div>
+</div>
+<script src="scripts/app.js"></script>
+</body>
+</html>
