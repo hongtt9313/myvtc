@@ -1,0 +1,11 @@
+{
+  "buildCommand": "python build.py",
+  "outputDirectory": "dist",
+  "cleanUrls": true,
+  "rewrites": [
+    {
+      "source": "/",
+      "destination": "/MyVTC_Home.html"
+    }
+  ]
+}
