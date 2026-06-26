@@ -62,6 +62,7 @@ for asset_dir in ["icon", "thumbnail"]:
 
 shutil.copy2(SRC / "styles" / "main.css", DIST / "styles" / "main.css")
 shutil.copy2(SRC / "scripts" / "app.js", DIST / "scripts" / "app.js")
+(DIST / "index.html").write_text(html, encoding="utf-8")
 (DIST / "MyVTC_Home.html").write_text(html, encoding="utf-8")
 (DIST / "MyAccount.html").write_text(account_html, encoding="utf-8")
 (DIST / "Loyalty.html").write_text(loyalty_html, encoding="utf-8")
@@ -70,6 +71,7 @@ shutil.copy2(SRC / "scripts" / "app.js", DIST / "scripts" / "app.js")
 (DIST / "RechargeDetail.html").write_text(recharge_html, encoding="utf-8")
 (DIST / "Support.html").write_text(support_html, encoding="utf-8")
 
+print("Đã build xong: dist/index.html")
 print("Đã build xong: dist/MyVTC_Home.html")
 print("Đã build xong: dist/MyAccount.html")
 print("Đã build xong: dist/Loyalty.html")
