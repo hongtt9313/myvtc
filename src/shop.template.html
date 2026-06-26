@@ -1,0 +1,189 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8"/>
+    <meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+    <title>VTC Shop</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="styles/main.css" rel="stylesheet"/>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet"/>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" rel="stylesheet"/>
+</head>
+<body>
+{{HEADER}}
+
+<main class="shop-page">
+    <section class="site-container shop-hero-layout">
+        <div class="shop-slider" id="shop-slider">
+            <div class="shop-slide active shop-slide-war" data-service="Giang Hồ Bát Phái">
+                <div class="shop-slide-content">
+                    <span>VTC Mobile</span>
+                    <h1>Dịch vụ chiến thuật cấp SSS</h1>
+                    <p>Nạp số dư, nhận ưu đãi và sẵn sàng vào trận.</p>
+                </div>
+            </div>
+
+            <div class="shop-slide shop-slide-zombie" data-service="Đột Kích">
+                <div class="shop-slide-content">
+                    <span>Dịch vụ sinh tồn</span>
+                    <h1>Anh hùng cảm địa</h1>
+                    <p>Trang bị vật phẩm, nâng cấp tài khoản và nhận quà.</p>
+                </div>
+            </div>
+
+            <div class="shop-slide shop-slide-cute" data-service="Ngôi Nhà Trong Mơ">
+                <div class="shop-slide-content">
+                    <span>Ưu đãi mùa đông</span>
+                    <h1>Ngôi nhà trong mơ</h1>
+                    <p>Combo quà tặng, Point và voucher dành cho người chơi.</p>
+                </div>
+            </div>
+
+            <div class="shop-slider-dots">
+                <button type="button" class="active" onclick="setShopSlide(0)"></button>
+                <button type="button" onclick="setShopSlide(1)"></button>
+                <button type="button" onclick="setShopSlide(2)"></button>
+            </div>
+        </div>
+
+        <aside class="shop-side-banners">
+            <a href="RechargeDetail.html?service=nap-so-du-myvtc" class="shop-side-banner shop-side-balance">
+                <span>Nạp số dư MyVTC</span>
+                <strong>Nạp Point nhanh</strong>
+                <em>Ưu đãi cho tài khoản đã đăng nhập</em>
+            </a>
+
+            <a href="Loyalty.html" class="shop-side-banner shop-side-loyalty">
+                <span>VTC Loyalty</span>
+                <strong>Tích EXP, đổi quà</strong>
+                <em>Xem hạng và nhiệm vụ thành viên</em>
+            </a>
+
+            <a href="Service.html" class="shop-side-banner shop-side-ecosystem">
+                <span>Hệ sinh thái VTC</span>
+                <strong>Khám phá dịch vụ</strong>
+                <em>PC Services và Mobile Services</em>
+            </a>
+        </aside>
+    </section>
+
+    <section class="site-container shop-section">
+        <div class="shop-section-head">
+            <div>
+                <h2>Dịch vụ của tôi</h2>
+                <p>Danh sách dịch vụ nổi bật, nạp nhanh trong một thao tác.</p>
+            </div>
+        </div>
+
+        <div class="shop-recommend-list">
+            <article class="shop-recommend-card" data-name="Nạp số dư MyVTC">
+                <img class="shop-service-icon-img" src="icon/icon_001.jpg" alt="Nạp số dư MyVTC">
+                <h3>Nạp số dư MyVTC</h3>
+            </article>
+
+            <article class="shop-recommend-card" data-name="Audition PC">
+                <img class="shop-service-icon-img" src="icon/icon_002.jpg" alt="Audition PC">
+                <h3>Audition PC</h3>
+            </article>
+
+            <article class="shop-recommend-card" data-name="Đột Kích">
+                <img class="shop-service-icon-img" src="icon/icon_003.jpg" alt="Đột Kích">
+                <h3>Đột Kích</h3>
+            </article>
+
+            <article class="shop-recommend-card" data-name="Giang Hồ Bát Phái">
+                <img class="shop-service-icon-img" src="icon/icon_004.jpg" alt="Giang Hồ Bát Phái">
+                <h3>Giang Hồ Bát Phái</h3>
+            </article>
+
+            <article class="shop-recommend-card" data-name="Be A Pro Football">
+                <img class="shop-service-icon-img" src="icon/icon_005.jpg" alt="Be A Pro Football">
+                <h3>Be A Pro Football</h3>
+            </article>
+
+            <article class="shop-recommend-card" data-name="Silkroad Origin VTC">
+                <img class="shop-service-icon-img" src="icon/icon_006.jpg" alt="Silkroad Origin VTC">
+                <h3>Silkroad Origin VTC</h3>
+            </article>
+        </div>
+    </section>
+
+    <section class="site-container shop-section shop-section-last">
+        <div class="shop-section-head">
+            <div>
+                <h2>Danh sách dịch vụ</h2>
+                <p>Lọc theo nền tảng để tìm dịch vụ.</p>
+            </div>
+
+            <div class="shop-filter-tabs">
+                <button type="button" class="active" data-shop-filter="all" onclick="setShopFilter('all')">Tất cả</button>
+                <button type="button" data-shop-filter="mobile" onclick="setShopFilter('mobile')">Mobile</button>
+                <button type="button" data-shop-filter="pc" onclick="setShopFilter('pc')">PC</button>
+            </div>
+        </div>
+
+        <div class="shop-service-grid" id="shop-service-list">
+            <article class="shop-service-card" data-type="all" data-name="Nạp số dư MyVTC">
+                <img class="shop-service-icon-img" src="icon/icon_001.jpg" alt="Nạp số dư MyVTC">
+                <h3>Nạp số dư MyVTC</h3>
+            </article>
+
+            <article class="shop-service-card" data-type="pc" data-name="Audition PC">
+                <img class="shop-service-icon-img" src="icon/icon_002.jpg" alt="Audition PC">
+                <h3>Audition PC</h3>
+            </article>
+
+            <article class="shop-service-card" data-type="pc" data-name="Đột Kích Crossfire">
+                <img class="shop-service-icon-img" src="icon/icon_003.jpg" alt="Đột Kích">
+                <h3>Đột Kích</h3>
+            </article>
+
+            <article class="shop-service-card" data-type="pc" data-name="Truy Kích PC">
+                <img class="shop-service-icon-img" src="icon/icon_004.jpg" alt="Truy Kích PC">
+                <h3>Truy Kích PC</h3>
+            </article>
+
+            <article class="shop-service-card" data-type="pc" data-name="Phi Đội Ace Online">
+                <img class="shop-service-icon-img" src="icon/icon_005.jpg" alt="Phi Đội">
+                <h3>Phi Đội</h3>
+            </article>
+
+            <article class="shop-service-card" data-type="pc" data-name="Silkroad Origin VTC">
+                <img class="shop-service-icon-img" src="icon/icon_006.jpg" alt="Silkroad Origin VTC">
+                <h3>Silkroad Origin VTC</h3>
+            </article>
+
+            <article class="shop-service-card" data-type="mobile" data-name="Giang Hồ Bát Phái">
+                <img class="shop-service-icon-img" src="icon/icon_007.jpg" alt="Giang Hồ Bát Phái">
+                <h3>Giang Hồ Bát Phái</h3>
+            </article>
+
+            <article class="shop-service-card" data-type="mobile" data-name="Be A Pro Football">
+                <img class="shop-service-icon-img" src="icon/icon_008.jpg" alt="Be A Pro Football">
+                <h3>Be A Pro Football</h3>
+            </article>
+
+            <article class="shop-service-card" data-type="mobile" data-name="Football Pro VTC">
+                <img class="shop-service-icon-img" src="icon/icon_009.jpg" alt="Football Pro VTC">
+                <h3>Football Pro VTC</h3>
+            </article>
+
+            <article class="shop-service-card" data-type="mobile" data-name="Đại Chiến Tam Quốc">
+                <img class="shop-service-icon-img" src="icon/icon_010.jpg" alt="Đại Chiến Tam Quốc">
+                <h3>Đại Chiến Tam Quốc</h3>
+            </article>
+
+            <article class="shop-service-card" data-type="mobile" data-name="Ngôi Nhà Trong Mơ">
+                <img class="shop-service-icon-img" src="icon/icon_011.jpg" alt="Ngôi Nhà Trong Mơ">
+                <h3>Ngôi Nhà Trong Mơ</h3>
+            </article>
+        </div>
+
+        <div class="shop-empty hidden" id="shop-empty">Không có dịch vụ phù hợp.</div>
+    </section>
+</main>
+
+{{FOOTER}}
+<script src="scripts/app.js"></script>
+</body>
+</html>

@@ -1,0 +1,279 @@
+<!DOCTYPE html>
+<html class="scroll-smooth" lang="vi">
+<head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>myVTC - Thành viên</title>
+<script src="https://cdn.tailwindcss.com"></script>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&amp;display=swap" rel="stylesheet"/>
+<link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet"/>
+<link href="styles/main.css" rel="stylesheet"/>
+</head>
+<body class="bg-white text-gray-800 antialiased">
+{{HEADER}}
+
+<main id="loyalty-page" class="loyalty-page">
+    <div class="site-container loyalty-shell">
+        <aside class="account-sidebar loyalty-sidebar">
+            <h2>THÀNH VIÊN</h2>
+            <button class="account-tab-btn active" data-loyalty-tab="rank" onclick="showLoyaltyTab('rank')">Hạng thành viên</button>
+            <button class="account-tab-btn" data-loyalty-tab="missions" onclick="showLoyaltyTab('missions')">Nhiệm vụ</button>
+            <button class="account-tab-btn" data-loyalty-tab="history" onclick="showLoyaltyTab('history')">Lịch sử</button>
+            <button class="account-tab-btn" data-loyalty-tab="bag" onclick="showLoyaltyTab('bag')">Túi đồ</button>
+        </aside>
+
+        <section class="account-content loyalty-content">
+            <div class="loyalty-tab-panel" data-loyalty-panel="rank">
+                <div class="account-heading">
+                    <h1>Hạng thành viên</h1>
+                    <p>Thông tin hạng thành viên của bạn</p>
+                </div>
+
+                                <div class="loyalty-rank-card">
+                    <div class="loyalty-rank-main">
+                        <div>
+                            <div class="loyalty-small-label" id="loyalty-rank-label">Hạng hiện tại</div>
+                            <div class="loyalty-current-rank" id="loyalty-rank-name">Đồng</div>
+                            <p id="loyalty-rank-desc">Điểm hiện tại của bạn là <strong>20 / 500 EXP</strong> để xét hạng Bạc.</p>
+                        </div>
+                        <div class="loyalty-rank-medal" id="loyalty-rank-medal">
+                            <i class="fas fa-medal"></i>
+                        </div>
+                    </div>
+
+                    <div class="loyalty-rank-switch">
+                        <button class="active" type="button" data-rank-view="dong" onclick="showLoyaltyRank('dong')">Đồng</button>
+                        <button type="button" data-rank-view="bac" onclick="showLoyaltyRank('bac')">Bạc</button>
+                        <button type="button" data-rank-view="vang" onclick="showLoyaltyRank('vang')">Vàng</button>
+                        <button type="button" data-rank-view="bachkim" onclick="showLoyaltyRank('bachkim')">Bạch Kim</button>
+                        <button type="button" data-rank-view="kimcuong" onclick="showLoyaltyRank('kimcuong')">Kim Cương</button>
+                    </div>
+
+                    <div class="loyalty-progress-wrap">
+                        <div class="loyalty-progress-head">
+                            <span>Tích lũy EXP</span>
+                            <strong id="loyalty-progress-value">20 / 500 EXP</strong>
+                        </div>
+                        <div class="loyalty-progress-bar">
+                            <div id="loyalty-progress-fill" style="width: 4%;"></div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="loyalty-section-card">
+                    <div class="loyalty-section-head">
+                        <h3>Nhiệm vụ thăng hạng</h3>
+                        <span id="loyalty-rank-deadline">Trước ngày 31/12/2026</span>
+                    </div>
+                    <p id="loyalty-mission-desc">Để mở khóa quyền lợi hạng Bạc, người dùng cần hoàn thành 2 điều kiện:</p>
+
+                    <div class="loyalty-task-list" id="loyalty-rank-missions">
+                    </div>
+                </div>
+
+                <div class="loyalty-section-card">
+                    <div class="loyalty-section-head">
+                        <h3>Ưu đãi</h3>
+                    </div>
+                    <div class="loyalty-alert" id="loyalty-benefit-alert">
+                        Thăng hạng Bạc để mở khóa ngay các phần quà ưu đãi bên dưới.
+                    </div>
+
+                                        <div class="loyalty-gift-grid" id="loyalty-benefit-list">
+                    </div>
+                </div>
+            </div>
+
+                        <div class="loyalty-tab-panel hidden" data-loyalty-panel="missions">
+                <div class="account-heading">
+                    <h1>Nhiệm vụ</h1>
+                    <p>Thực hiện nhiệm vụ để nhận EXP, Point và ưu đãi</p>
+                </div>
+
+                <div class="loyalty-mission-grid">
+                    <div class="loyalty-mission-card">
+                        <div class="loyalty-mission-icon"><i class="fas fa-user-plus"></i></div>
+                        <div>
+                            <h3>Mời bạn mới</h3>
+                            <p>Copy mã hoặc link mời bạn bè tạo tài khoản MyVTC.</p>
+                        </div>
+                        <button type="button" onclick="openInviteFriendModal()">Xem mã mời</button>
+                    </div>
+
+                    <div class="loyalty-mission-card checkin-mini-card">
+                        <div class="loyalty-mission-icon"><i class="fas fa-calendar-check"></i></div>
+                        <div>
+                            <h3>Nhiệm vụ điểm danh</h3>
+                            <p>Điểm danh hôm nay nhận +1 Point. Chuỗi 7 ngày nhận thêm +10 Point.</p>
+                        </div>
+                        <button type="button" onclick="openCheckinMissionModal()">Điểm danh</button>
+                    </div>
+                </div>
+
+                <div class="loyalty-section-card">
+                    <div class="loyalty-section-head">
+                        <h3>Nhiệm vụ nhận thưởng điểm EXP</h3>
+                    </div>
+
+                    <div class="loyalty-exp-list">
+                        <div>
+                            <span>Xác minh SĐT</span>
+                            <strong>+20 EXP</strong>
+                            <button type="button">Làm ngay</button>
+                        </div>
+
+                        <div>
+                            <span>Xác minh Email</span>
+                            <strong>+20 EXP</strong>
+                            <button type="button" onclick="claimMissionReward('Xác minh Email')">Nhận ngay</button>
+                        </div>
+
+                        <div>
+                            <span>Mời bạn mới</span>
+                            <strong>+10 EXP</strong>
+                            <div class="loyalty-mission-action">
+                                <button type="button" onclick="openInviteFriendModal()">Nhận ngay</button>
+                                <small>Đã nhận 2/10 lượt</small>
+                            </div>
+                        </div>
+
+                        <div>
+                            <span>Điểm danh hôm nay</span>
+                            <strong>+1 Point</strong>
+                            <button type="button" onclick="openCheckinMissionModal()">Điểm danh</button>
+                        </div>
+
+                        <div>
+                            <span>Điểm danh liên tục 7 ngày</span>
+                            <strong>+10 Point</strong>
+                            <button type="button" onclick="openCheckinMissionModal()">Xem chuỗi</button>
+                        </div>
+
+                        <div>
+                            <span>Tham gia 1 dịch vụ bất kỳ</span>
+                            <strong>+30 EXP</strong>
+                            <button type="button">Làm ngay</button>
+                        </div>
+
+                        <div>
+                            <span>Tham gia 2 dịch vụ bất kỳ</span>
+                            <strong>+60 EXP</strong>
+                            <button type="button">Làm ngay</button>
+                        </div>
+
+                        <div>
+                            <span>Nạp 500 Point</span>
+                            <strong>+100 EXP</strong>
+                            <button type="button">Nạp ngay</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+                        <div class="loyalty-tab-panel hidden" data-loyalty-panel="history">
+                <div class="account-heading">
+                    <h1>Lịch sử thành viên</h1>
+                    <p>Danh sách biến động của bạn trong chương trình khách hàng thân thiết</p>
+                </div>
+
+                <div class="loyalty-history-card">
+                    <div class="loyalty-history-list">
+                        <div class="loyalty-history-item">
+                            <div class="loyalty-history-main">
+                                <span class="loyalty-history-index">#1</span>
+                                <div>
+                                    <strong>Nhận thưởng từ Nhiệm vụ điểm danh</strong>
+                                    <p>25/06/2026 14:51:00</p>
+                                </div>
+                            </div>
+                            <div class="loyalty-history-meta">
+                                <span>Loại quà: EXP</span>
+                                <span>Mã GD: 1409714719677275942</span>
+                                <span>Người gửi: Hệ thống</span>
+                            </div>
+                            <div class="loyalty-history-value positive">+10</div>
+                        </div>
+
+                        <div class="loyalty-history-item">
+                            <div class="loyalty-history-main">
+                                <span class="loyalty-history-index">#2</span>
+                                <div>
+                                    <strong>Thu hồi 5 EXP từ Admin</strong>
+                                    <p>21/06/2026 00:51:00</p>
+                                </div>
+                            </div>
+                            <div class="loyalty-history-meta">
+                                <span>Loại quà: EXP</span>
+                                <span>Mã GD: 1409714719677275123</span>
+                                <span>Người gửi: Admin</span>
+                            </div>
+                            <div class="loyalty-history-value negative">-5</div>
+                        </div>
+
+                        <div class="loyalty-history-item">
+                            <div class="loyalty-history-main">
+                                <span class="loyalty-history-index">#3</span>
+                                <div>
+                                    <strong>Nhận thưởng từ Mời bạn mới</strong>
+                                    <p>02/06/2026 14:51:00</p>
+                                </div>
+                            </div>
+                            <div class="loyalty-history-meta">
+                                <span>Loại quà: EXP</span>
+                                <span>Mã GD: 1409714719677271234</span>
+                                <span>Người gửi: Hệ thống</span>
+                            </div>
+                            <div class="loyalty-history-value positive">+10</div>
+                        </div>
+
+                        <div class="loyalty-history-item">
+                            <div class="loyalty-history-main">
+                                <span class="loyalty-history-index">#4</span>
+                                <div>
+                                    <strong>Nhận thưởng nâng hạng Bạc</strong>
+                                    <p>01/06/2026 14:51:00</p>
+                                </div>
+                            </div>
+                            <div class="loyalty-history-meta">
+                                <span>Loại quà: Voucher</span>
+                                <span>Mã GD: 1409714719677271235</span>
+                                <span>Người gửi: Hệ thống</span>
+                            </div>
+                            <div class="loyalty-history-value positive">+1</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+                <div class="account-heading">
+                    <h1>Túi đồ</h1>
+                    <p>Quản lý quà tặng, voucher và vật phẩm đã nhận</p>
+                </div>
+
+                <div class="loyalty-bag-grid">
+                    <div class="loyalty-bag-card">
+                        <div class="loyalty-bag-icon"><i class="fas fa-ticket-alt"></i></div>
+                        <strong>Voucher Nạp Points giảm giá 10%</strong>
+                        <span>Chưa mở khóa</span>
+                        <button type="button" disabled>Chưa đủ điều kiện</button>
+                    </div>
+                    <div class="loyalty-bag-card">
+                        <div class="loyalty-bag-icon"><i class="fas fa-coins"></i></div>
+                        <strong>Thẻ Vcoin 10K</strong>
+                        <span>Chưa mở khóa</span>
+                        <button type="button" disabled>Chưa đủ điều kiện</button>
+                    </div>
+                    <div class="loyalty-bag-card available">
+                        <div class="loyalty-bag-icon"><i class="fas fa-star"></i></div>
+                        <strong>EXP checkin hằng ngày</strong>
+                        <span>Đã nhận hôm nay</span>
+                        <button type="button">Xem lịch sử</button>
+                    </div>
+                </div>
+            </div>
+        </section>
+    </div>
+</main>
+
+{{FOOTER}}
+<script src="scripts/app.js"></script>
+</body>
+</html>

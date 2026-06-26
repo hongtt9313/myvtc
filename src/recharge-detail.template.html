@@ -1,0 +1,121 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8"/>
+    <meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+    <title>Chi tiết nạp - MyVTC</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="styles/main.css" rel="stylesheet"/>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet"/>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" rel="stylesheet"/>
+</head>
+<body>
+{{HEADER}}
+
+<main class="recharge-page" id="recharge-detail-page">
+    <section class="site-container recharge-shell">
+        <a class="recharge-back" href="Shop.html"><i class="fas fa-arrow-left"></i> Quay lại Shop</a>
+
+        <div class="recharge-service-head">
+            <div class="shop-service-icon" id="recharge-service-icon">AU</div>
+            <div>
+                <span>Nạp dịch vụ</span>
+                <h1 id="recharge-service-name">Audition PC</h1>
+            </div>
+        </div>
+
+        <div class="recharge-layout">
+            <div class="recharge-main">
+                <section class="recharge-card">
+                    <div class="recharge-card-head">
+                        <h2>Tài khoản nạp</h2>
+                        <p>Chọn đúng tài khoản sử dụng dịch vụ cần nạp.</p>
+                    </div>
+                    <div id="recharge-account-box"></div>
+                </section>
+
+                <section class="recharge-card">
+                    <div class="recharge-card-head">
+                        <h2>Danh sách gói</h2>
+                        <p>Chọn gói nạp phù hợp.</p>
+                    </div>
+		<div class="recharge-package-filters hidden" id="recharge-package-filters"></div>
+                    <div class="recharge-package-grid" id="recharge-package-list"></div>
+                </section>
+            </div>
+
+            <aside class="recharge-card recharge-order-card">
+                <div class="recharge-card-head">
+                    <h2>Thông tin đơn hàng</h2>
+                    <p>Kiểm tra đơn trước khi thanh toán.</p>
+                </div>
+
+                <div class="order-row">
+                    <span>Tên sản phẩm</span>
+                    <strong id="order-product-name">Chưa chọn gói</strong>
+                </div>
+
+                <div class="order-row">
+                    <span>Số lượng</span>
+                    <div class="order-qty">
+                        <button type="button" onclick="changeRechargeQty(-1)">-</button>
+                        <strong id="order-quantity">1</strong>
+                        <button type="button" onclick="changeRechargeQty(1)">+</button>
+                    </div>
+                </div>
+
+                                <details class="order-collapse">
+                    <summary>Phương thức thanh toán</summary>
+                    <div class="payment-method-grid" id="recharge-payment-methods">
+                        <button type="button" class="active" data-payment="Số dư MyVTC" onclick="selectRechargePayment('Số dư MyVTC')">Số dư MyVTC</button>
+                        <button type="button" data-payment="Chuyển khoản" onclick="selectRechargePayment('Chuyển khoản')">Chuyển khoản</button>
+                        <button type="button" data-payment="VTC Pay" onclick="selectRechargePayment('VTC Pay')">VTC Pay</button>
+                        <button type="button" data-payment="Ngân hàng nội địa" onclick="selectRechargePayment('Ngân hàng nội địa')">Ngân hàng nội địa</button>
+                        <button type="button" data-payment="Thẻ quốc tế" onclick="selectRechargePayment('Thẻ quốc tế')">Thẻ quốc tế</button>
+                    </div>
+                </details>
+
+                <details class="order-collapse">
+                    <summary>Voucher</summary>
+                    <div class="voucher-box">
+                        <label for="recharge-voucher">Nhập hoặc chọn mã voucher</label>
+                        <div class="voucher-line">
+                            <input id="recharge-voucher" placeholder="Nhập mã voucher">
+                            <select id="recharge-voucher-select" onchange="selectRechargeVoucherCode()">
+                                <option value="">Chọn mã có sẵn</option>
+                                <option value="MYVTC10">MYVTC10 - Giảm 10%</option>
+                                <option value="VTCPAY20">VTCPAY20 - Giảm 20.000đ</option>
+                                <option value="NEWUSER">NEWUSER - Giảm 30.000đ</option>
+                            </select>
+                            <button type="button" onclick="applyRechargeVoucher()">Dùng</button>
+                        </div>
+                        <p id="voucher-message"></p>
+                    </div>
+                </details>
+
+                <div class="order-total-box">
+                    <div>
+                        <span>Tạm tính</span>
+                        <strong id="order-subtotal">0đ</strong>
+                    </div>
+                    <div>
+                        <span>Giảm giá</span>
+                        <strong id="order-discount">0đ</strong>
+                    </div>
+                    <div class="final">
+                        <span>Tổng thanh toán</span>
+                        <strong id="order-total">0đ</strong>
+                    </div>
+                </div>
+
+                <button type="button" class="recharge-pay-btn" onclick="submitRechargeOrder()">Thanh toán ngay</button>
+            </aside>
+        </div>
+    </section>
+</main>
+
+{{FOOTER}}
+{{AUTH_MODAL}}
+<script src="scripts/app.js"></script>
+</body>
+</html>
