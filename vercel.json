@@ -1,11 +1,39 @@
 {
-  "buildCommand": "python build.py",
+  "buildCommand": "python3 build.py",
   "outputDirectory": "dist",
-  "cleanUrls": true,
+  "cleanUrls": false,
   "rewrites": [
     {
       "source": "/",
+      "destination": "/index.html"
+    },
+    {
+      "source": "/MyVTC_Home",
       "destination": "/MyVTC_Home.html"
+    },
+    {
+      "source": "/MyAccount",
+      "destination": "/MyAccount.html"
+    },
+    {
+      "source": "/Loyalty",
+      "destination": "/Loyalty.html"
+    },
+    {
+      "source": "/Service",
+      "destination": "/Service.html"
+    },
+    {
+      "source": "/Shop",
+      "destination": "/Shop.html"
+    },
+    {
+      "source": "/RechargeDetail",
+      "destination": "/RechargeDetail.html"
+    },
+    {
+      "source": "/Support",
+      "destination": "/Support.html"
     }
   ]
 }
