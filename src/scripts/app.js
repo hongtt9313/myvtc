@@ -147,7 +147,7 @@ function findRecoveryAccounts(keyword) {
     const currentPage = window.location.pathname.split('/').pop() || 'MyVTC_Home.html';
 
             if (navLinks) {
-                if (currentPage === 'Service.html' || currentPage === 'Shop.html' || currentPage === 'Support.html' || currentPage === 'RechargeDetail.html') {
+        if (currentPage === 'Service.html' || currentPage === 'Shop.html' || currentPage === 'Support.html' || currentPage === 'RechargeDetail.html') {
             navLinks.innerHTML = '';
         } else {
             navLinks.innerHTML = `
@@ -156,16 +156,22 @@ function findRecoveryAccounts(keyword) {
                 <a class="nav-link ${currentPage === 'Loyalty.html' ? 'active' : ''}" href="Loyalty.html">Thành viên</a>
             `;
         }
+
+        const mobileNavBtn = document.getElementById('mobile-nav-menu-btn');
+        if (mobileNavBtn) {
+            mobileNavBtn.classList.toggle('hidden', navLinks.children.length === 0);
+        }
     }
 
     if (!isLoggedIn) {
-        navRight.innerHTML = `
-            <button onclick="openAuthModal('login')" class="bg-blue-600 hover:bg-blue-700 text-white font-semibold py-2 px-5 rounded-full shadow-md transition-all active:scale-95 text-sm">
-                Đăng nhập
-            </button>
-        `;
-        return;
-    }
+    navRight.innerHTML = `
+        <button onclick="openAuthModal('login')" class="header-login-btn" aria-label="Đăng nhập">
+            <i class="fas fa-user"></i>
+            <span>Đăng nhập</span>
+        </button>
+    `;
+    return;
+}
 
     const displayUsername = currentUser.username || currentUser.phone || currentUser.email || currentUser.name || 'Tài khoản';
     const displayUserId = currentUser.id || 'N/A';
@@ -2284,12 +2290,22 @@ const loyaltyRankData = {
 
 function showLoyaltyTab(tabName) {
     document.querySelectorAll('[data-loyalty-tab]').forEach(btn => {
-        btn.classList.toggle('active', btn.dataset.loyaltyTab === tabName);
+        const isActive = btn.dataset.loyaltyTab === tabName;
+        btn.classList.toggle('active', isActive);
+
+        if (isActive) {
+            const label = document.getElementById('loyalty-mobile-active-label');
+            if (label) {
+                label.textContent = btn.textContent.trim();
+            }
+        }
     });
 
     document.querySelectorAll('[data-loyalty-panel]').forEach(panel => {
         panel.classList.toggle('hidden', panel.dataset.loyaltyPanel !== tabName);
     });
+
+    closeLoyaltyBodyMenu();
 }
 
 function showLoyaltyRank(rankKey) {
@@ -2591,13 +2607,23 @@ function initLoyaltyPage() {
     showLoyaltyRank('dong');
 }
         function showAccountTab(tabName) {
-    document.querySelectorAll('.account-tab-btn').forEach(btn => {
-        btn.classList.toggle('active', btn.dataset.tab === tabName);
+    document.querySelectorAll('[data-tab]').forEach(btn => {
+        const isActive = btn.dataset.tab === tabName;
+        btn.classList.toggle('active', isActive);
+
+        if (isActive) {
+            const label = document.getElementById('account-mobile-active-label');
+            if (label) {
+                label.textContent = btn.textContent.trim();
+            }
+        }
     });
 
     document.querySelectorAll('.account-tab-panel').forEach(panel => {
         panel.classList.toggle('hidden', panel.dataset.panel !== tabName);
     });
+
+    closeAccountBodyMenu();
 
     if (tabName === 'transactions') {
         filterTransactions();
@@ -2607,6 +2633,76 @@ function initLoyaltyPage() {
         renderAccountNotifications();
     }
 }
+function toggleMobileNavMenu() {
+    const navLinks = document.getElementById('main-nav-links');
+    if (!navLinks) return;
+
+    navLinks.classList.toggle('open');
+}
+
+function closeMobileNavMenu() {
+    const navLinks = document.getElementById('main-nav-links');
+    if (!navLinks) return;
+
+    navLinks.classList.remove('open');
+}
+
+function toggleAccountBodyMenu() {
+    const menu = document.getElementById('account-body-tab-menu');
+    const icon = document.getElementById('account-mobile-menu-icon');
+    if (!menu) return;
+
+    menu.classList.toggle('open');
+
+    if (icon) {
+        icon.classList.toggle('open', menu.classList.contains('open'));
+    }
+}
+
+function closeAccountBodyMenu() {
+    const menu = document.getElementById('account-body-tab-menu');
+    const icon = document.getElementById('account-mobile-menu-icon');
+    if (!menu) return;
+
+    menu.classList.remove('open');
+
+    if (icon) {
+        icon.classList.remove('open');
+    }
+}
+
+function toggleLoyaltyBodyMenu() {
+    const menu = document.getElementById('loyalty-body-tab-menu');
+    const icon = document.getElementById('loyalty-mobile-menu-icon');
+    if (!menu) return;
+
+    menu.classList.toggle('open');
+
+    if (icon) {
+        icon.classList.toggle('open', menu.classList.contains('open'));
+    }
+}
+
+function closeLoyaltyBodyMenu() {
+    const menu = document.getElementById('loyalty-body-tab-menu');
+    const icon = document.getElementById('loyalty-mobile-menu-icon');
+    if (!menu) return;
+
+    menu.classList.remove('open');
+
+    if (icon) {
+        icon.classList.remove('open');
+    }
+}
+
+document.addEventListener('click', function (event) {
+    const navLinks = document.getElementById('main-nav-links');
+    const navBtn = document.getElementById('mobile-nav-menu-btn');
+
+    if (navLinks && navBtn && !navLinks.contains(event.target) && !navBtn.contains(event.target)) {
+        closeMobileNavMenu();
+    }
+});
 
         // ================================================================
         //  AUTH MODAL LANGUAGE
@@ -3244,11 +3340,116 @@ function submitRechargeOrder() {
 // ================================================================
 //  SUPPORT PAGE
 // ================================================================
+const supportFaqData = {
+    login: {
+        title: 'Cách đăng nhập tài khoản MyVTC',
+        intro: 'Bạn đăng nhập bằng mật khẩu, OTP hoặc tài khoản Google, Apple, Facebook đã liên kết.',
+        steps: [
+            'Chọn Đăng nhập trên header.',
+            'Nhập SĐT, Email hoặc tên tài khoản.',
+            'Chọn đăng nhập bằng mật khẩu hoặc OTP.',
+            'Hoàn tất xác thực và kiểm tra lại thông tin tài khoản.'
+        ]
+    },
+    forgot: {
+        title: 'Tôi quên mật khẩu thì làm gì?',
+        intro: 'Bạn đặt lại mật khẩu bằng SĐT, Email hoặc tên tài khoản đã đăng ký.',
+        steps: [
+            'Chọn Quên mật khẩu.',
+            'Nhập thông tin tài khoản cần khôi phục.',
+            'Nhận OTP qua phương thức còn hiệu lực.',
+            'Nhập mật khẩu mới và đăng nhập lại.'
+        ]
+    },
+    link: {
+        title: 'Liên kết tài khoản dịch vụ',
+        intro: 'Tính năng này giúp đồng bộ tài khoản chơi dịch vụ với tài khoản MyVTC.',
+        steps: [
+            'Vào Tài khoản, chọn Tài khoản liên kết.',
+            'Chọn dịch vụ cần liên kết.',
+            'Nhập tài khoản đang chơi hoặc tạo tài khoản mới.',
+            'Kiểm tra thông tin và xác nhận liên kết.'
+        ]
+    },
+    topup: {
+        title: 'Cách nạp Point MyVTC',
+        intro: 'Bạn nạp Point bằng Thẻ Vcoin, chuyển khoản, VTC Pay, ngân hàng nội địa hoặc thẻ quốc tế.',
+        steps: [
+            'Vào Shop, chọn Nạp số dư MyVTC.',
+            'Chọn gói nạp.',
+            'Chọn phương thức thanh toán.',
+            'Kiểm tra đơn hàng và xác nhận thanh toán.'
+        ]
+    },
+    payment: {
+        title: 'Thanh toán gói dịch vụ không thành công',
+        intro: 'Giao dịch lỗi thường do số dư không đủ, thông tin thanh toán sai hoặc quá hạn xác thực.',
+        steps: [
+            'Kiểm tra lại trạng thái trong Lịch sử giao dịch.',
+            'Kiểm tra số dư hoặc hạn mức thanh toán.',
+            'Thử lại bằng phương thức thanh toán khác.',
+            'Gửi yêu cầu hỗ trợ nếu tiền đã trừ nhưng đơn chưa ghi nhận.'
+        ]
+    },
+    voucher: {
+        title: 'Cách nhập voucher khi thanh toán',
+        intro: 'Voucher áp dụng theo điều kiện từng dịch vụ, từng phương thức thanh toán và thời hạn hiệu lực.',
+        steps: [
+            'Mở khu vực Voucher trong đơn hàng.',
+            'Nhập mã hoặc chọn mã có sẵn.',
+            'Bấm Dùng để kiểm tra ưu đãi.',
+            'Kiểm tra số tiền giảm trước khi thanh toán.'
+        ]
+    },
+    security: {
+        title: 'Thiết lập bảo mật OTP và 2FA',
+        intro: 'Bảo mật 2 bước giúp bảo vệ đăng nhập và giao dịch quan trọng.',
+        steps: [
+            'Vào Tài khoản, chọn Bảo mật.',
+            'Chọn phương thức OTP hoặc 2FA.',
+            'Xác thực thông tin liên hệ.',
+            'Bật bảo mật và lưu thay đổi.'
+        ]
+    },
+    profile: {
+        title: 'Cập nhật SĐT hoặc Email',
+        intro: 'Bạn cần xác thực OTP trước khi đổi SĐT hoặc Email cho tài khoản.',
+        steps: [
+            'Vào Tài khoản, chọn Thông tin cá nhân.',
+            'Chọn cập nhật SĐT hoặc Email.',
+            'Nhập thông tin mới.',
+            'Nhập OTP để xác nhận thay đổi.'
+        ]
+    },
+    loyalty: {
+        title: 'Điểm EXP và hạng thành viên',
+        intro: 'EXP dùng để xét hạng thành viên và mở quyền lợi Loyalty.',
+        steps: [
+            'Vào Thành viên để xem hạng hiện tại.',
+            'Kiểm tra tiến trình EXP trong chu kỳ.',
+            'Làm nhiệm vụ hoặc giao dịch để nhận EXP.',
+            'Nhận thưởng khi đạt điều kiện nâng hạng.'
+        ]
+    },
+    inventory: {
+        title: 'Kiểm tra Túi đồ, vật phẩm và voucher',
+        intro: 'Túi đồ lưu voucher, vật phẩm và quà tặng bạn đã nhận.',
+        steps: [
+            'Vào Tài khoản, chọn Túi đồ.',
+            'Chọn loại vật phẩm cần xem.',
+            'Kiểm tra hạn dùng và điều kiện áp dụng.',
+            'Dùng vật phẩm trong màn thanh toán hoặc sự kiện phù hợp.'
+        ]
+    }
+};
+
 function filterSupportArticles() {
     const input = document.getElementById('support-search-input');
     const list = document.getElementById('support-article-list');
     const empty = document.getElementById('support-empty');
     if (!input || !list || !empty) return;
+
+    closeSupportFaq(false);
 
     const keyword = input.value.trim().toLowerCase();
     let visible = 0;
@@ -3261,6 +3462,44 @@ function filterSupportArticles() {
     });
 
     empty.classList.toggle('hidden', visible > 0);
+}
+
+function openSupportFaq(key) {
+    const faq = supportFaqData[key];
+    const list = document.getElementById('support-article-list');
+    const empty = document.getElementById('support-empty');
+    const detail = document.getElementById('support-faq-detail');
+    const content = document.getElementById('support-faq-detail-content');
+    if (!faq || !list || !detail || !content) return;
+
+    list.classList.add('hidden');
+    if (empty) empty.classList.add('hidden');
+    detail.classList.remove('hidden');
+
+    content.innerHTML = `
+        <article class="support-faq-card">
+            <h2>${faq.title}</h2>
+            <p>${faq.intro}</p>
+            <ol>
+                ${faq.steps.map(step => `<li>${step}</li>`).join('')}
+            </ol>
+        </article>
+    `;
+
+    detail.scrollIntoView({ behavior: 'smooth', block: 'start' });
+}
+
+function closeSupportFaq(shouldScroll = true) {
+    const list = document.getElementById('support-article-list');
+    const detail = document.getElementById('support-faq-detail');
+    if (!list || !detail) return;
+
+    detail.classList.add('hidden');
+    list.classList.remove('hidden');
+
+    if (shouldScroll) {
+        list.scrollIntoView({ behavior: 'smooth', block: 'start' });
+    }
 }
 
 // ================================================================
