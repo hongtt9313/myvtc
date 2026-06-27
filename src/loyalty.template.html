@@ -15,11 +15,21 @@
 <main id="loyalty-page" class="loyalty-page">
     <div class="site-container loyalty-shell">
         <aside class="account-sidebar loyalty-sidebar">
-            <h2>THÀNH VIÊN</h2>
-            <button class="account-tab-btn active" data-loyalty-tab="rank" onclick="showLoyaltyTab('rank')">Hạng thành viên</button>
-            <button class="account-tab-btn" data-loyalty-tab="missions" onclick="showLoyaltyTab('missions')">Nhiệm vụ</button>
-            <button class="account-tab-btn" data-loyalty-tab="history" onclick="showLoyaltyTab('history')">Lịch sử</button>
-            <button class="account-tab-btn" data-loyalty-tab="bag" onclick="showLoyaltyTab('bag')">Túi đồ</button>
+            <button class="mobile-body-menu-head" type="button" onclick="toggleLoyaltyBodyMenu()" aria-label="Mở danh mục thành viên">
+                <span>
+                    <small>THÀNH VIÊN</small>
+                    <strong id="loyalty-mobile-active-label">Hạng thành viên</strong>
+                </span>
+                <i class="fas fa-chevron-down" id="loyalty-mobile-menu-icon"></i>
+            </button>
+
+            <div class="body-tab-menu" id="loyalty-body-tab-menu">
+                <h2>THÀNH VIÊN</h2>
+                <button class="account-tab-btn active" data-loyalty-tab="rank" onclick="showLoyaltyTab('rank')">Hạng thành viên</button>
+                <button class="account-tab-btn" data-loyalty-tab="missions" onclick="showLoyaltyTab('missions')">Nhiệm vụ</button>
+                <button class="account-tab-btn" data-loyalty-tab="history" onclick="showLoyaltyTab('history')">Lịch sử</button>
+                <button class="account-tab-btn" data-loyalty-tab="bag" onclick="showLoyaltyTab('bag')">Túi đồ</button>
+            </div>
         </aside>
 
         <section class="account-content loyalty-content">
