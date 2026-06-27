@@ -27,45 +27,53 @@
             <input id="support-search-input" type="text" placeholder="Tìm kiếm câu hỏi hoặc chủ đề hỗ trợ" oninput="filterSupportArticles()"/>
         </div>
 
-        <div class="support-section-head">
-            <h2>10 bài viết thường được hỏi</h2>
-            <p>Chọn bài viết để xem hướng dẫn nhanh.</p>
+         <div class="support-section-head">
+            <h2>Câu hỏi thường gặp</h2>
+            <p>Chọn câu hỏi để xem nội dung chi tiết.</p>
         </div>
 
-        <div class="support-article-list" id="support-article-list">
-            <article class="support-article" data-title="Đăng nhập tài khoản MyVTC">
+                <div class="support-article-list" id="support-article-list">
+            <article class="support-article" data-faq="login" data-title="Đăng nhập tài khoản MyVTC" onclick="openSupportFaq('login')">
                 <span>01</span><div><h3>Cách đăng nhập tài khoản MyVTC</h3><p>Hướng dẫn đăng nhập bằng mật khẩu, OTP và tài khoản mạng xã hội.</p></div><i class="fas fa-chevron-right"></i>
             </article>
-            <article class="support-article" data-title="Quên mật khẩu">
+            <article class="support-article" data-faq="forgot" data-title="Quên mật khẩu" onclick="openSupportFaq('forgot')">
                 <span>02</span><div><h3>Tôi quên mật khẩu thì làm gì?</h3><p>Các bước lấy lại mật khẩu bằng SĐT, Email hoặc tên tài khoản.</p></div><i class="fas fa-chevron-right"></i>
             </article>
-            <article class="support-article" data-title="Liên kết tài khoản dịch vụ">
+            <article class="support-article" data-faq="link" data-title="Liên kết tài khoản dịch vụ" onclick="openSupportFaq('link')">
                 <span>03</span><div><h3>Liên kết tài khoản dịch vụ</h3><p>Hướng dẫn liên kết tài khoản khách và tài khoản MyVTC.</p></div><i class="fas fa-chevron-right"></i>
             </article>
-            <article class="support-article" data-title="Nạp Point MyVTC">
+            <article class="support-article" data-faq="topup" data-title="Nạp Point MyVTC" onclick="openSupportFaq('topup')">
                 <span>04</span><div><h3>Cách nạp Point MyVTC</h3><p>Các phương thức nạp số dư và kiểm tra giao dịch.</p></div><i class="fas fa-chevron-right"></i>
             </article>
-            <article class="support-article" data-title="Thanh toán gói dịch vụ">
+            <article class="support-article" data-faq="payment" data-title="Thanh toán gói dịch vụ" onclick="openSupportFaq('payment')">
                 <span>05</span><div><h3>Thanh toán gói dịch vụ không thành công</h3><p>Nguyên nhân thường gặp và cách kiểm tra trạng thái đơn hàng.</p></div><i class="fas fa-chevron-right"></i>
             </article>
-            <article class="support-article" data-title="Voucher mã giảm giá">
+            <article class="support-article" data-faq="voucher" data-title="Voucher mã giảm giá" onclick="openSupportFaq('voucher')">
                 <span>06</span><div><h3>Cách nhập voucher khi thanh toán</h3><p>Điều kiện áp dụng mã giảm giá và cách kiểm tra ưu đãi.</p></div><i class="fas fa-chevron-right"></i>
             </article>
-            <article class="support-article" data-title="Bảo mật OTP 2FA">
+            <article class="support-article" data-faq="security" data-title="Bảo mật OTP 2FA" onclick="openSupportFaq('security')">
                 <span>07</span><div><h3>Thiết lập bảo mật OTP và 2FA</h3><p>Hướng dẫn bật xác thực hai bước cho tài khoản.</p></div><i class="fas fa-chevron-right"></i>
             </article>
-            <article class="support-article" data-title="Cập nhật số điện thoại email">
+            <article class="support-article" data-faq="profile" data-title="Cập nhật số điện thoại email" onclick="openSupportFaq('profile')">
                 <span>08</span><div><h3>Cập nhật SĐT hoặc Email</h3><p>Cách thay đổi thông tin liên hệ và xác thực OTP.</p></div><i class="fas fa-chevron-right"></i>
             </article>
-            <article class="support-article" data-title="Loyalty EXP hạng thành viên">
+            <article class="support-article" data-faq="loyalty" data-title="Loyalty EXP hạng thành viên" onclick="openSupportFaq('loyalty')">
                 <span>09</span><div><h3>Điểm EXP và hạng thành viên</h3><p>Cách tích EXP, nâng hạng và nhận ưu đãi Loyalty.</p></div><i class="fas fa-chevron-right"></i>
             </article>
-            <article class="support-article" data-title="Túi đồ vật phẩm voucher">
+            <article class="support-article" data-faq="inventory" data-title="Túi đồ vật phẩm voucher" onclick="openSupportFaq('inventory')">
                 <span>10</span><div><h3>Kiểm tra Túi đồ, vật phẩm và voucher</h3><p>Nơi xem các phần thưởng đã nhận trong tài khoản.</p></div><i class="fas fa-chevron-right"></i>
             </article>
         </div>
 
-        <div class="support-empty hidden" id="support-empty">Không tìm thấy bài viết phù hợp.</div>
+        <div class="support-empty hidden" id="support-empty">Không tìm thấy câu hỏi phù hợp.</div>
+
+        <section class="support-faq-detail hidden" id="support-faq-detail">
+            <button type="button" class="support-back-btn" onclick="closeSupportFaq()">
+                <i class="fas fa-arrow-left"></i>
+                Quay lại câu hỏi thường gặp
+            </button>
+            <div id="support-faq-detail-content"></div>
+        </section>
     </section>
 </main>
 
