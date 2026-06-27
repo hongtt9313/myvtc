@@ -1,0 +1,836 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+<meta charset="utf-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>VTC Pay CMS - Admin Portal</title>
+<link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet"/>
+<style>
+    * {
+        box-sizing: border-box;
+    }
+
+    body {
+        margin: 0;
+        font-family: Arial, Helvetica, sans-serif;
+        font-size: 14px;
+        color: #222;
+        background: #f5f5f5;
+    }
+
+    .cms-top-line {
+        height: 6px;
+        background: #0072bc;
+    }
+
+    .cms-header {
+        height: 58px;
+        background: #fff;
+        border-bottom: 1px solid #d7d7d7;
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        padding: 0 18px;
+    }
+
+    .cms-left {
+        display: flex;
+        align-items: center;
+        gap: 14px;
+    }
+
+    .cms-logo {
+        height: 38px;
+        width: 128px;
+        object-fit: contain;
+    }
+
+    .cms-nav {
+        display: flex;
+        align-items: center;
+        gap: 6px;
+    }
+
+    .cms-nav-btn {
+        border: 1px solid #1c5f96;
+        background: linear-gradient(#337fb8, #1c5f96);
+        color: #fff;
+        border-radius: 4px;
+        height: 34px;
+        padding: 0 14px;
+        display: inline-flex;
+        align-items: center;
+        gap: 8px;
+        cursor: pointer;
+        font-weight: 600;
+        box-shadow: inset 0 1px rgba(255, 255, 255, 0.25);
+    }
+
+    .cms-nav-btn:hover,
+    .cms-nav-btn.active {
+        background: linear-gradient(#236fa8, #174f80);
+    }
+
+    .cms-user {
+        display: flex;
+        align-items: center;
+        gap: 24px;
+        color: #1262aa;
+        font-weight: 600;
+    }
+
+    .cms-page {
+        margin: 0 15px 22px;
+        border: 1px solid #1f83cf;
+        background: #fff;
+    }
+
+    .cms-panel-title {
+        background: linear-gradient(#337fb8, #1c6ca5);
+        color: #fff;
+        height: 36px;
+        display: flex;
+        align-items: center;
+        padding: 0 14px;
+        font-weight: 600;
+        gap: 8px;
+    }
+
+    .cms-toolbar {
+        padding: 16px 16px 10px;
+        display: flex;
+        align-items: center;
+        flex-wrap: wrap;
+        gap: 14px 28px;
+    }
+
+    .cms-form-row {
+        display: flex;
+        align-items: center;
+        gap: 10px;
+        min-width: 300px;
+    }
+
+    .cms-form-row label {
+        min-width: 100px;
+        font-weight: 700;
+    }
+
+    .cms-input,
+    .cms-select {
+        height: 34px;
+        border: 1px solid #ccc;
+        border-radius: 3px;
+        padding: 0 10px;
+        background: #fff;
+    }
+
+    .cms-date {
+        display: inline-flex;
+        align-items: center;
+        border: 1px solid #ccc;
+        border-radius: 3px;
+        overflow: hidden;
+        background: #fff;
+        height: 34px;
+    }
+
+    .cms-date input {
+        height: 32px;
+        border: 0;
+        width: 135px;
+        padding: 0 10px;
+    }
+
+    .cms-date button {
+        width: 36px;
+        height: 32px;
+        border: 0;
+        border-left: 1px solid #ccc;
+        background: #eee;
+    }
+
+    .cms-actions {
+        width: 100%;
+        display: flex;
+        justify-content: center;
+        gap: 6px;
+    }
+
+    .cms-btn {
+        border: 1px solid transparent;
+        border-radius: 4px;
+        height: 34px;
+        padding: 0 13px;
+        color: #fff;
+        cursor: pointer;
+        display: inline-flex;
+        align-items: center;
+        gap: 7px;
+        font-weight: 600;
+    }
+
+    .cms-btn.blue {
+        background: #2da7d8;
+        border-color: #1d91bf;
+    }
+
+    .cms-btn.red {
+        background: #c9302c;
+        border-color: #ac2925;
+    }
+
+    .cms-btn.green {
+        background: #42a542;
+        border-color: #398439;
+    }
+
+    .cms-btn.orange {
+        background: #f0ad4e;
+        border-color: #eea236;
+    }
+
+    .cms-btn.gray {
+        background: #eee;
+        color: #333;
+        border-color: #ccc;
+    }
+
+    .cms-table-tools {
+        padding: 0 16px 8px;
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+    }
+
+    .cms-mini-tools {
+        display: flex;
+        gap: 6px;
+    }
+
+    .cms-mini-btn {
+        height: 30px;
+        border: 1px solid #ccc;
+        background: #fff;
+        border-radius: 3px;
+        padding: 0 12px;
+        cursor: pointer;
+        color: #176ca8;
+    }
+
+    .cms-search {
+        display: flex;
+        align-items: center;
+        gap: 4px;
+    }
+
+    .cms-table-wrap {
+        margin: 0 16px 12px;
+        overflow-x: auto;
+        border-bottom: 1px solid #ddd;
+    }
+
+    .cms-table {
+        width: 100%;
+        border-collapse: collapse;
+        min-width: 980px;
+    }
+
+    .cms-table th {
+        background: #d9edf7;
+        border: 1px solid #c6dce8;
+        padding: 9px 8px;
+        text-align: center;
+        font-weight: 700;
+    }
+
+    .cms-table td {
+        border: 1px solid #ddd;
+        padding: 7px 8px;
+        text-align: center;
+        background: #fff;
+    }
+
+    .cms-table tr:nth-child(even) td {
+        background: #f8f8f8;
+    }
+
+    .text-left {
+        text-align: left !important;
+    }
+
+    .text-right {
+        text-align: right !important;
+    }
+
+    .cms-page-footer {
+        padding: 0 16px 18px;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+    }
+
+    .cms-pagination {
+        display: flex;
+        gap: 0;
+    }
+
+    .cms-pagination button {
+        height: 34px;
+        min-width: 34px;
+        border: 1px solid #ddd;
+        background: #fff;
+        color: #337ab7;
+        cursor: pointer;
+    }
+
+    .cms-pagination button.active {
+        background: #337ab7;
+        color: #fff;
+    }
+
+    .cms-pagination button:disabled {
+        color: #aaa;
+        cursor: default;
+    }
+
+    .cms-bottom-scroll {
+        height: 16px;
+        margin: 0 16px 16px;
+        overflow-x: auto;
+    }
+
+    .cms-bottom-scroll div {
+        width: 1600px;
+        height: 1px;
+    }
+
+    .cms-form {
+        max-width: 720px;
+        margin: 18px auto 0;
+        padding: 0 12px 22px;
+    }
+
+    .cms-section-head {
+        height: 40px;
+        background: #d9edf7;
+        border-top: 1px solid #bce8f1;
+        border-bottom: 1px solid #bce8f1;
+        color: #31708f;
+        display: flex;
+        align-items: center;
+        padding: 0 18px;
+        font-size: 18px;
+        gap: 8px;
+    }
+
+    .cms-edit-row {
+        display: grid;
+        grid-template-columns: 210px 1fr;
+        gap: 16px;
+        align-items: center;
+        margin-bottom: 15px;
+    }
+
+    .cms-edit-row label {
+        text-align: right;
+        font-weight: 700;
+    }
+
+    .cms-edit-row input,
+    .cms-edit-row select {
+        width: 100%;
+        height: 36px;
+        border: 1px solid #ccc;
+        border-radius: 3px;
+        padding: 0 12px;
+    }
+
+    .required {
+        color: #d00;
+    }
+
+    .cms-form-bottom {
+        background: #f5f5f5;
+        padding: 12px;
+        text-align: center;
+        border-top: 1px solid #eee;
+    }
+
+    .cms-check {
+        width: 16px;
+        height: 16px;
+    }
+
+    .ok {
+        color: green;
+        font-weight: 700;
+    }
+
+    .no {
+        color: red;
+        font-weight: 700;
+    }
+
+    .cms-tree-wrap {
+        width: 960px;
+        margin: 16px auto 14px;
+        overflow-x: auto;
+    }
+
+    .cms-tree-actions {
+        text-align: center;
+        padding: 16px 0 4px;
+    }
+
+    .tree-table {
+        width: 100%;
+        border-collapse: collapse;
+        min-width: 760px;
+    }
+
+    .tree-table td,
+    .tree-table th {
+        border: 1px solid #2792e8;
+        height: 30px;
+        padding: 0 10px;
+    }
+
+    .tree-table th {
+        background: #fff;
+    }
+
+    .tree-name {
+        text-align: left;
+        color: #1d70b7;
+    }
+
+    .tree-l1 {
+        padding-left: 18px !important;
+    }
+
+    .tree-l2 {
+        padding-left: 38px !important;
+    }
+
+    .tree-l3 {
+        padding-left: 58px !important;
+    }
+
+    .icon-btn {
+        width: 28px;
+        height: 28px;
+        border: 0;
+        border-radius: 50%;
+        color: #fff;
+        margin: 0 2px;
+        cursor: pointer;
+    }
+
+    .icon-btn.orange {
+        background: #f0ad4e;
+    }
+
+    .icon-btn.red {
+        background: #d9534f;
+    }
+
+    .icon-btn.blue {
+        background: #337ab7;
+    }
+
+    .cms-alert {
+        margin: 0 15px 18px;
+        background: #f3f3f3;
+        padding: 7px 10px;
+        border-top: 1px solid #eee;
+        border-bottom: 1px solid #eee;
+    }
+
+    .cms-alert b {
+        background: #ff4b2b;
+        color: #fff;
+        padding: 5px 9px;
+        border-radius: 2px;
+        margin-right: 6px;
+    }
+
+    .cms-hidden {
+        display: none;
+    }
+
+    @media (max-width: 768px) {
+        .cms-header {
+            height: auto;
+            align-items: flex-start;
+            gap: 10px;
+            padding: 10px;
+            flex-direction: column;
+        }
+
+        .cms-left {
+            width: 100%;
+            align-items: flex-start;
+            flex-direction: column;
+        }
+
+        .cms-nav {
+            width: 100%;
+            overflow-x: auto;
+            padding-bottom: 4px;
+        }
+
+        .cms-page {
+            margin: 0 8px 18px;
+        }
+
+        .cms-form-row {
+            width: 100%;
+            min-width: 0;
+            flex-direction: column;
+            align-items: flex-start;
+        }
+
+        .cms-actions {
+            justify-content: flex-start;
+        }
+
+        .cms-table-tools,
+        .cms-page-footer {
+            flex-direction: column;
+            align-items: flex-start;
+            gap: 10px;
+        }
+
+        .cms-edit-row {
+            grid-template-columns: 1fr;
+            gap: 6px;
+        }
+
+        .cms-edit-row label {
+            text-align: left;
+        }
+
+        .cms-tree-wrap {
+            width: auto;
+            margin: 12px;
+        }
+    }
+</style>
+</head>
+<body>
+<div class="cms-top-line"></div>
+
+<header class="cms-header">
+    <div class="cms-left">
+        <img class="cms-logo" alt="VTC Pay" src="https://pay.vtc.vn/Content/images/logo-vtcpay.png"/>
+        <nav class="cms-nav">
+            <button class="cms-nav-btn active" onclick="showCmsPage('logs', this)"><i class="fa fa-cogs"></i> Hệ thống <i class="fa fa-caret-down"></i></button>
+            <button class="cms-nav-btn" onclick="showCmsPage('functions', this)"><i class="fa fa-cubes"></i> Sản phẩm <i class="fa fa-caret-down"></i></button>
+            <button class="cms-nav-btn" onclick="showCmsPage('users', this)"><i class="fa fa-users"></i> Tài khoản <i class="fa fa-caret-down"></i></button>
+        </nav>
+    </div>
+    <div class="cms-user">
+        <span>hongtt <i class="fa fa-angle-down"></i></span>
+        <i class="fa fa-sign-out-alt"></i>
+    </div>
+</header>
+
+<main>
+    <section class="cms-page" id="cms-page-logs">
+        <div class="cms-panel-title"><i class="fa fa-list"></i> Quản Lý User Log</div>
+
+        <div class="cms-toolbar">
+            <div class="cms-form-row">
+                <label>Từ Ngày</label>
+                <span class="cms-date">
+                    <input value="27/06/2024 04:38"/>
+                    <button><i class="fa fa-calendar"></i></button>
+                </span>
+            </div>
+
+            <div class="cms-form-row">
+                <label>Đến Ngày</label>
+                <span class="cms-date">
+                    <input value="28/06/2026 04:38"/>
+                    <button><i class="fa fa-calendar"></i></button>
+                </span>
+            </div>
+
+            <div class="cms-form-row">
+                <label>chức năng</label>
+                <select class="cms-select">
+                    <option>Tất cả</option>
+                    <option>Tra cứu thông tin tài khoản</option>
+                    <option>Quản trị sản phẩm</option>
+                </select>
+            </div>
+
+            <div class="cms-form-row">
+                <label>Tài khoản</label>
+                <select class="cms-select">
+                    <option>Tất cả</option>
+                    <option>hongtt</option>
+                    <option>toanth</option>
+                </select>
+            </div>
+
+            <div class="cms-actions">
+                <button class="cms-btn blue"><i class="fa fa-search"></i> Tìm Kiếm</button>
+                <button class="cms-btn red">Xóa</button>
+            </div>
+        </div>
+
+        <div class="cms-table-tools">
+            <div class="cms-mini-tools">
+                <button class="cms-mini-btn"><i class="fa fa-arrow-down-wide-short"></i> Hiện 25 dòng</button>
+                <button class="cms-mini-btn"><i class="fa fa-eye-slash"></i> Ẩn/hiện cột</button>
+            </div>
+            <label class="cms-search">Tìm Kiếm:<input class="cms-input"/></label>
+        </div>
+
+        <div class="cms-table-wrap">
+            <table class="cms-table">
+                <thead>
+                    <tr>
+                        <th>Thời gian</th>
+                        <th>UserID</th>
+                        <th>Username</th>
+                        <th>Họ Tên</th>
+                        <th>Tên chức năng</th>
+                        <th>Mô tả</th>
+                        <th>ClientIP</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr><td>26/06/2026 13:59</td><td>12118</td><td>hongtt</td><td>Trần Thúy Hồng</td><td>Tra cứu thông tin tài khoản</td><td class="text-left">Tài khoản: hongtt tra cứu thông tin tài khoản 0936168687</td><td>117.103.228.53</td></tr>
+                    <tr><td>26/06/2026 13:59</td><td>12118</td><td>hongtt</td><td>Trần Thúy Hồng</td><td>Tra cứu thông tin tài khoản</td><td class="text-left">Tài khoản: hongtt (Hủy) xác thực thành công</td><td>117.103.228.53</td></tr>
+                    <tr><td>26/06/2026 13:58</td><td>12124</td><td>toanth</td><td>Trần Hùng Toàn</td><td>Tra cứu thông tin tài khoản</td><td class="text-left">Tài khoản: toanth tra cứu thông tin tài khoản 0936168687</td><td>117.103.228.53</td></tr>
+                    <tr><td>25/06/2026 09:32</td><td>12118</td><td>hongtt</td><td>Trần Thúy Hồng</td><td>Tra cứu thông tin tài khoản</td><td class="text-left">Tài khoản: hongtt tra cứu thông tin tài khoản 0961381232</td><td>117.103.228.53</td></tr>
+                    <tr><td>22/06/2026 15:14</td><td>12118</td><td>hongtt</td><td>Trần Thúy Hồng</td><td>Quản trị sản phẩm</td><td class="text-left">Tài khoản: hongtt (Cập nhật) sản phẩm thành công</td><td>117.103.228.53</td></tr>
+                    <tr><td>22/06/2026 15:13</td><td>12118</td><td>hongtt</td><td>Trần Thúy Hồng</td><td>Quản trị sản phẩm</td><td class="text-left">Tài khoản: hongtt (Cập nhật) sản phẩm thành công</td><td>117.103.228.53</td></tr>
+                    <tr><td>22/06/2026 15:12</td><td>12118</td><td>hongtt</td><td>Trần Thúy Hồng</td><td>Quản trị sản phẩm</td><td class="text-left">Tài khoản: hongtt (Cập nhật) sản phẩm thành công</td><td>117.103.228.53</td></tr>
+                    <tr><td>17/06/2026 08:42</td><td>12124</td><td>toanth</td><td>Trần Hùng Toàn</td><td>Tra cứu thông tin tài khoản</td><td class="text-left">Tài khoản: toanth tra cứu thông tin tài khoản 0817260666</td><td>117.103.228.53</td></tr>
+                </tbody>
+            </table>
+        </div>
+
+        <div class="cms-page-footer">
+            <span>Hiển thị từ 1 tới 25 của 674 bản ghi</span>
+            <div class="cms-pagination">
+                <button disabled>Trước</button>
+                <button class="active">1</button>
+                <button>2</button>
+                <button>3</button>
+                <button>4</button>
+                <button>5</button>
+                <button>...</button>
+                <button>27</button>
+                <button>Tiếp</button>
+            </div>
+        </div>
+        <div class="cms-bottom-scroll"><div></div></div>
+    </section>
+
+    <section class="cms-page cms-hidden" id="cms-page-users">
+        <div class="cms-panel-title"><i class="fa fa-user"></i> Tìm Kiếm Danh Sách Người Dùng</div>
+
+        <div class="cms-toolbar">
+            <div class="cms-form-row">
+                <label><i class="fa fa-flag"></i> Trạng thái</label>
+                <select class="cms-select">
+                    <option>Lấy tất cả</option>
+                    <option>Đang hoạt động</option>
+                    <option>Tạm khóa</option>
+                </select>
+            </div>
+            <button class="cms-btn green"><i class="fa fa-user-plus"></i> Thêm User</button>
+        </div>
+
+        <div class="cms-table-tools">
+            <div class="cms-mini-tools">
+                <button class="cms-mini-btn"><i class="fa fa-arrow-down-wide-short"></i> Hiện 25 dòng</button>
+                <button class="cms-mini-btn"><i class="fa fa-eye-slash"></i> Ẩn/hiện cột</button>
+            </div>
+            <label class="cms-search">Tìm Kiếm:<input class="cms-input"/></label>
+        </div>
+
+        <div class="cms-table-wrap">
+            <table class="cms-table">
+                <thead>
+                    <tr>
+                        <th>Mã User</th>
+                        <th>Admin</th>
+                        <th>Username</th>
+                        <th>Email</th>
+                        <th>Họ Tên</th>
+                        <th>Trạng Thái</th>
+                        <th>Người Tạo</th>
+                        <th>Chức Năng</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr><td>12132</td><td class="ok">✔</td><td>giang.hoang</td><td>giang.hoang@vtc.vn</td><td>Hoàng Đức Giang</td><td class="ok">✔</td><td>tuanhd</td><td><button class="icon-btn red"><i class="fa fa-ban"></i></button><button class="icon-btn orange"><i class="fa fa-edit"></i></button><button class="icon-btn blue"><i class="fa fa-cogs"></i></button><button class="icon-btn red"><i class="fa fa-trash"></i></button></td></tr>
+                    <tr><td>12131</td><td class="no">⊘</td><td>tuanhd1</td><td>tuanhd1@vtc.vn</td><td>tuanhd1</td><td class="ok">✔</td><td>tuanhd</td><td><button class="icon-btn red"><i class="fa fa-ban"></i></button><button class="icon-btn orange"><i class="fa fa-edit"></i></button><button class="icon-btn blue"><i class="fa fa-cogs"></i></button><button class="icon-btn red"><i class="fa fa-trash"></i></button></td></tr>
+                    <tr><td>12130</td><td class="no">⊘</td><td>toanphuong.nguyen</td><td>toanphuong.nguyen@vtc.vn</td><td>toanphuong.nguyen</td><td class="ok">✔</td><td>hongtt2</td><td><button class="icon-btn red"><i class="fa fa-ban"></i></button><button class="icon-btn orange"><i class="fa fa-edit"></i></button><button class="icon-btn blue"><i class="fa fa-cogs"></i></button><button class="icon-btn red"><i class="fa fa-trash"></i></button></td></tr>
+                    <tr><td>12124</td><td class="no">⊘</td><td>toanth</td><td>toanth@vtc.vn</td><td>Trần Hùng Toàn</td><td class="ok">✔</td><td>tuanhd</td><td><button class="icon-btn red"><i class="fa fa-ban"></i></button><button class="icon-btn orange"><i class="fa fa-edit"></i></button><button class="icon-btn blue"><i class="fa fa-cogs"></i></button><button class="icon-btn red"><i class="fa fa-trash"></i></button></td></tr>
+                    <tr><td>12118</td><td class="ok">✔</td><td>hongtt</td><td>hongtt@vtc.vn</td><td>Trần Thúy Hồng</td><td class="ok">✔</td><td>hanhpd</td><td><button class="icon-btn red"><i class="fa fa-ban"></i></button><button class="icon-btn orange"><i class="fa fa-edit"></i></button><button class="icon-btn blue"><i class="fa fa-cogs"></i></button><button class="icon-btn red"><i class="fa fa-trash"></i></button></td></tr>
+                    <tr><td>10118</td><td class="no">⊘</td><td>binhdt</td><td>binhdt@vtc.vn</td><td>Đỗ Thanh Bình</td><td class="ok">✔</td><td>hongtt</td><td><button class="icon-btn red"><i class="fa fa-ban"></i></button><button class="icon-btn orange"><i class="fa fa-edit"></i></button><button class="icon-btn blue"><i class="fa fa-cogs"></i></button><button class="icon-btn red"><i class="fa fa-trash"></i></button></td></tr>
+                </tbody>
+            </table>
+        </div>
+
+        <div class="cms-page-footer">
+            <span>Hiển thị từ 1 tới 21 của 21 bản ghi</span>
+            <div class="cms-pagination">
+                <button disabled>Trước</button>
+                <button class="active">1</button>
+                <button>Tiếp</button>
+            </div>
+        </div>
+        <div class="cms-bottom-scroll"><div></div></div>
+    </section>
+
+    <section class="cms-page cms-hidden" id="cms-page-user-edit">
+        <div class="cms-panel-title"><i class="fa fa-user"></i> Cập Nhật User</div>
+        <div class="cms-alert"><b>Chú ý!</b> Hãy chắc chắn nhập vào đầy đủ thông tin tại các mục bắt buộc đánh dấu (*)</div>
+        <div class="cms-section-head"><i class="fa fa-wrench"></i> Thông Tin Cơ Bản</div>
+
+        <div class="cms-form">
+            <div class="cms-edit-row"><label>UserName : <span class="required">*</span></label><input value="giang.hoang"/></div>
+            <div class="cms-edit-row"><label>FullName : <span class="required">*</span></label><input value="Hoàng Đức Giang"/></div>
+            <div class="cms-edit-row"><label>Email : <span class="required">*</span></label><input value="giang.hoang@vtc.vn"/></div>
+            <div class="cms-edit-row"><label>Status :</label><input class="cms-check" type="checkbox" checked/></div>
+            <div class="cms-edit-row"><label>Admin :</label><input class="cms-check" type="checkbox" checked/></div>
+        </div>
+
+        <div class="cms-form-bottom">
+            <button class="cms-btn blue"><i class="fa fa-save"></i> Lưu lại</button>
+            <button class="cms-btn green"><i class="fa fa-refresh"></i> Làm mới</button>
+            <button class="cms-btn gray"><i class="fa fa-backward"></i> Back</button>
+        </div>
+    </section>
+
+    <section class="cms-page cms-hidden" id="cms-page-functions">
+        <div class="cms-panel-title"><i class="fa fa-wrench"></i> Danh Sách Chức Năng</div>
+
+        <div class="cms-tree-actions">
+            <button class="cms-btn green"><i class="fa fa-user-plus"></i> Thêm</button>
+            <button class="cms-btn orange"><i class="fa fa-sort-amount-down"></i> Sắp xếp</button>
+        </div>
+
+        <div class="cms-tree-wrap">
+            <table class="tree-table">
+                <tbody>
+                    <tr><td class="tree-name"><i class="fa fa-chevron-down"></i> <i class="fa fa-cogs"></i> (1) Hệ thống</td><td width="150"><button class="icon-btn orange"><i class="fa fa-edit"></i></button><button class="icon-btn red"><i class="fa fa-trash"></i></button></td></tr>
+                    <tr><td class="tree-name tree-l1"><i class="fa fa-wrench"></i> (2) Danh sách chức năng</td><td><button class="icon-btn orange"><i class="fa fa-edit"></i></button><button class="icon-btn red"><i class="fa fa-trash"></i></button><button class="icon-btn blue"><i class="fa fa-user"></i></button></td></tr>
+                    <tr><td class="tree-name tree-l1"><i class="fa fa-user"></i> (3) Quản trị người dùng</td><td><button class="icon-btn orange"><i class="fa fa-edit"></i></button><button class="icon-btn red"><i class="fa fa-trash"></i></button><button class="icon-btn blue"><i class="fa fa-user"></i></button></td></tr>
+                    <tr><td class="tree-name tree-l1"><i class="fa fa-list"></i> (4) Quản trị Log người dùng</td><td><button class="icon-btn orange"><i class="fa fa-edit"></i></button><button class="icon-btn red"><i class="fa fa-trash"></i></button><button class="icon-btn blue"><i class="fa fa-user"></i></button></td></tr>
+                    <tr><td class="tree-name tree-l1"><i class="fa fa-triangle-exclamation"></i> (5) Quản trị log lỗi hệ thống</td><td><button class="icon-btn orange"><i class="fa fa-edit"></i></button><button class="icon-btn red"><i class="fa fa-trash"></i></button><button class="icon-btn blue"><i class="fa fa-user"></i></button></td></tr>
+                    <tr><td class="tree-name"><i class="fa fa-chevron-down"></i> <i class="fa fa-users"></i> (9) Tài khoản</td><td><button class="icon-btn orange"><i class="fa fa-edit"></i></button><button class="icon-btn red"><i class="fa fa-trash"></i></button></td></tr>
+                    <tr><td class="tree-name tree-l1"><i class="fa fa-refresh"></i> (13) Reset mật khẩu tài khoản</td><td><button class="icon-btn orange"><i class="fa fa-edit"></i></button><button class="icon-btn red"><i class="fa fa-trash"></i></button><button class="icon-btn blue"><i class="fa fa-user"></i></button></td></tr>
+                    <tr><td class="tree-name tree-l1"><i class="fa fa-lock-open"></i> (11) Mở khóa tài khoản</td><td><button class="icon-btn orange"><i class="fa fa-edit"></i></button><button class="icon-btn red"><i class="fa fa-trash"></i></button><button class="icon-btn blue"><i class="fa fa-user"></i></button></td></tr>
+                    <tr><td class="tree-name tree-l1"><i class="fa fa-lock"></i> (12) Khóa tài khoản</td><td><button class="icon-btn orange"><i class="fa fa-edit"></i></button><button class="icon-btn red"><i class="fa fa-trash"></i></button><button class="icon-btn blue"><i class="fa fa-user"></i></button></td></tr>
+                    <tr><td class="tree-name tree-l1"><i class="fa fa-user-plus"></i> (1027) Tạo Tài khoản</td><td><button class="icon-btn orange"><i class="fa fa-edit"></i></button><button class="icon-btn red"><i class="fa fa-trash"></i></button><button class="icon-btn blue"><i class="fa fa-user"></i></button></td></tr>
+                    <tr><td class="tree-name tree-l1"><i class="fa fa-search"></i> (12172) Tra cứu thông tin tài khoản</td><td><button class="icon-btn orange"><i class="fa fa-edit"></i></button><button class="icon-btn red"><i class="fa fa-trash"></i></button><button class="icon-btn blue"><i class="fa fa-user"></i></button></td></tr>
+                    <tr><td class="tree-name"><i class="fa fa-chevron-down"></i> <i class="fa fa-cubes"></i> (12159) Sản phẩm</td><td><button class="icon-btn orange"><i class="fa fa-edit"></i></button><button class="icon-btn red"><i class="fa fa-trash"></i></button></td></tr>
+                    <tr><td class="tree-name tree-l1"><i class="fa fa-cube"></i> (12160) Quản trị loại sản phẩm</td><td><button class="icon-btn orange"><i class="fa fa-edit"></i></button><button class="icon-btn red"><i class="fa fa-trash"></i></button><button class="icon-btn blue"><i class="fa fa-user"></i></button></td></tr>
+                    <tr><td class="tree-name tree-l1"><i class="fa fa-users"></i> (12161) Quản trị đơn vị phân phối</td><td><button class="icon-btn orange"><i class="fa fa-edit"></i></button><button class="icon-btn red"><i class="fa fa-trash"></i></button><button class="icon-btn blue"><i class="fa fa-user"></i></button></td></tr>
+                    <tr><td class="tree-name tree-l1"><i class="fa fa-cube"></i> (12165) Quản trị sản phẩm</td><td><button class="icon-btn orange"><i class="fa fa-edit"></i></button><button class="icon-btn red"><i class="fa fa-trash"></i></button><button class="icon-btn blue"><i class="fa fa-user"></i></button></td></tr>
+                </tbody>
+            </table>
+        </div>
+    </section>
+
+    <section class="cms-page cms-hidden" id="cms-page-function-edit">
+        <div class="cms-alert"><b>Chú ý!</b> Hãy chắc chắn nhập vào đầy đủ thông tin tại các mục bắt buộc đánh dấu (*)</div>
+        <div class="cms-panel-title"><i class="fa fa-cogs"></i> Cập Nhật Chức Năng</div>
+        <div class="cms-section-head"><i class="fa fa-wrench"></i> Thông Tin Chức Năng</div>
+
+        <div class="cms-form">
+            <div class="cms-edit-row"><label>Tên chức năng : <span class="required">*</span></label><input placeholder="Nhập tên chức năng"/></div>
+            <div class="cms-edit-row"><label>ActionName Url :</label><input placeholder="Nhập ActionName"/></div>
+            <div class="cms-edit-row"><label>Chọn chức năng cha :</label><select><option>Chọn chức năng</option></select></div>
+            <div class="cms-edit-row"><label>Đường Dẫn : <span class="required">*</span></label><input placeholder="Enter Function Url"/></div>
+            <div class="cms-edit-row"><label>Mã Icon : <span class="required">*</span></label><input placeholder="nhập mã icon"/></div>
+            <div class="cms-edit-row"><label>Trạng thái hoạt động :</label><input class="cms-check" type="checkbox"/></div>
+            <div class="cms-edit-row"><label>Trạng thái hiển thị :</label><input class="cms-check" type="checkbox"/></div>
+        </div>
+
+        <div class="cms-form-bottom">
+            <button class="cms-btn blue"><i class="fa fa-save"></i> Lưu lại</button>
+            <button class="cms-btn green"><i class="fa fa-refresh"></i> Làm mới</button>
+            <button class="cms-btn gray"><i class="fa fa-backward"></i> Back</button>
+        </div>
+    </section>
+
+    <section class="cms-page cms-hidden" id="cms-page-permission">
+        <div class="cms-panel-title"><i class="fa fa-cogs"></i> Thông Tin Phân Quyền Tài khoản giang.hoang (Hoàng Đức Giang)</div>
+
+        <div class="cms-tree-wrap">
+            <table class="cms-table">
+                <thead>
+                    <tr>
+                        <th>Chức năng</th>
+                        <th>Xem</th>
+                        <th>Thêm</th>
+                        <th>Sửa</th>
+                        <th>Xóa</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr><td class="text-left"><i class="fa fa-minus"></i> <i class="fa fa-cogs"></i> Hệ thống</td><td><input type="checkbox"/></td><td><input type="checkbox"/></td><td><input type="checkbox"/></td><td><input type="checkbox"/></td></tr>
+                    <tr><td class="text-left tree-l1"><i class="fa fa-wrench"></i> Danh sách chức năng</td><td><input type="checkbox"/></td><td><input type="checkbox"/></td><td><input type="checkbox"/></td><td><input type="checkbox"/></td></tr>
+                    <tr><td class="text-left tree-l1"><i class="fa fa-users"></i> Quản trị Nhóm User</td><td><input type="checkbox"/></td><td><input type="checkbox"/></td><td><input type="checkbox"/></td><td><input type="checkbox"/></td></tr>
+                    <tr><td class="text-left tree-l1"><i class="fa fa-user"></i> Quản trị người dùng</td><td><input type="checkbox"/></td><td><input type="checkbox"/></td><td><input type="checkbox"/></td><td><input type="checkbox"/></td></tr>
+                    <tr><td class="text-left"><i class="fa fa-minus"></i> <i class="fa fa-cubes"></i> Sản phẩm</td><td><input type="checkbox"/></td><td><input type="checkbox"/></td><td><input type="checkbox"/></td><td><input type="checkbox"/></td></tr>
+                    <tr><td class="text-left tree-l1"><i class="fa fa-cube"></i> Quản trị sản phẩm</td><td><input type="checkbox"/></td><td><input type="checkbox"/></td><td><input type="checkbox"/></td><td><input type="checkbox"/></td></tr>
+                    <tr><td class="text-left"><i class="fa fa-minus"></i> <i class="fa fa-users"></i> Tài khoản</td><td><input type="checkbox"/></td><td><input type="checkbox"/></td><td><input type="checkbox"/></td><td><input type="checkbox"/></td></tr>
+                    <tr><td class="text-left tree-l1"><i class="fa fa-lock-open"></i> Mở khóa tài khoản</td><td><input type="checkbox"/></td><td><input type="checkbox"/></td><td><input type="checkbox"/></td><td><input type="checkbox"/></td></tr>
+                    <tr><td class="text-left tree-l1"><i class="fa fa-lock"></i> Khóa tài khoản</td><td><input type="checkbox"/></td><td><input type="checkbox"/></td><td><input type="checkbox"/></td><td><input type="checkbox"/></td></tr>
+                    <tr><td class="text-left tree-l1"><i class="fa fa-search"></i> Tra cứu thông tin tài khoản</td><td><input type="checkbox"/></td><td><input type="checkbox"/></td><td><input type="checkbox"/></td><td><input type="checkbox"/></td></tr>
+                </tbody>
+            </table>
+        </div>
+
+        <div class="cms-form-bottom">
+            <button class="cms-btn blue"><i class="fa fa-save"></i> Lưu lại</button>
+            <button class="cms-btn gray"><i class="fa fa-backward"></i> Quay lại</button>
+        </div>
+    </section>
+</main>
+
+<script>
+    function showCmsPage(page, btn) {
+        document.querySelectorAll('.cms-page').forEach(function (item) {
+            item.classList.add('cms-hidden');
+        });
+
+        var target = document.getElementById('cms-page-' + page);
+        if (target) {
+            target.classList.remove('cms-hidden');
+        }
+
+        document.querySelectorAll('.cms-nav-btn').forEach(function (item) {
+            item.classList.remove('active');
+        });
+
+        if (btn) {
+            btn.classList.add('active');
+        }
+    }
+
+    document.addEventListener('click', function (event) {
+        var editBtn = event.target.closest('.icon-btn.orange');
+        if (editBtn) {
+            showCmsPage('function-edit');
+        }
+
+        var permissionBtn = event.target.closest('.icon-btn.blue');
+        if (permissionBtn) {
+            showCmsPage('permission');
+        }
+    });
+</script>
+</body>
+</html>
