@@ -15,14 +15,24 @@
 <main id="my-account-page" class="account-page">
     <div class="site-container account-shell">
         <aside class="account-sidebar">
-            <h2>TÀI KHOẢN</h2>
-            <button class="account-tab-btn active" data-tab="personal" onclick="showAccountTab('personal')">Thông tin cá nhân</button>
-<button class="account-tab-btn" data-tab="linked" onclick="showAccountTab('linked')">Tài khoản liên kết</button>
-<button class="account-tab-btn" data-tab="security" onclick="showAccountTab('security')">Bảo mật tài khoản</button>
-<button class="account-tab-btn" data-tab="payment" onclick="showAccountTab('payment')">Quản lý thanh toán</button>
-<button class="account-tab-btn" data-tab="transactions" onclick="showAccountTab('transactions')">Lịch sử giao dịch</button>
-<button class="account-tab-btn" data-tab="notifications" onclick="showAccountTab('notifications')">Thông báo</button>
-<button class="account-tab-btn" data-tab="terms" onclick="showAccountTab('terms')">Điều khoản sử dụng</button>
+            <button class="mobile-body-menu-head" type="button" onclick="toggleAccountBodyMenu()" aria-label="Mở danh mục tài khoản">
+                <span>
+                    <small>TÀI KHOẢN</small>
+                    <strong id="account-mobile-active-label">Thông tin cá nhân</strong>
+                </span>
+                <i class="fas fa-chevron-down" id="account-mobile-menu-icon"></i>
+            </button>
+
+            <div class="body-tab-menu" id="account-body-tab-menu">
+                <h2>TÀI KHOẢN</h2>
+                <button class="account-tab-btn active" data-tab="personal" onclick="showAccountTab('personal')">Thông tin cá nhân</button>
+                <button class="account-tab-btn" data-tab="linked" onclick="showAccountTab('linked')">Tài khoản liên kết</button>
+                <button class="account-tab-btn" data-tab="security" onclick="showAccountTab('security')">Bảo mật tài khoản</button>
+                <button class="account-tab-btn" data-tab="payment" onclick="showAccountTab('payment')">Quản lý thanh toán</button>
+                <button class="account-tab-btn" data-tab="transactions" onclick="showAccountTab('transactions')">Lịch sử giao dịch</button>
+                <button class="account-tab-btn" data-tab="notifications" onclick="showAccountTab('notifications')">Thông báo</button>
+                <button class="account-tab-btn" data-tab="terms" onclick="showAccountTab('terms')">Điều khoản sử dụng</button>
+            </div>
         </aside>
 
         <section class="account-content">
