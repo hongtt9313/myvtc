@@ -2218,11 +2218,13 @@ const loyaltyRankData = {
         progress: '20 / 2.000 EXP',
         percent: 1,
         deadline: '',
-        missionDesc: 'Để mở khóa quyền lợi hạng Vàng, người dùng cần hoàn thành 3 điều kiện:',
+        missionDesc: 'Để mở khóa quyền lợi hạng Vàng, người dùng cần hoàn thành điều kiện thăng hạng:',
         missions: [
-            { title: 'Tích lũy 2.000 EXP', desc: 'EXP được cộng từ giao dịch, nhiệm vụ và hoạt động hợp lệ.', action: 'Xem nhiệm vụ' },
-            { title: 'Nạp 2.000 Points', desc: 'Tổng nạp Points đạt ngưỡng trong chu kỳ xét hạng.', action: 'Nạp ngay' },
-            { title: 'Hoàn thành 5 ngày điểm danh', desc: 'Điểm danh đủ 5 ngày trong chu kỳ hiện tại.', action: 'Điểm danh' }
+            { title: 'Thăng hạng: Tích lũy 2.000 EXP', desc: 'EXP được cộng từ giao dịch, nhiệm vụ và hoạt động hợp lệ.', action: 'Xem nhiệm vụ' },
+            { title: 'Thăng hạng: Nạp 2.000 Points', desc: 'Tổng nạp Points đạt ngưỡng trong chu kỳ xét hạng.', action: 'Nạp ngay' },
+            { title: 'Thăng hạng: Hoàn thành 5 ngày điểm danh', desc: 'Điểm danh đủ 5 ngày trong chu kỳ hiện tại.', action: 'Điểm danh' },
+            { title: 'Duy trì hạng Bạc: Đạt 500 Cycle EXP', desc: 'Nếu kết thúc chu kỳ mà không đạt 500 Cycle EXP, hệ thống giáng xuống hạng Đồng.', action: 'Xem điều kiện' },
+            { title: 'Duy trì hạng Bạc: Có ít nhất 1 giao dịch hợp lệ', desc: 'Giao dịch nạp hoặc thanh toán Points phát sinh trong chu kỳ duy trì.', action: 'Xem lịch sử' }
         ],
         alert: 'Đạt hạng Vàng để nhận thêm voucher và EXP thưởng.',
         benefits: [
@@ -2237,11 +2239,13 @@ const loyaltyRankData = {
         progress: '20 / 5.000 EXP',
         percent: 1,
         deadline: '',
-        missionDesc: 'Để mở khóa quyền lợi hạng Bạch Kim, người dùng cần hoàn thành 3 điều kiện:',
+        missionDesc: 'Để mở khóa quyền lợi hạng Bạch Kim, người dùng cần hoàn thành điều kiện thăng hạng:',
         missions: [
-            { title: 'Tích lũy 5.000 EXP', desc: 'EXP được tính trong chu kỳ xét hạng hiện tại.', action: 'Xem tiến độ' },
-            { title: 'Nạp 5.000 Points', desc: 'Tổng nạp Points đạt ngưỡng yêu cầu.', action: 'Nạp ngay' },
-            { title: 'Mời 3 bạn mới', desc: 'Bạn mới đăng ký và phát sinh hoạt động hợp lệ.', action: 'Mời ngay' }
+            { title: 'Thăng hạng: Tích lũy 5.000 EXP', desc: 'EXP được tính trong chu kỳ xét hạng hiện tại.', action: 'Xem tiến độ' },
+            { title: 'Thăng hạng: Nạp 5.000 Points', desc: 'Tổng nạp Points đạt ngưỡng yêu cầu.', action: 'Nạp ngay' },
+            { title: 'Thăng hạng: Mời 3 bạn mới', desc: 'Bạn mới đăng ký và phát sinh hoạt động hợp lệ.', action: 'Mời ngay' },
+            { title: 'Duy trì hạng Vàng: Đạt 2.000 Cycle EXP', desc: 'Nếu kết thúc chu kỳ mà không đạt 2.000 Cycle EXP, hệ thống giáng xuống hạng Bạc.', action: 'Xem điều kiện' },
+            { title: 'Duy trì hạng Vàng: Có hoạt động trong 30 ngày gần nhất', desc: 'Hoạt động hợp lệ gồm đăng nhập, nạp Points, thanh toán Points hoặc nhận nhiệm vụ.', action: 'Xem hoạt động' }
         ],
         alert: 'Đạt hạng Bạch Kim để mở nhóm ưu đãi giá trị cao hơn.',
         benefits: [
@@ -2256,11 +2260,13 @@ const loyaltyRankData = {
         progress: '20 / 10.000 EXP',
         percent: 1,
         deadline: '',
-        missionDesc: 'Để mở khóa quyền lợi hạng Kim Cương, người dùng cần hoàn thành 3 điều kiện:',
+        missionDesc: 'Để mở khóa quyền lợi hạng Kim Cương, người dùng cần hoàn thành điều kiện thăng hạng:',
         missions: [
-            { title: 'Tích lũy 10.000 EXP', desc: 'EXP hợp lệ được cộng từ giao dịch và nhiệm vụ.', action: 'Xem tiến độ' },
-            { title: 'Nạp 10.000 Points', desc: 'Tổng nạp Points đạt ngưỡng trong chu kỳ.', action: 'Nạp ngay' },
-            { title: 'Duy trì hoạt động 30 ngày', desc: 'Có hoạt động hợp lệ trong 30 ngày gần nhất.', action: 'Xem nhiệm vụ' }
+            { title: 'Thăng hạng: Tích lũy 10.000 EXP', desc: 'EXP hợp lệ được cộng từ giao dịch và nhiệm vụ.', action: 'Xem tiến độ' },
+            { title: 'Thăng hạng: Nạp 10.000 Points', desc: 'Tổng nạp Points đạt ngưỡng trong chu kỳ.', action: 'Nạp ngay' },
+            { title: 'Thăng hạng: Duy trì hoạt động 30 ngày', desc: 'Có hoạt động hợp lệ trong 30 ngày gần nhất.', action: 'Xem nhiệm vụ' },
+            { title: 'Duy trì hạng Bạch Kim: Đạt 5.000 Cycle EXP', desc: 'Nếu kết thúc chu kỳ mà không đạt 5.000 Cycle EXP, hệ thống giáng xuống hạng Vàng.', action: 'Xem điều kiện' },
+            { title: 'Duy trì hạng Bạch Kim: Có ít nhất 3 giao dịch hợp lệ', desc: 'Giao dịch nạp hoặc thanh toán Points phát sinh trong chu kỳ duy trì.', action: 'Xem lịch sử' }
         ],
         alert: 'Đạt hạng Kim Cương để nhận quyền lợi cao nhất.',
         benefits: [
@@ -2324,6 +2330,9 @@ function showLoyaltyRank(rankKey) {
     const deadline = document.getElementById('loyalty-rank-deadline');
     const missionDesc = document.getElementById('loyalty-mission-desc');
     const missionList = document.getElementById('loyalty-rank-missions');
+    const maintainSection = document.getElementById('loyalty-maintain-section');
+    const maintainDesc = document.getElementById('loyalty-maintain-desc');
+    const maintainList = document.getElementById('loyalty-maintain-missions');
     const benefitAlert = document.getElementById('loyalty-benefit-alert');
     const benefitList = document.getElementById('loyalty-benefit-list');
 
@@ -2338,9 +2347,34 @@ function showLoyaltyRank(rankKey) {
     }
     if (missionDesc) missionDesc.textContent = data.missionDesc;
 
+    const upgradeMissions = (data.missions || []).filter(item => !item.title.startsWith('Duy trì'));
+    const maintainMissions = (data.missions || []).filter(item => item.title.startsWith('Duy trì'));
+
     if (missionList) {
-        missionList.innerHTML = data.missions.map(item => `
+        missionList.innerHTML = upgradeMissions.map(item => `
             <div class="loyalty-task-item">
+                <div>
+                    <strong>${item.title}</strong>
+                    <span>${item.desc}</span>
+                </div>
+                <button type="button">${item.action}</button>
+            </div>
+        `).join('');
+    }
+
+    if (maintainSection) {
+        maintainSection.classList.toggle('hidden', maintainMissions.length === 0);
+    }
+
+    if (maintainDesc) {
+        maintainDesc.textContent = maintainMissions.length
+            ? `Điều kiện áp dụng để giữ ${data.name} trong chu kỳ tiếp theo.`
+            : '';
+    }
+
+    if (maintainList) {
+        maintainList.innerHTML = maintainMissions.map(item => `
+            <div class="loyalty-task-item maintain">
                 <div>
                     <strong>${item.title}</strong>
                     <span>${item.desc}</span>
