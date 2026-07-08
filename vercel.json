@@ -14,15 +14,39 @@
       "destination": "/index.html"
     },
     {
-      "source": "/MyVTC_Home",
-      "destination": "/MyVTC_Home.html"
+      "source": "/index.html",
+      "destination": "/index.html"
     },
     {
       "source": "/MobileApp",
       "destination": "/MobileApp.html"
     },
     {
+      "source": "/MobileApp.html",
+      "destination": "/MobileApp.html"
+    },
+    {
+      "source": "/CMS",
+      "destination": "/CMS.html"
+    },
+    {
+      "source": "/CMS.html",
+      "destination": "/CMS.html"
+    },
+    {
+      "source": "/MyVTC_Home",
+      "destination": "/MyVTC_Home.html"
+    },
+    {
+      "source": "/MyVTC_Home.html",
+      "destination": "/MyVTC_Home.html"
+    },
+    {
       "source": "/MyAccount",
+      "destination": "/MyAccount.html"
+    },
+    {
+      "source": "/MyAccount.html",
       "destination": "/MyAccount.html"
     },
     {
@@ -30,7 +54,15 @@
       "destination": "/Loyalty.html"
     },
     {
+      "source": "/Loyalty.html",
+      "destination": "/Loyalty.html"
+    },
+    {
       "source": "/Service",
+      "destination": "/Service.html"
+    },
+    {
+      "source": "/Service.html",
       "destination": "/Service.html"
     },
     {
@@ -38,7 +70,15 @@
       "destination": "/Shop.html"
     },
     {
+      "source": "/Shop.html",
+      "destination": "/Shop.html"
+    },
+    {
       "source": "/RechargeDetail",
+      "destination": "/RechargeDetail.html"
+    },
+    {
+      "source": "/RechargeDetail.html",
       "destination": "/RechargeDetail.html"
     },
     {
@@ -46,8 +86,8 @@
       "destination": "/Support.html"
     },
     {
-      "source": "/CMS",
-      "destination": "/CMS.html"
+      "source": "/Support.html",
+      "destination": "/Support.html"
     }
   ]
 }
