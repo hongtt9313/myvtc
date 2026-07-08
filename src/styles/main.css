@@ -5734,3 +5734,125 @@ header {
         font-size: 17px;
     }
 }
+/* Home demo entry buttons */
+.home-demo-actions {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 12px;
+}
+
+.home-demo-btn {
+    min-height: 48px;
+    padding: 0 18px;
+    border: 1px solid #dbeafe;
+    border-radius: 999px;
+    background: #fff;
+    color: #0e56cc;
+    display: inline-flex;
+    align-items: center;
+    gap: 9px;
+    font-weight: 700;
+    box-shadow: 0 10px 22px rgba(14, 86, 204, 0.08);
+    transition: transform .2s ease, box-shadow .2s ease, border-color .2s ease;
+}
+
+.home-demo-btn:hover {
+    transform: translateY(-2px);
+    border-color: #93c5fd;
+    box-shadow: 0 16px 28px rgba(14, 86, 204, 0.14);
+}
+
+.home-demo-btn.primary {
+    background: linear-gradient(135deg, #0e56cc, #1282db);
+    border-color: #0e56cc;
+    color: #fff;
+}
+
+.demo-page {
+    padding: 56px 0;
+    background: #f8fafc;
+}
+
+.demo-hero-card,
+.demo-card {
+    background: #fff;
+    border: 1px solid #e5e7eb;
+    border-radius: 24px;
+    box-shadow: 0 16px 40px rgba(15, 23, 42, 0.07);
+}
+
+.demo-hero-card {
+    padding: 36px;
+}
+
+.demo-grid {
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: 18px;
+    margin-top: 24px;
+}
+
+.demo-card {
+    padding: 22px;
+}
+
+.demo-card i {
+    color: #0e56cc;
+    font-size: 24px;
+    margin-bottom: 12px;
+}
+
+.demo-card h3 {
+    font-size: 18px;
+    font-weight: 800;
+    color: #111827;
+    margin-bottom: 8px;
+}
+
+.demo-card p,
+.demo-hero-card p {
+    color: #64748b;
+    line-height: 1.65;
+}
+
+@media (max-width: 768px) {
+    .home-demo-actions {
+        flex-direction: column;
+        align-items: stretch;
+    }
+
+    .home-demo-btn {
+        justify-content: center;
+        width: 100%;
+    }
+
+    .demo-grid {
+        grid-template-columns: 1fr;
+    }
+
+    .demo-hero-card {
+        padding: 24px;
+    }
+}
+
+/* Demo Center */
+.demo-center-body { margin: 0; min-height: 100vh; font-family: Inter, Arial, sans-serif; background: linear-gradient(135deg, #eaf3ff 0%, #ffffff 52%, #fff3e8 100%); color: #111827; }
+.demo-center-page { min-height: 100vh; display: flex; align-items: center; justify-content: center; padding: 32px; }
+.demo-center-card { width: min(1080px, 100%); background: rgba(255,255,255,.92); border: 1px solid rgba(14,86,204,.12); border-radius: 32px; padding: 42px; box-shadow: 0 24px 80px rgba(15, 23, 42, .12); }
+.demo-center-logo { width: max-content; padding: 10px 18px; border-radius: 999px; background: #0e56cc; color: #fff; font-weight: 800; letter-spacing: .2px; margin-bottom: 18px; }
+.demo-center-card h1 { margin: 0; font-size: clamp(32px, 5vw, 56px); line-height: 1.05; font-weight: 900; }
+.demo-center-card p { max-width: 620px; color: #64748b; font-size: 17px; line-height: 1.6; margin: 16px 0 30px; }
+.demo-version-grid { display: grid; grid-template-columns: repeat(5, minmax(0, 1fr)); gap: 16px; }
+.demo-version-card { min-height: 168px; border: 1px solid #dbeafe; background: #fff; border-radius: 24px; padding: 22px; color: #0f172a; text-decoration: none; display: flex; flex-direction: column; gap: 10px; transition: transform .2s ease, box-shadow .2s ease, border-color .2s ease; }
+.demo-version-card:hover { transform: translateY(-6px); border-color: #0e56cc; box-shadow: 0 18px 40px rgba(14,86,204,.16); }
+.demo-version-card i { width: 48px; height: 48px; border-radius: 16px; display: inline-flex; align-items: center; justify-content: center; background: #eff6ff; color: #0e56cc; font-size: 22px; }
+.demo-version-card span { font-size: 18px; font-weight: 800; }
+.demo-version-card small { color: #64748b; line-height: 1.4; }
+.demo-version-card.primary { background: linear-gradient(135deg, #0e56cc, #1282db); color: #fff; }
+.demo-version-card.primary i { background: rgba(255,255,255,.18); color: #fff; }
+.demo-version-card.primary small { color: rgba(255,255,255,.82); }
+@media (max-width: 980px) { .demo-version-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); } }
+@media (max-width: 560px) { .demo-center-page { padding: 16px; } .demo-center-card { padding: 24px; border-radius: 24px; } .demo-version-grid { grid-template-columns: 1fr; } .demo-version-card { min-height: 120px; } }
+
+.loyalty-task-item.maintain { border-color: #bfdbfe; background: #eff6ff; }
+.loyalty-task-item.maintain button { background: #ffffff; color: #0e56cc; border: 1px solid #93c5fd; }
