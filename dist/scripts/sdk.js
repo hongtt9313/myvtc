@@ -1,4 +1,4 @@
-/* SDK Demo JS: chỉ phục vụ dist/SDK.html. Luồng còn lại: Splash, Đăng nhập, Đăng ký. */
+/* SDK Demo JS: Splash, Đăng nhập, Đăng ký. Luồng bám theo Mobile App. */
 (function () {
     var demoOtpCode = "123456";
     var currentScreen = "login-select";
@@ -15,48 +15,50 @@
         registerOtpMethod: "sms",
         otpRequestsCount: 0,
         otpWrongCount: 0,
-        message: null
+        message: null,
+        fieldErrors: {}
     };
 
     var currentUser = loadCurrentUser();
 
     var mockSavedLoginAccounts = [
-        { id: "saved_acc_001", name: "Nguyễn Văn A", username: "0901231234", type: "phone", icon: "fa-user", rank: "Hạng Đồng" },
-        { id: "saved_acc_002", name: "Nguyễn Thu Trang", username: "trangt@vtc.vn", type: "email", icon: "fa-envelope", rank: "Hạng Bạc" }
+        { id: "saved_acc_001", name: "Nguyễn Văn A", username: "0901231234", type: "phone", icon: "fa-user" },
+        { id: "saved_acc_002", name: "Nguyễn Thu Trang", username: "trangt@vtc.vn", type: "email", icon: "fa-envelope" }
     ];
 
     var mockExistingUsers = [
-        "0912345678",
-        "0988888888",
-        "0389954275",
-        "vtc_test",
-        "test@gmail.com",
-        "hongtt@vtc.vn",
-        "hon123",
-        "embehp",
-        "contact@gmail.com",
-        "hong.tran",
-        "0901234567",
-        "vantuan"
+        "0912345678", "0988888888", "0389954275", "vtc_test", "test@gmail.com",
+        "hongtt@vtc.vn", "hon123", "embehp", "contact@gmail.com", "hong.tran",
+        "0901234567", "0901231234", "trangt@vtc.vn", "vantuan"
     ];
 
     var mockDemoUsers = [
         { username: "0389954275", password: "Demo@123", name: "Nguyễn Văn A", phone: "0389954275", email: "thuyhong.vnt@gmail.com", rank: "Hạng Đồng" },
         { username: "0901234567", password: "Demo@123", name: "Trần Minh Anh", phone: "0901234567", email: "minhanh@vtc.vn", rank: "Hạng Bạc" },
         { username: "hong.tran", password: "Demo@123", name: "Hong Tran", phone: "0391234123", email: "hongtt@vtc.vn", rank: "Hạng Vàng" },
-        { username: "hongtt@vtc.vn", password: "Demo@123", name: "Hong TT", phone: "0391234123", email: "hongtt@vtc.vn", rank: "Hạng Bạc" }
+        { username: "hongtt@vtc.vn", password: "Demo@123", name: "Hong TT", phone: "0391234123", email: "hongtt@vtc.vn", rank: "Hạng Bạc" },
+        { username: "0901231234", password: "Demo@123", name: "Nguyễn Văn A", phone: "0901231234", email: "vana@vtc.vn", rank: "Hạng Đồng" },
+        { username: "trangt@vtc.vn", password: "Demo@123", name: "Nguyễn Thu Trang", phone: "0988888888", email: "trangt@vtc.vn", rank: "Hạng Bạc" }
     ];
 
+    var socialLoginUsers = {
+        facebook: { username: "facebook_user", name: "Facebook User", email: "facebook.user@vtc.vn", provider: "Facebook", rank: "Hạng Đồng" },
+        apple: { username: "apple_user", name: "Apple User", email: "apple.user@vtc.vn", provider: "Apple", rank: "Hạng Đồng" },
+        google: { username: "google_user", name: "Google User", email: "google.user@vtc.vn", provider: "Google", rank: "Hạng Đồng" },
+        quick: { username: "quick_login", name: "Nguyễn Văn A", phone: "0389954275", provider: "Đăng nhập nhanh", rank: "Hạng Đồng" }
+    };
+
     var registerTypeConfig = {
-        phone: { title: "Đăng ký bằng SĐT", label: "Số điện thoại", inputMode: "tel", placeholder: "Nhập số điện thoại" },
+        phone: { title: "Đăng ký bằng Số điện thoại", label: "Số điện thoại", inputMode: "tel", placeholder: "Nhập số điện thoại" },
         email: { title: "Đăng ký bằng Email", label: "Email", inputMode: "email", placeholder: "Nhập địa chỉ email" },
-        username: { title: "Đăng ký bằng Username", label: "Username", inputMode: "text", placeholder: "Nhập username 4-32 ký tự" }
+        username: { title: "Đăng ký bằng Tên tài khoản", label: "Tên tài khoản", inputMode: "text", placeholder: "Nhập tên tài khoản" }
     };
 
     var otpChannelLabels = {
         sms: "SMS",
         voice: "Voice",
-        email: "Email"
+        email: "Email",
+        app: "OTP App"
     };
 
     document.addEventListener("DOMContentLoaded", init);
@@ -68,14 +70,12 @@
         window.setTimeout(function () {
             showNativeScreen("auth");
             goTo("login-select", true);
-        }, 900);
+        }, 750);
     }
 
     function bindLayoutSwitch() {
         document.querySelectorAll("[data-layout-btn]").forEach(function (button) {
-            button.addEventListener("click", function () {
-                applyLayout(button.dataset.layoutBtn);
-            });
+            button.addEventListener("click", function () { applyLayout(button.dataset.layoutBtn); });
         });
     }
 
@@ -103,7 +103,7 @@
         if (!resetHistory) screenHistory.push(currentScreen);
         if (resetHistory) screenHistory = [];
         currentScreen = screenName;
-        sdkState.message = null;
+        clearErrors();
         render();
     }
 
@@ -111,7 +111,7 @@
         var previous = screenHistory.pop();
         if (previous) {
             currentScreen = previous;
-            sdkState.message = null;
+            clearErrors();
             render();
             return;
         }
@@ -131,23 +131,24 @@
         header.innerHTML = [
             '<div class="sdk-top-row">',
             '<button class="sdk-back-btn" type="button" data-action="back" ' + (meta.canBack ? "" : "disabled") + ' aria-label="Quay lại"><i class="fa fa-arrow-left"></i></button>',
-            '<div class="sdk-title-group"><small>MyVTC</small><h2>' + escapeHtml(meta.title) + '</h2></div>',
-            '<button class="sdk-icon-btn" type="button" data-action="home" aria-label="Về đăng nhập"><i class="fa fa-house"></i></button>',
+            '<div class="sdk-title-group"><img class="sdk-title-logo" src="icon/logo.png" alt="MyVTC"><h2>' + escapeHtml(meta.title) + '</h2></div>',
+            '<button class="sdk-icon-btn" type="button" data-action="close" aria-label="Đóng"><i class="fa fa-xmark"></i></button>',
             '</div>'
         ].join("");
     }
 
     function getScreenMeta(screenName) {
         var titles = {
-            "login-select": "Đăng nhập",
+            "login-select": "Chọn tài khoản",
+            "login-identifier": "Đăng nhập",
             "login-password": "Nhập mật khẩu",
-            "login-otp-method": "Chọn nhận OTP",
-            "login-otp": "Nhập OTP",
+            "login-otp-method": "Đăng nhập",
+            "login-otp": "Đăng nhập",
             "register-select": "Đăng ký",
-            "register-form": registerTypeConfig[sdkState.registerType].title,
-            "register-otp-method": "Chọn nhận OTP",
-            "register-otp": "Xác thực OTP",
-            "register-profile": "Hoàn tất đăng ký",
+            "register-form": "Đăng ký",
+            "register-otp-method": "Đăng ký",
+            "register-otp": "Đăng ký",
+            "register-profile": "Đăng ký",
             "success": "Hoàn tất"
         };
         return { title: titles[screenName] || "MyVTC SDK", canBack: screenName !== "login-select" };
@@ -158,6 +159,7 @@
         if (!content) return;
         var html = "";
         if (currentScreen === "login-select") html = renderLoginSelect();
+        if (currentScreen === "login-identifier") html = renderLoginIdentifier();
         if (currentScreen === "login-password") html = renderLoginPassword();
         if (currentScreen === "login-otp-method") html = renderLoginOtpMethod();
         if (currentScreen === "login-otp") html = renderLoginOtp();
@@ -179,57 +181,82 @@
         var savedAccounts = getSavedLoginAccounts();
         return [
             '<div class="sdk-stack">',
+            logoHtml(),
+            '<p class="sdk-note">Chọn tài khoản đã lưu hoặc đăng nhập bằng tài khoản khác.</p>',
             savedAccounts.slice(0, 2).map(function (account) {
-                return cardHtml({ action: "login-saved", value: account.id, icon: account.icon || "fa-user", title: account.name || account.username, desc: account.username + " · " + account.rank });
+                return cardHtml({ action: "login-saved", value: account.id, icon: account.icon || "fa-user", title: account.name || account.username, desc: account.username });
             }).join(""),
-            cardHtml({ action: "login-other", icon: "fa-right-to-bracket", title: "Đăng nhập tài khoản khác", desc: "SĐT, Email hoặc Username" }),
-            '<div class="sdk-help-row">',
-            '<button type="button" data-action="register">Đăng ký</button>',
-            '<button type="button" data-action="clear-session">Xóa phiên</button>',
-            '</div>',
+            cardHtml({ action: "login-other", icon: "fa-right-to-bracket", title: "Sử dụng một tài khoản khác", desc: "SĐT, Email hoặc tên đăng nhập" }),
             '</div>'
+        ].join("");
+    }
+
+    function renderLoginIdentifier() {
+        return [
+            '<form class="sdk-form" data-form="login-identifier">',
+            fieldHtml({ id: "loginIdentifier", label: "Tài khoản", value: sdkState.loginIdentifier, placeholder: "SĐT, Email hoặc tên đăng nhập", autocomplete: "username" }),
+            '<div class="sdk-form-note-row"><span></span><button class="sdk-inline-link" type="button" data-action="forgot-account">Quên tài khoản?</button></div>',
+            '<button class="sdk-primary-btn" type="submit">Tiếp tục</button>',
+            '</form>',
+            renderLoginOptions()
         ].join("");
     }
 
     function renderLoginPassword() {
         return [
             '<form class="sdk-form" data-form="login-password">',
-            '<div class="sdk-field"><label>Tài khoản</label><input class="sdk-input" id="loginIdentifier" value="' + escapeAttr(sdkState.loginIdentifier) + '" placeholder="SĐT, Email hoặc Username" autocomplete="username"></div>',
-            '<div class="sdk-field"><label>Mật khẩu</label><input class="sdk-input" id="loginPassword" type="password" placeholder="Nhập mật khẩu" autocomplete="current-password"></div>',
+            '<p class="sdk-note">Đăng nhập bằng ' + escapeHtml(sdkState.loginIdentifier || "tài khoản đã nhập") + '</p>',
+            passwordFieldHtml({ id: "loginPassword", label: "Mật khẩu", placeholder: "Nhập mật khẩu", autocomplete: "current-password" }),
+            '<div class="sdk-form-note-row"><span></span><button class="sdk-inline-link" type="button" data-action="forgot-password">Quên mật khẩu?</button></div>',
             '<button class="sdk-primary-btn" type="submit">Đăng nhập</button>',
-            '<button class="sdk-secondary-btn" type="button" data-action="login-otp-method">Đăng nhập bằng OTP</button>',
-            '</form>'
+            '</form>',
+            '<div class="sdk-login-actions"><div class="sdk-divider">Hoặc</div>',
+            '<button class="sdk-secondary-btn" type="button" data-action="login-otp-method"><i class="fa fa-shield-halved"></i> Đăng nhập bằng OTP</button></div>'
+        ].join("");
+    }
+
+    function renderLoginOptions() {
+        return [
+            '<div class="sdk-login-actions">',
+            '<div class="sdk-divider">Hoặc</div>',
+            '<div class="sdk-social-grid" aria-label="Đăng nhập mạng xã hội và đăng nhập nhanh">',
+            socialButtonHtml("apple", "fa-brands fa-apple", "Đăng nhập với Apple"),
+            socialButtonHtml("google", "sdk-google-mark", "Đăng nhập với Google", "G"),
+            socialButtonHtml("facebook", "fa-brands fa-facebook-f", "Đăng nhập với Facebook"),
+            socialButtonHtml("quick", "fa fa-bolt", "Đăng nhập nhanh"),
+            '</div>',
+            '<p class="sdk-signup-copy">Bạn chưa có tài khoản? <button class="sdk-inline-link" type="button" data-action="register">Đăng ký</button></p>',
+            '</div>'
         ].join("");
     }
 
     function renderLoginOtpMethod() {
         return [
             '<div class="sdk-stack">',
-            '<p class="sdk-note">Chọn kênh nhận OTP cho tài khoản ' + escapeHtml(sdkState.loginIdentifier || "đã nhập") + '.</p>',
-            cardHtml({ action: "select-login-otp", value: "sms", icon: "fa-comment-sms", title: "SMS", desc: "Gửi mã tới SĐT đã liên kết" }),
-            cardHtml({ action: "select-login-otp", value: "voice", icon: "fa-phone-volume", title: "Voice", desc: "Cuộc gọi đọc mã OTP" }),
-            cardHtml({ action: "select-login-otp", value: "email", icon: "fa-envelope", title: "Email", desc: "Gửi mã tới Email đã liên kết" }),
-            '</div>'
+            '<p class="sdk-note">Chọn kênh nhận mã xác thực cho tài khoản đã nhập.</p>',
+            '<div class="sdk-channel-grid">',
+            cardHtml({ action: "select-login-otp", value: "sms", icon: "fa-comment-sms", title: "SMS", desc: "Nhận mã qua tin nhắn SMS." }),
+            cardHtml({ action: "select-login-otp", value: "voice", icon: "fa-phone-volume", title: "Voice", desc: "Nhận mã qua cuộc gọi thoại." }),
+            cardHtml({ action: "select-login-otp", value: "email", icon: "fa-envelope", title: "Email", desc: "Nhận mã qua email đã xác thực." }),
+            cardHtml({ action: "select-login-otp", value: "app", icon: "fa-mobile-screen-button", title: "OTP App", desc: "Lấy mã trong ứng dụng xác thực." }),
+            '</div></div>'
         ].join("");
     }
 
     function renderLoginOtp() {
-        return renderOtpForm({
-            form: "login-otp",
-            label: "OTP đăng nhập",
-            note: "Nhập OTP đã gửi qua " + otpChannelLabels[sdkState.loginOtpMethod] + ".",
-            submit: "Xác nhận đăng nhập",
-            resendAction: "resend-login-otp"
-        });
+        return renderOtpForm({ form: "login-otp", label: "Mã OTP", note: "Nhập mã xác thực đã gửi qua " + otpChannelLabels[sdkState.loginOtpMethod] + ".", submit: "Xác nhận", resendAction: "resend-login-otp", backText: "Đổi phương thức" });
     }
 
     function renderRegisterSelect() {
         return [
             '<div class="sdk-stack">',
-            cardHtml({ action: "register-type", value: "phone", icon: "fa-mobile-screen-button", title: "Đăng ký bằng SĐT", desc: "Nhận OTP qua SMS hoặc Voice" }),
-            cardHtml({ action: "register-type", value: "email", icon: "fa-envelope", title: "Đăng ký bằng Email", desc: "Nhận OTP qua Email" }),
-            cardHtml({ action: "register-type", value: "username", icon: "fa-user", title: "Đăng ký bằng Username", desc: "Tạo tài khoản bằng username" }),
-            '</div>'
+            logoHtml(),
+            '<p class="sdk-note">Chọn phương thức phù hợp với tài khoản của bạn.</p>',
+            '<div class="sdk-register-grid">',
+            cardHtml({ action: "register-type", value: "phone", icon: "fa-mobile-screen-button", title: "Số điện thoại" }),
+            cardHtml({ action: "register-type", value: "email", icon: "fa-envelope", title: "Email" }),
+            cardHtml({ action: "register-type", value: "username", icon: "fa-user", title: "Tên tài khoản" }),
+            '</div></div>'
         ].join("");
     }
 
@@ -237,9 +264,10 @@
         var config = registerTypeConfig[sdkState.registerType];
         return [
             '<form class="sdk-form" data-form="register-form">',
-            '<div class="sdk-field"><label>' + escapeHtml(config.label) + '</label><input class="sdk-input" id="registerIdentifier" value="' + escapeAttr(sdkState.registerIdentifier) + '" inputmode="' + config.inputMode + '" placeholder="' + escapeAttr(config.placeholder) + '"></div>',
-            '<div class="sdk-field"><label>Mật khẩu</label><input class="sdk-input" id="registerPassword" type="password" placeholder="6 đến 32 ký tự, gồm hoa, thường, số"></div>',
-            '<div class="sdk-field"><label>Nhập lại mật khẩu</label><input class="sdk-input" id="registerPasswordConfirm" type="password" placeholder="Nhập lại mật khẩu"></div>',
+            '<p class="sdk-note">' + escapeHtml(config.title) + '</p>',
+            fieldHtml({ id: "registerIdentifier", label: config.label, value: sdkState.registerIdentifier, inputMode: config.inputMode, placeholder: config.placeholder }),
+            passwordFieldHtml({ id: "registerPassword", label: "Mật khẩu", placeholder: "Nhập mật khẩu" }),
+            passwordFieldHtml({ id: "registerPasswordConfirm", label: "Nhập lại mật khẩu", placeholder: "Nhập lại mật khẩu" }),
             '<button class="sdk-primary-btn" type="submit">Tiếp tục</button>',
             '</form>'
         ].join("");
@@ -248,31 +276,43 @@
     function renderRegisterOtpMethod() {
         return [
             '<div class="sdk-stack">',
-            '<p class="sdk-note">Chọn cách nhận OTP cho ' + escapeHtml(sdkState.registerIdentifier) + '.</p>',
-            cardHtml({ action: "select-register-otp", value: "sms", icon: "fa-comment-sms", title: "SMS", desc: "Gửi OTP qua tin nhắn" }),
-            cardHtml({ action: "select-register-otp", value: "voice", icon: "fa-phone-volume", title: "Voice", desc: "Nhận OTP qua cuộc gọi" }),
-            '</div>'
+            '<p class="sdk-note">Chọn phương thức nhận mã cho số điện thoại đã đăng ký.</p>',
+            '<div class="sdk-channel-grid">',
+            cardHtml({ action: "select-register-otp", value: "sms", icon: "fa-comment-sms", title: "SMS", desc: "Nhận mã xác thực qua tin nhắn SMS." }),
+            cardHtml({ action: "select-register-otp", value: "voice", icon: "fa-phone-volume", title: "Voice", desc: "Nhận mã xác thực qua cuộc gọi thoại." }),
+            '</div></div>'
         ].join("");
     }
 
     function renderRegisterOtp() {
-        return renderOtpForm({
-            form: "register-otp",
-            label: "OTP đăng ký",
-            note: "Nhập OTP đã gửi qua " + otpChannelLabels[sdkState.registerOtpMethod] + ".",
-            submit: "Xác thực",
-            resendAction: "resend-register-otp"
-        });
+        return renderOtpForm({ form: "register-otp", label: "Mã OTP", note: "Nhập mã xác thực đã gửi qua " + otpChannelLabels[sdkState.registerOtpMethod] + ".", submit: "Xác nhận", resendAction: "resend-register-otp", backText: "Đổi phương thức" });
     }
 
     function renderRegisterProfile() {
         return [
             '<form class="sdk-form" data-form="register-profile">',
-            '<div class="sdk-field"><label>Nickname</label><input class="sdk-input" id="registerNickname" placeholder="Nhập nickname"></div>',
-            '<div class="sdk-field"><label>Họ và tên</label><input class="sdk-input" id="registerFullname" placeholder="Nhập họ và tên"></div>',
-            '<div class="sdk-field"><label>Giới tính</label><select class="sdk-select" id="registerGender"><option value="">Chọn giới tính</option><option>Nam</option><option>Nữ</option><option>Khác</option></select></div>',
-            '<label class="sdk-card"><span class="sdk-card-icon"><i class="fa fa-check"></i></span><span class="sdk-card-main"><strong>Đồng ý điều khoản MyVTC</strong><small>Tiếp tục tạo tài khoản</small></span><input id="registerPolicy" type="checkbox"></label>',
-            '<button class="sdk-primary-btn" type="submit">Hoàn tất đăng ký</button>',
+            '<p class="sdk-note">Bổ sung thông tin tài khoản.</p>',
+            '<div class="sdk-profile-grid">',
+            fieldHtml({ id: "registerNickname", label: "Nickname", placeholder: "Nickname 4-50 ký tự" }),
+            fieldHtml({ id: "registerFullname", label: "Họ và tên", placeholder: "Nhập họ và tên" }),
+            fieldHtml({ id: "registerDob", label: "Ngày sinh", type: "date" }),
+            '<div class="sdk-field" data-field="registerGender"><label>Giới tính</label><select class="sdk-select" id="registerGender"><option value="">Chọn giới tính</option><option>Nam</option><option>Nữ</option><option>Khác</option></select>' + fieldErrorHtml("registerGender") + '</div>',
+            fieldHtml({ id: "registerIdNumber", label: "Số CCCD/Hộ chiếu", inputMode: "numeric", maxlength: "12", placeholder: "Nhập 12 chữ số" }),
+            '<label class="sdk-card sdk-policy-card" data-field="registerPolicy"><span class="sdk-card-icon"><i class="fa fa-check"></i></span><span class="sdk-card-main"><strong>Tôi đồng ý với Chính sách và Quyền riêng tư</strong>' + fieldErrorHtml("registerPolicy") + '</span><input id="registerPolicy" type="checkbox"></label>',
+            '</div>',
+            '<button class="sdk-primary-btn" type="submit">Hoàn tất</button>',
+            '</form>'
+        ].join("");
+    }
+
+    function renderOtpForm(options) {
+        return [
+            '<form class="sdk-form" data-form="' + options.form + '">',
+            '<p class="sdk-note">' + escapeHtml(options.note) + ' Mã demo: 123456.</p>',
+            fieldHtml({ id: "otpCode", label: options.label, inputClass: "otp", maxlength: "6", inputMode: "numeric", placeholder: "Nhập mã OTP" }),
+            '<button class="sdk-primary-btn" type="submit">' + escapeHtml(options.submit) + '</button>',
+            '<button class="sdk-inline-link" type="button" data-action="' + options.resendAction + '">Nhận lại OTP</button>',
+            '<button class="sdk-inline-link" type="button" data-action="back">' + escapeHtml(options.backText || "Đổi phương thức") + '</button>',
             '</form>'
         ].join("");
     }
@@ -282,20 +322,9 @@
             '<div class="sdk-success-box">',
             '<div class="sdk-success-icon"><i class="fa fa-check"></i></div>',
             '<h3>Đăng nhập thành công</h3>',
-            '<p>' + escapeHtml(currentUser.name || currentUser.username || "Tài khoản MyVTC") + ' đã xác thực trong SDK.</p>',
-            '<button class="sdk-primary-btn" type="button" data-action="home">Về đăng nhập</button>',
+            '<p>Tài khoản ' + escapeHtml(currentUser.name || currentUser.username || "MyVTC") + ' đã xác thực trong SDK.</p>',
+            '<button class="sdk-primary-btn" type="button" data-action="close">Về màn chọn tài khoản</button>',
             '</div>'
-        ].join("");
-    }
-
-    function renderOtpForm(options) {
-        return [
-            '<form class="sdk-form" data-form="' + options.form + '">',
-            '<p class="sdk-note">' + escapeHtml(options.note) + ' Mã demo: 123456.</p>',
-            '<div class="sdk-field"><label>' + escapeHtml(options.label) + '</label><input class="sdk-input otp" id="otpCode" maxlength="6" inputmode="numeric" placeholder="••••••"></div>',
-            '<button class="sdk-primary-btn" type="submit">' + escapeHtml(options.submit) + '</button>',
-            '<button class="sdk-secondary-btn" type="button" data-action="' + options.resendAction + '">Nhận lại OTP</button>',
-            '</form>'
         ].join("");
     }
 
@@ -303,46 +332,98 @@
         return [
             '<button class="sdk-card" type="button" data-action="' + escapeAttr(options.action) + '" data-value="' + escapeAttr(options.value || "") + '">',
             '<span class="sdk-card-icon"><i class="fa ' + escapeAttr(options.icon) + '"></i></span>',
-            '<span class="sdk-card-main"><strong>' + escapeHtml(options.title) + '</strong><small>' + escapeHtml(options.desc || "") + '</small></span>',
+            '<span class="sdk-card-main"><strong>' + escapeHtml(options.title) + '</strong>' + (options.desc ? '<small>' + escapeHtml(options.desc) + '</small>' : '') + '</span>',
             '<i class="fa fa-chevron-right"></i>',
             '</button>'
         ].join("");
     }
 
+    function socialButtonHtml(provider, icon, label, customText) {
+        var iconHtml = customText ? '<strong class="' + escapeAttr(icon) + '">' + escapeHtml(customText) + '</strong>' : '<i class="' + escapeAttr(icon) + '"></i>';
+        return '<button class="sdk-social-btn" type="button" data-action="login-social" data-value="' + escapeAttr(provider) + '" aria-label="' + escapeAttr(label) + '" title="' + escapeAttr(label) + '">' + iconHtml + '</button>';
+    }
+
+    function fieldHtml(options) {
+        options = options || {};
+        var id = options.id || "";
+        var attrs = [
+            'class="sdk-input ' + escapeAttr(options.inputClass || "") + '"',
+            'id="' + escapeAttr(id) + '"',
+            'type="' + escapeAttr(options.type || "text") + '"'
+        ];
+        if (options.value) attrs.push('value="' + escapeAttr(options.value) + '"');
+        if (options.placeholder) attrs.push('placeholder="' + escapeAttr(options.placeholder) + '"');
+        if (options.autocomplete) attrs.push('autocomplete="' + escapeAttr(options.autocomplete) + '"');
+        if (options.inputMode) attrs.push('inputmode="' + escapeAttr(options.inputMode) + '"');
+        if (options.maxlength) attrs.push('maxlength="' + escapeAttr(options.maxlength) + '"');
+        if (options.readonly) attrs.push('readonly');
+        return '<div class="sdk-field" data-field="' + escapeAttr(id) + '"><label>' + escapeHtml(options.label || "") + '</label><input ' + attrs.join(" ") + '>' + fieldErrorHtml(id) + '</div>';
+    }
+
+    function passwordFieldHtml(options) {
+        options = options || {};
+        var id = options.id || "";
+        var attrs = [
+            'class="sdk-input"',
+            'id="' + escapeAttr(id) + '"',
+            'type="password"'
+        ];
+        if (options.placeholder) attrs.push('placeholder="' + escapeAttr(options.placeholder) + '"');
+        if (options.autocomplete) attrs.push('autocomplete="' + escapeAttr(options.autocomplete) + '"');
+        return [
+            '<div class="sdk-field" data-field="' + escapeAttr(id) + '">',
+            '<label>' + escapeHtml(options.label || "") + '</label>',
+            '<div class="sdk-password-wrap"><input ' + attrs.join(" ") + '>',
+            '<button class="sdk-password-toggle" type="button" data-action="toggle-password" data-value="' + escapeAttr(id) + '" aria-label="Hiện mật khẩu"><i class="fa fa-eye-slash"></i></button></div>',
+            fieldErrorHtml(id),
+            '</div>'
+        ].join("");
+    }
+
+    function fieldErrorHtml(fieldName) {
+        var text = sdkState.fieldErrors && sdkState.fieldErrors[fieldName];
+        return '<small class="sdk-field-error" data-error-for="' + escapeAttr(fieldName) + '">' + escapeHtml(text || "") + '</small>';
+    }
+
+    function logoHtml() {
+        return '<div class="sdk-auth-logo"><img class="sdk-logo-img" src="icon/logo.png" alt="MyVTC"></div>';
+    }
+
     function bindDynamicEvents() {
-        document.querySelectorAll("[data-action]").forEach(function (element) {
-            element.addEventListener("click", handleAction);
+        document.querySelectorAll("[data-action]").forEach(function (element) { element.addEventListener("click", handleAction); });
+        document.querySelectorAll("form[data-form]").forEach(function (form) { form.addEventListener("submit", handleSubmit); });
+        document.querySelectorAll("input, select").forEach(function (input) {
+            input.addEventListener("input", clearFieldErrorOnEdit);
+            input.addEventListener("change", clearFieldErrorOnEdit);
         });
-        document.querySelectorAll("form[data-form]").forEach(function (form) {
-            form.addEventListener("submit", handleSubmit);
-        });
-        document.querySelectorAll("input[inputmode='numeric'], .sdk-input.otp").forEach(function (input) {
-            input.addEventListener("keydown", allowOnlyNumbers);
-        });
+        document.querySelectorAll("input[inputmode='numeric'], .sdk-input.otp").forEach(function (input) { input.addEventListener("keydown", allowOnlyNumbers); });
     }
 
     function handleAction(event) {
         var button = event.currentTarget;
         var action = button.dataset.action;
         var value = button.dataset.value || "";
-
         if (action === "back") return goBack();
-        if (action === "home") return goTo("login-select", true);
+        if (action === "close") return goTo("login-select", true);
         if (action === "login-saved") return loginWithSavedAccount(value);
-        if (action === "login-other") return goTo("login-password");
+        if (action === "login-other") return goTo("login-identifier");
         if (action === "login-otp-method") return startLoginOtpMethod();
+        if (action === "login-social") return loginWithSocial(value);
         if (action === "select-login-otp") return selectLoginOtp(value);
         if (action === "resend-login-otp") return resendOtp();
         if (action === "register") return goTo("register-select");
         if (action === "register-type") return selectRegisterType(value);
         if (action === "select-register-otp") return selectRegisterOtp(value);
         if (action === "resend-register-otp") return resendOtp();
-        if (action === "clear-session") return clearSession();
+        if (action === "toggle-password") return togglePassword(value, button);
+        if (action === "forgot-account") return showSystemError("Chức năng quên tài khoản chạy bằng popup hệ thống demo.");
+        if (action === "forgot-password") return showSystemError("Chức năng quên mật khẩu chạy bằng popup hệ thống demo.");
     }
 
     function handleSubmit(event) {
         event.preventDefault();
         var formName = event.currentTarget.dataset.form;
+        if (formName === "login-identifier") return submitLoginIdentifier();
         if (formName === "login-password") return submitLoginPassword();
         if (formName === "login-otp") return submitLoginOtp();
         if (formName === "register-form") return submitRegisterForm();
@@ -352,24 +433,29 @@
 
     function loginWithSavedAccount(accountId) {
         var account = getSavedLoginAccounts().find(function (item) { return item.id === accountId; });
-        if (!account) return showInlineError("Không tìm thấy phiên đăng nhập.");
-        currentUser = Object.assign(currentUser, {
-            name: account.name,
-            username: account.username,
-            rank: account.rank || "Hạng Đồng"
-        });
+        if (!account) return showSystemError("Không tìm thấy phiên đăng nhập.");
+        var user = findDemoUser(account.username) || account;
+        currentUser = Object.assign(currentUser, user, { name: account.name || user.name, username: account.username || user.username });
         saveCurrentUser();
         showToast("Đăng nhập thành công", "success");
         goToSuccess();
     }
 
-    function submitLoginPassword() {
+    function submitLoginIdentifier() {
         var identifier = getValue("loginIdentifier").trim();
+        if (!identifier) return showFieldError("loginIdentifier", "Vui lòng nhập SĐT, Email hoặc tên đăng nhập.");
+        if (!identifierExists(identifier)) return showFieldError("loginIdentifier", "Tài khoản chưa tồn tại.");
+        sdkState.loginIdentifier = identifier;
+        goTo("login-password");
+    }
+
+    function submitLoginPassword() {
+        var identifier = sdkState.loginIdentifier;
         var password = getValue("loginPassword");
-        if (!identifier) return showInlineError("Vui lòng nhập tài khoản.");
-        if (!password) return showInlineError("Vui lòng nhập mật khẩu.");
+        if (!identifier) return goTo("login-identifier");
+        if (!password) return showFieldError("loginPassword", "Vui lòng nhập mật khẩu.");
         var user = findDemoUser(identifier);
-        if (!user || user.password !== password) return showInlineError("Tài khoản hoặc mật khẩu không đúng. Dùng Demo@123 cho tài khoản demo.");
+        if (!user || user.password !== password) return showFieldError("loginPassword", "Mật khẩu không đúng. Dùng Demo@123 cho tài khoản demo.");
         currentUser = Object.assign(currentUser, user);
         saveCurrentUser();
         addSavedAccount(currentUser);
@@ -378,18 +464,29 @@
     }
 
     function startLoginOtpMethod() {
-        var identifier = getValue("loginIdentifier").trim() || sdkState.loginIdentifier;
-        if (!identifier) return showInlineError("Vui lòng nhập tài khoản trước khi nhận OTP.");
-        if (!identifierExists(identifier)) return showInlineError("Không tìm thấy tài khoản.");
+        var identifierInput = getValue("loginIdentifier").trim();
+        var identifier = identifierInput || sdkState.loginIdentifier;
+        if (!identifier) return showFieldError("loginIdentifier", "Vui lòng nhập tài khoản trước khi nhận OTP.");
+        if (!identifierExists(identifier)) return showFieldError("loginIdentifier", "Không tìm thấy tài khoản.");
         sdkState.loginIdentifier = identifier;
         goTo("login-otp-method");
+    }
+
+    function loginWithSocial(provider) {
+        var socialUser = socialLoginUsers[provider];
+        if (!socialUser) return showSystemError("Phương thức đăng nhập không hợp lệ.");
+        currentUser = Object.assign(currentUser, socialUser);
+        saveCurrentUser();
+        addSavedAccount(currentUser);
+        showToast("Đăng nhập bằng " + socialUser.provider + " thành công", "success");
+        goToSuccess();
     }
 
     function selectLoginOtp(method) {
         sdkState.loginOtpMethod = method;
         sdkState.otpRequestsCount = 1;
         sdkState.otpWrongCount = 0;
-        showToast("Đã gửi OTP qua " + otpChannelLabels[method], "info");
+        showToast(method === "app" ? "Mở ứng dụng xác thực OTP" : "Đã gửi OTP qua " + otpChannelLabels[method], "info");
         goTo("login-otp");
     }
 
@@ -415,10 +512,10 @@
         var identifier = getValue("registerIdentifier").trim();
         var password = getValue("registerPassword");
         var passwordConfirm = getValue("registerPasswordConfirm");
-        if (!validateRegisterIdentifier(sdkState.registerType, identifier)) return showInlineError("Thông tin đăng ký không đúng định dạng.");
-        if (mockExistingUsers.indexOf(identifier.toLowerCase()) !== -1) return showInlineError("Tài khoản đã tồn tại.");
-        if (!validatePasswordFormat(password)) return showInlineError("Mật khẩu cần 6 đến 32 ký tự, gồm chữ hoa, chữ thường và số.");
-        if (password !== passwordConfirm) return showInlineError("Mật khẩu nhập lại không khớp.");
+        if (!validateRegisterIdentifier(sdkState.registerType, identifier)) return showFieldError("registerIdentifier", "Thông tin đăng ký không đúng định dạng.");
+        if (mockExistingUsers.indexOf(identifier.toLowerCase()) !== -1) return showFieldError("registerIdentifier", "Tài khoản đã tồn tại.");
+        if (!validatePasswordFormat(password)) return showFieldError("registerPassword", "Mật khẩu cần 6 đến 32 ký tự, gồm chữ hoa, chữ thường và số.");
+        if (password !== passwordConfirm) return showFieldError("registerPasswordConfirm", "Mật khẩu nhập lại không khớp.");
         sdkState.registerIdentifier = identifier;
         sdkState.registerPassword = password;
         sdkState.otpRequestsCount = 0;
@@ -450,12 +547,16 @@
     function submitRegisterProfile() {
         var nickname = getValue("registerNickname").trim();
         var fullname = getValue("registerFullname").trim();
+        var dob = getValue("registerDob");
         var gender = getValue("registerGender");
+        var idNumber = getValue("registerIdNumber").trim();
         var policy = document.getElementById("registerPolicy");
-        if (!validateNicknameFormat(nickname)) return showInlineError("Nickname cần từ 4 đến 50 ký tự.");
-        if (!validateFullnameFormat(fullname)) return showInlineError("Họ tên cần từ 4 đến 100 ký tự.");
-        if (!gender) return showInlineError("Vui lòng chọn giới tính.");
-        if (!policy || !policy.checked) return showInlineError("Vui lòng đồng ý điều khoản MyVTC.");
+        if (!validateNicknameFormat(nickname)) return showFieldError("registerNickname", "Nickname cần từ 4 đến 50 ký tự.");
+        if (!validateFullnameFormat(fullname)) return showFieldError("registerFullname", "Họ tên cần từ 4 đến 100 ký tự.");
+        if (!dob) return showFieldError("registerDob", "Vui lòng nhập ngày sinh.");
+        if (!gender) return showFieldError("registerGender", "Vui lòng chọn giới tính.");
+        if (!/^\d{12}$/.test(idNumber)) return showFieldError("registerIdNumber", "CCCD phải đủ 12 chữ số.");
+        if (!policy || !policy.checked) return showFieldError("registerPolicy", "Vui lòng đồng ý Chính sách và Quyền riêng tư.");
         currentUser = Object.assign(currentUser, {
             name: fullname,
             nickname: nickname,
@@ -463,6 +564,8 @@
             phone: sdkState.registerType === "phone" ? sdkState.registerIdentifier : currentUser.phone,
             email: sdkState.registerType === "email" ? sdkState.registerIdentifier : currentUser.email,
             gender: gender,
+            birthday: dob,
+            idNumber: idNumber,
             rank: "Hạng Đồng"
         });
         saveCurrentUser();
@@ -472,7 +575,7 @@
     }
 
     function resendOtp() {
-        if (sdkState.otpRequestsCount >= 3) return showInlineError("Bạn đã yêu cầu OTP quá nhiều lần. Vui lòng thử lại sau.");
+        if (sdkState.otpRequestsCount >= 3) return showSystemError("Bạn đã yêu cầu OTP quá nhiều lần. Vui lòng thử lại sau.");
         sdkState.otpRequestsCount++;
         sdkState.otpWrongCount = 0;
         showToast("Đã gửi lại OTP", "info");
@@ -481,34 +584,63 @@
 
     function checkOtp(code) {
         if (sdkState.otpWrongCount >= 2) {
-            showInlineError("Sai OTP quá nhiều. Tài khoản bị khóa 15 phút.");
+            showFieldError("otpCode", "Sai OTP quá nhiều. Tài khoản bị khóa 15 phút.");
             return false;
         }
         if (code !== demoOtpCode) {
             sdkState.otpWrongCount++;
-            showInlineError("OTP không đúng hoặc đã hết hạn.");
+            showFieldError("otpCode", "OTP không đúng hoặc đã hết hạn.");
             return false;
         }
         sdkState.otpWrongCount = 0;
         return true;
     }
 
-    function clearSession() {
-        localStorage.removeItem("myvtc_sdk_saved_login_accounts");
-        showToast("Đã xóa phiên đăng nhập demo", "success");
-        goTo("login-select", true);
+    function togglePassword(id, button) {
+        var input = document.getElementById(id);
+        if (!input) return;
+        var show = input.type === "password";
+        input.type = show ? "text" : "password";
+        var icon = button.querySelector("i");
+        if (icon) icon.className = show ? "fa fa-eye" : "fa fa-eye-slash";
     }
 
     function goToSuccess() {
         currentScreen = "success";
         screenHistory = [];
-        sdkState.message = null;
+        clearErrors();
         render();
     }
 
-    function showInlineError(text) {
-        sdkState.message = { type: "error", text: text };
+    function clearErrors() {
+        sdkState.message = null;
+        sdkState.fieldErrors = {};
+    }
+
+    function showFieldError(fieldName, text) {
+        sdkState.message = null;
+        sdkState.fieldErrors = {};
+        sdkState.fieldErrors[fieldName] = text;
         render();
+        var field = document.querySelector('[data-field="' + fieldName + '"]');
+        if (field) field.classList.add("has-error");
+    }
+
+    function clearFieldErrorOnEdit(event) {
+        var id = event.currentTarget.id;
+        if (!id || !sdkState.fieldErrors || !sdkState.fieldErrors[id]) return;
+        delete sdkState.fieldErrors[id];
+        sdkState.message = null;
+        var field = document.querySelector('[data-field="' + id + '"]');
+        var error = document.querySelector('[data-error-for="' + id + '"]');
+        if (field) field.classList.remove("has-error");
+        if (error) error.textContent = "";
+    }
+
+    function showSystemError(text) {
+        sdkState.message = null;
+        sdkState.fieldErrors = {};
+        showToast(text, "error");
     }
 
     function showToast(message, type) {
@@ -524,25 +656,10 @@
     }
 
     function loadCurrentUser() {
-        var defaults = {
-            name: "Nguyễn Văn A",
-            nickname: "hongtran",
-            id: "31735b35ecba3981",
-            rank: "Hạng Đồng",
-            balance: 1000,
-            username: "0389954275",
-            phone: "0389954275",
-            email: "thuyhong.vnt@gmail.com",
-            gender: "Nữ",
-            birthday: "1990-10-30"
-        };
+        var defaults = { name: "Nguyễn Văn A", nickname: "hongtran", id: "31735b35ecba3981", rank: "Hạng Đồng", balance: 1000, username: "0389954275", phone: "0389954275", email: "thuyhong.vnt@gmail.com", gender: "Nữ", birthday: "1990-10-30" };
         var saved = localStorage.getItem("myvtc_sdk_current_user");
         if (!saved) return defaults;
-        try {
-            return Object.assign(defaults, JSON.parse(saved));
-        } catch (error) {
-            return defaults;
-        }
+        try { return Object.assign(defaults, JSON.parse(saved)); } catch (error) { return defaults; }
     }
 
     function saveCurrentUser() {
@@ -555,25 +672,19 @@
             localStorage.setItem("myvtc_sdk_saved_login_accounts", JSON.stringify(mockSavedLoginAccounts));
             return mockSavedLoginAccounts;
         }
-        try {
-            return JSON.parse(saved);
-        } catch (error) {
-            return mockSavedLoginAccounts;
-        }
+        try { return JSON.parse(saved); } catch (error) { return mockSavedLoginAccounts; }
     }
 
     function addSavedAccount(user) {
         var accounts = getSavedLoginAccounts();
         if (accounts.some(function (account) { return account.username === user.username; })) return;
-        accounts.unshift({ id: "saved_" + Date.now(), name: user.name, username: user.username, type: validateEmailFormat(user.username) ? "email" : "phone", icon: "fa-user", rank: user.rank || "Hạng Đồng" });
+        accounts.unshift({ id: "saved_" + Date.now(), name: user.name, username: user.username, type: validateEmailFormat(user.username) ? "email" : "phone", icon: "fa-user" });
         localStorage.setItem("myvtc_sdk_saved_login_accounts", JSON.stringify(accounts.slice(0, 4)));
     }
 
     function findDemoUser(identifier) {
         var value = String(identifier || "").toLowerCase();
-        return mockDemoUsers.find(function (user) {
-            return user.username.toLowerCase() === value || user.phone === value || user.email.toLowerCase() === value;
-        });
+        return mockDemoUsers.find(function (user) { return user.username.toLowerCase() === value || user.phone === value || user.email.toLowerCase() === value; });
     }
 
     function identifierExists(identifier) {
@@ -587,25 +698,11 @@
         return /^[a-zA-Z0-9_.]{4,32}$/.test(value);
     }
 
-    function validateVietnamesePhone(value) {
-        return /^(03|05|07|08|09|01[2689])[0-9]{8}$/.test(value);
-    }
-
-    function validateEmailFormat(value) {
-        return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(value);
-    }
-
-    function validatePasswordFormat(value) {
-        return /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d).{6,32}$/.test(value);
-    }
-
-    function validateNicknameFormat(value) {
-        return /^[a-zA-Z0-9À-ỹ\s_.]{4,50}$/.test(value);
-    }
-
-    function validateFullnameFormat(value) {
-        return /^[a-zA-ZÀ-ỹ\s]{4,100}$/.test(value);
-    }
+    function validateVietnamesePhone(value) { return /^(03|05|07|08|09|01[2689])[0-9]{8}$/.test(value); }
+    function validateEmailFormat(value) { return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(value); }
+    function validatePasswordFormat(value) { return /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d).{6,32}$/.test(value); }
+    function validateNicknameFormat(value) { return /^[a-zA-Z0-9À-ỹ\s_.]{4,50}$/.test(value); }
+    function validateFullnameFormat(value) { return /^[a-zA-ZÀ-ỹ\s]{4,100}$/.test(value); }
 
     function getValue(id) {
         var input = document.getElementById(id);
@@ -626,7 +723,5 @@
             .replace(/'/g, "&#039;");
     }
 
-    function escapeAttr(value) {
-        return escapeHtml(value);
-    }
+    function escapeAttr(value) { return escapeHtml(value); }
 })();
