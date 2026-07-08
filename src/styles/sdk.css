@@ -1,0 +1,628 @@
+:root {
+    --sdk-blue: #1282db;
+    --sdk-blue-dark: #0e56cc;
+    --sdk-cyan: #18b7d4;
+    --sdk-ink: #0f172a;
+    --sdk-muted: #64748b;
+    --sdk-line: #e4ebf3;
+    --sdk-soft: #f6f9fd;
+    --sdk-danger: #dc2626;
+    --sdk-success: #059669;
+}
+
+* {
+    box-sizing: border-box;
+}
+
+html,
+body {
+    min-height: 100%;
+}
+
+body {
+    margin: 0;
+    font-family: Inter, Arial, sans-serif;
+    color: var(--sdk-ink);
+    background: linear-gradient(180deg, #f7fbff 0%, #edf6ff 100%);
+}
+
+button,
+input,
+select {
+    font: inherit;
+}
+
+button {
+    border: 0;
+}
+
+.sdk-demo-page {
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 12px;
+    padding: 16px;
+}
+
+.sdk-toolbar {
+    width: min(760px, 100%);
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 12px;
+    padding: 8px 10px;
+    border: 1px solid rgba(18, 130, 219, 0.14);
+    border-radius: 16px;
+    background: rgba(255, 255, 255, 0.94);
+    box-shadow: 0 12px 30px rgba(15, 23, 42, 0.07);
+}
+
+.sdk-toolbar strong {
+    font-size: 14px;
+    font-weight: 900;
+}
+
+.sdk-layout-switch {
+    display: flex;
+    gap: 6px;
+    padding: 4px;
+    border-radius: 14px;
+    background: #eef5fc;
+}
+
+.sdk-layout-switch button {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 6px;
+    min-height: 34px;
+    padding: 0 10px;
+    border-radius: 11px;
+    color: #496172;
+    background: transparent;
+    cursor: pointer;
+    font-size: 12px;
+    font-weight: 800;
+}
+
+.sdk-layout-switch button.active {
+    color: #fff;
+    background: linear-gradient(135deg, var(--sdk-blue-dark), var(--sdk-blue));
+    box-shadow: 0 8px 18px rgba(18, 130, 219, 0.22);
+}
+
+.sdk-frame {
+    position: relative;
+    overflow: hidden;
+    border: 10px solid #111827;
+    background: #fff;
+    box-shadow: 0 24px 70px rgba(15, 23, 42, 0.25);
+    transition: width 0.22s ease, height 0.22s ease, border-radius 0.22s ease;
+}
+
+.sdk-frame.portrait {
+    width: 390px;
+    height: 760px;
+    border-radius: 40px;
+}
+
+.sdk-frame.landscape {
+    width: min(860px, calc(100vw - 32px));
+    height: min(500px, calc(100vh - 110px));
+    min-height: 430px;
+    border-radius: 32px;
+    display: block;
+}
+
+.sdk-device-status {
+    position: absolute;
+    z-index: 20;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 30px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 0 18px;
+    font-size: 12px;
+    font-weight: 800;
+    color: rgba(255, 255, 255, 0.96);
+    pointer-events: none;
+}
+
+.sdk-brand-panel {
+    position: relative;
+    display: none;
+    min-height: 100%;
+    color: #fff;
+    background:
+        radial-gradient(circle at 20% 18%, rgba(255, 255, 255, 0.18), transparent 25%),
+        radial-gradient(circle at 86% 78%, rgba(125, 211, 252, 0.18), transparent 28%),
+        linear-gradient(155deg, #0b3b8a 0%, #0e56cc 44%, #1282db 72%, #18b7d4 100%);
+}
+
+.sdk-brand-panel::after,
+.sdk-splash-content::after {
+    content: "";
+    position: absolute;
+    inset: auto 0 0 0;
+    height: 42%;
+    opacity: 0.18;
+    background-image:
+        linear-gradient(rgba(255, 255, 255, 0.16) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(255, 255, 255, 0.16) 1px, transparent 1px);
+    background-size: 24px 24px;
+}
+
+.sdk-frame.landscape .sdk-brand-panel {
+    display: none;
+}
+
+.sdk-brand-card {
+    position: relative;
+    z-index: 2;
+    display: grid;
+    gap: 14px;
+    place-items: center;
+    text-align: center;
+}
+
+.sdk-brand-card p {
+    margin: 0;
+    font-size: 14px;
+    font-weight: 800;
+    opacity: 0.92;
+}
+
+.sdk-logo-mark {
+    position: relative;
+    z-index: 1;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    min-width: 104px;
+    height: 44px;
+    padding: 0 16px;
+    border-radius: 15px;
+    color: var(--sdk-blue-dark);
+    background: #fff;
+    font-weight: 900;
+    letter-spacing: -0.5px;
+    box-shadow: 0 16px 36px rgba(15, 23, 42, 0.15);
+}
+
+.sdk-logo-mark.large {
+    min-width: 150px;
+    height: 64px;
+    border-radius: 22px;
+    font-size: 26px;
+}
+
+.sdk-app-panel {
+    position: relative;
+    width: 100%;
+    height: 100%;
+    min-width: 0;
+    background: #fff;
+}
+
+.sdk-screen {
+    position: absolute;
+    inset: 0;
+    display: none;
+}
+
+.sdk-screen.active {
+    display: block;
+}
+
+.sdk-splash-content {
+    position: relative;
+    width: 100%;
+    height: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background:
+        radial-gradient(circle at 20% 12%, rgba(255, 255, 255, 0.18), transparent 28%),
+        radial-gradient(circle at 85% 80%, rgba(125, 211, 252, 0.18), transparent 30%),
+        linear-gradient(155deg, #0b3b8a 0%, #0e56cc 45%, #1282db 72%, #18b7d4 100%);
+}
+
+.sdk-auth-shell {
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+    padding: 32px 18px 18px;
+    background: #fff;
+}
+
+.sdk-frame.landscape .sdk-auth-shell {
+    padding: 30px 38px 18px;
+}
+
+.sdk-auth-header {
+    flex: 0 0 auto;
+    padding: 8px 0 12px;
+}
+
+.sdk-top-row {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 10px;
+}
+
+.sdk-back-btn,
+.sdk-icon-btn {
+    width: 38px;
+    height: 38px;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 14px;
+    color: var(--sdk-ink);
+    background: #f1f6fb;
+    cursor: pointer;
+}
+
+.sdk-back-btn:disabled {
+    opacity: 0;
+    pointer-events: none;
+}
+
+.sdk-title-group {
+    min-width: 0;
+    text-align: center;
+}
+
+.sdk-title-group small {
+    display: block;
+    color: var(--sdk-blue-dark);
+    font-size: 11px;
+    font-weight: 900;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+}
+
+.sdk-title-group h2 {
+    margin: 3px 0 0;
+    font-size: 18px;
+    line-height: 1.2;
+    letter-spacing: -0.3px;
+}
+
+.sdk-auth-content {
+    flex: 1 1 auto;
+    width: 100%;
+    max-width: 360px;
+    min-height: 0;
+    margin: 0 auto;
+    overflow-y: auto;
+    padding: 2px 2px 8px;
+}
+
+.sdk-frame.landscape .sdk-auth-content {
+    max-width: 560px;
+}
+
+.sdk-auth-content::-webkit-scrollbar {
+    width: 4px;
+}
+
+.sdk-auth-content::-webkit-scrollbar-thumb {
+    border-radius: 99px;
+    background: #cbd5e1;
+}
+
+.sdk-stack,
+.sdk-form {
+    display: grid;
+    gap: 12px;
+}
+
+.sdk-card {
+    width: 100%;
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding: 13px;
+    border: 1px solid var(--sdk-line);
+    border-radius: 17px;
+    color: var(--sdk-ink);
+    background: #fff;
+    text-align: left;
+    cursor: pointer;
+    box-shadow: 0 8px 20px rgba(15, 23, 42, 0.045);
+}
+
+.sdk-card:hover,
+.sdk-card:focus-visible {
+    border-color: rgba(18, 130, 219, 0.42);
+    background: #f8fbff;
+    outline: none;
+}
+
+.sdk-frame.landscape .sdk-card {
+    padding: 14px 16px;
+}
+
+.sdk-frame.landscape .sdk-card-main strong {
+    font-size: 15px;
+}
+
+.sdk-card-icon {
+    flex: 0 0 auto;
+    width: 40px;
+    height: 40px;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 14px;
+    color: var(--sdk-blue-dark);
+    background: #eaf5ff;
+}
+
+.sdk-card-main {
+    min-width: 0;
+    flex: 1;
+}
+
+.sdk-card-main strong {
+    display: block;
+    font-size: 14px;
+    line-height: 1.25;
+}
+
+.sdk-card-main small {
+    display: block;
+    margin-top: 3px;
+    color: var(--sdk-muted);
+    font-size: 12px;
+    line-height: 1.35;
+}
+
+.sdk-help-row,
+.sdk-link-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 10px;
+}
+
+.sdk-help-row button,
+.sdk-text-btn {
+    min-height: 40px;
+    border-radius: 14px;
+    color: var(--sdk-blue-dark);
+    background: #eff7ff;
+    cursor: pointer;
+    font-size: 12px;
+    font-weight: 800;
+}
+
+.sdk-field label {
+    display: block;
+    margin-bottom: 7px;
+    color: #334155;
+    font-size: 12px;
+    font-weight: 800;
+}
+
+.sdk-input,
+.sdk-select {
+    width: 100%;
+    height: 48px;
+    padding: 0 13px;
+    border: 1.5px solid var(--sdk-line);
+    border-radius: 14px;
+    outline: none;
+    color: var(--sdk-ink);
+    background: #f8fafc;
+    font-size: 14px;
+}
+
+.sdk-input:focus,
+.sdk-select:focus {
+    border-color: var(--sdk-blue);
+    background: #fff;
+    box-shadow: 0 0 0 4px rgba(18, 130, 219, 0.11);
+}
+
+.sdk-input.otp {
+    height: 54px;
+    text-align: center;
+    font-size: 24px;
+    font-weight: 900;
+    letter-spacing: 0.2em;
+}
+
+.sdk-primary-btn,
+.sdk-secondary-btn {
+    width: 100%;
+    min-height: 48px;
+    border-radius: 15px;
+    cursor: pointer;
+    font-weight: 900;
+}
+
+.sdk-primary-btn {
+    color: #fff;
+    background: linear-gradient(135deg, var(--sdk-blue-dark), var(--sdk-blue));
+    box-shadow: 0 12px 26px rgba(18, 130, 219, 0.24);
+}
+
+.sdk-secondary-btn {
+    color: var(--sdk-ink);
+    background: #eef4fa;
+}
+
+.sdk-message {
+    display: none;
+    margin-top: 12px;
+    padding: 11px 12px;
+    border-radius: 14px;
+    font-size: 12px;
+    line-height: 1.45;
+    font-weight: 700;
+}
+
+.sdk-message.show {
+    display: block;
+}
+
+.sdk-message.error {
+    color: var(--sdk-danger);
+    background: #fff1f2;
+}
+
+.sdk-message.success {
+    color: var(--sdk-success);
+    background: #ecfdf5;
+}
+
+.sdk-note {
+    margin: 0;
+    color: #516678;
+    font-size: 12px;
+    line-height: 1.45;
+}
+
+.sdk-success-box {
+    display: grid;
+    gap: 14px;
+    place-items: center;
+    padding: 28px 10px;
+    text-align: center;
+}
+
+.sdk-success-icon {
+    width: 64px;
+    height: 64px;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 22px;
+    color: #fff;
+    background: linear-gradient(135deg, #10b981, #059669);
+    font-size: 28px;
+}
+
+.sdk-success-box h3 {
+    margin: 0;
+    font-size: 20px;
+}
+
+.sdk-success-box p {
+    margin: 0;
+    color: var(--sdk-muted);
+    font-size: 13px;
+    line-height: 1.5;
+}
+
+.sdk-toast {
+    position: fixed;
+    left: 50%;
+    bottom: 18px;
+    z-index: 80;
+    min-width: 220px;
+    max-width: calc(100vw - 32px);
+    display: none;
+    align-items: center;
+    gap: 10px;
+    padding: 12px 14px;
+    border-radius: 16px;
+    color: #fff;
+    background: #0f172a;
+    box-shadow: 0 18px 44px rgba(15, 23, 42, 0.24);
+    transform: translateX(-50%);
+    font-size: 13px;
+    font-weight: 800;
+}
+
+.sdk-toast.show {
+    display: flex;
+}
+
+.sdk-toast.success {
+    background: var(--sdk-success);
+}
+
+.sdk-toast.info {
+    background: #0f172a;
+}
+
+.sdk-toast.error {
+    background: var(--sdk-danger);
+}
+
+@media (max-height: 560px) and (orientation: landscape) {
+    .sdk-frame.landscape {
+        height: calc(100vh - 84px);
+        min-height: 360px;
+    }
+
+    .sdk-frame.landscape .sdk-auth-shell {
+        padding: 28px 18px 12px;
+    }
+
+    .sdk-frame.landscape .sdk-card {
+        padding: 10px 12px;
+    }
+
+    .sdk-frame.landscape .sdk-input,
+    .sdk-frame.landscape .sdk-select,
+    .sdk-frame.landscape .sdk-primary-btn,
+    .sdk-frame.landscape .sdk-secondary-btn {
+        height: 42px;
+        min-height: 42px;
+    }
+}
+
+@media (max-width: 720px) {
+    .sdk-demo-page {
+        justify-content: flex-start;
+        padding: 10px;
+    }
+
+    .sdk-toolbar {
+        width: min(390px, calc(100vw - 20px));
+    }
+
+    .sdk-layout-switch button {
+        padding: 0 8px;
+    }
+
+    .sdk-frame.portrait,
+    .sdk-frame.landscape {
+        width: min(390px, calc(100vw - 20px));
+        height: calc(100vh - 92px);
+        min-height: 600px;
+        display: block;
+        border-radius: 38px;
+    }
+
+    .sdk-frame.landscape .sdk-brand-panel {
+        display: none;
+    }
+}
+
+@media (max-width: 380px) {
+    .sdk-frame.portrait,
+    .sdk-frame.landscape {
+        border-width: 8px;
+        border-radius: 34px;
+    }
+
+    .sdk-auth-shell {
+        padding-left: 14px;
+        padding-right: 14px;
+    }
+
+    .sdk-help-row,
+    .sdk-link-grid {
+        gap: 8px;
+    }
+}
