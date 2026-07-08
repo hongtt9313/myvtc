@@ -1,0 +1,1120 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+<meta charset="utf-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>MyVTC Mobile App Demo</title>
+<link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet"/> <link href="https://fonts.googleapis.com" rel="preconnect"/> <link href="https://fonts.gstatic.com" rel="preconnect" crossorigin/> <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet"/> <link href="styles/mobile-app.css" rel="stylesheet"/>
+</head>
+<body>
+<main class="mobile-app-shell">
+    <section class="phone-app-frame" aria-label="MyVTC Mobile App">
+        <div class="phone-status-bar">
+            <span>9:41</span>
+            <span class="status-icons">
+                <i class="fa fa-signal"></i>
+                <i class="fa fa-wifi"></i>
+                <i class="fa fa-battery-full"></i>
+            </span>
+        </div>
+
+        <section class="app-screen app-splash active" data-screen="splash">
+            <img src="icon/logo.png" alt="MyVTC" class="splash-logo"/>
+        </section>
+
+        <section class="app-screen app-main app-home-guest" data-screen="home-guest">
+    <div class="app-content has-bottom-tab">
+        <header class="mobile-header">
+            <img src="icon/logo_blue.png" alt="MyVTC" class="mobile-header-logo"/>
+            <button class="header-icon-btn" type="button" aria-label="Thông báo"><i class="fa fa-bell"></i></button>
+        </header>
+
+        <section class="home-hero-secure"> <div> <h1>Một tài khoản cho tất cả dịch vụ của VTC</h1> </div> <button class="primary-btn" type="button" data-screen-target="login-select">Đăng nhập</button> </section>
+
+        <section class="banner-slider home-banner-slider" aria-label="Dịch vụ nổi bật">
+    <article class="banner-card banner-ecosystem active">
+        <div class="banner-art">
+            <i class="fa fa-layer-group"></i>
+        </div>
+        <div class="banner-copy">
+            <strong>Hệ sinh thái VTC</strong>
+            <small>Một tài khoản cho tất cả dịch vụ của VTC.</small>
+        </div>
+    </article>
+    <article class="banner-card banner-balance">
+        <div class="banner-art">
+            <i class="fa fa-wallet"></i>
+        </div>
+        <div class="banner-copy">
+            <strong>Nạp số dư MyVTC</strong>
+            <small>Nạp Points nhanh, theo dõi giao dịch rõ ràng.</small>
+        </div>
+    </article>
+    <article class="banner-card banner-loyalty">
+        <div class="banner-art">
+            <i class="fa fa-medal"></i>
+        </div>
+        <div class="banner-copy">
+            <strong>VTC Loyalty</strong>
+            <small>Tích EXP, nhận voucher và quyền lợi thành viên.</small>
+        </div>
+    </article>
+</section>
+
+        <section class="section-head-row">
+    <div>
+        <p class="eyebrow">Dịch vụ</p>
+    </div>
+    <div class="service-menu-wrap">
+        <button class="service-menu-btn" type="button" data-service-menu-toggle aria-label="Bộ lọc dịch vụ">
+            <i class="fa fa-ellipsis-vertical"></i>
+        </button>
+        <div class="service-filter service-filter-menu" aria-label="Bộ lọc dịch vụ">
+            <button class="active" type="button" data-service-filter="all">All Service</button>
+            <button type="button" data-service-filter="pc">PC Service</button>
+            <button type="button" data-service-filter="mobile">Mobile Service</button>
+        </div>
+    </div>
+</section>
+
+        <section class="service-grid service-catalog-list">
+    <button class="service-grid-card" type="button" data-service-type="all" data-screen-target="shop">
+        <img src="icon/icon_001.jpg" alt="Nạp số dư MyVTC" onerror="this.style.display='none'"/>
+        <span>
+            <strong>Nạp số dư MyVTC</strong>
+            <small>Nạp Points, kiểm tra giao dịch và hoàn tiền.</small>
+        </span>
+    </button>
+    <button class="service-grid-card" type="button" data-service-type="pc" data-screen-target="service">
+        <img src="icon/icon_002.jpg" alt="Audition PC" onerror="this.style.display='none'"/>
+        <span>
+            <strong>Audition PC</strong>
+            <small>Dịch vụ âm nhạc, thời trang và cộng đồng.</small>
+        </span>
+    </button>
+    <button class="service-grid-card" type="button" data-service-type="pc" data-screen-target="service">
+        <img src="icon/icon_003.jpg" alt="Đột Kích Crossfire" onerror="this.style.display='none'"/>
+        <span>
+            <strong>Đột Kích Crossfire</strong>
+            <small>Dịch vụ bắn súng dành cho người chơi PC.</small>
+        </span>
+    </button>
+    <button class="service-grid-card" type="button" data-service-type="pc" data-screen-target="service">
+        <img src="icon/icon_004.jpg" alt="Truy Kích PC" onerror="this.style.display='none'"/>
+        <span>
+            <strong>Truy Kích PC</strong>
+            <small>Dịch vụ FPS trực tuyến trên PC.</small>
+        </span>
+    </button>
+    <button class="service-grid-card" type="button" data-service-type="pc" data-screen-target="service">
+        <img src="icon/icon_006.jpg" alt="Silkroad Origin VTC" onerror="this.style.display='none'"/>
+        <span>
+            <strong>Silkroad Origin VTC</strong>
+            <small>Dịch vụ nhập vai trực tuyến trên PC.</small>
+        </span>
+    </button>
+    <button class="service-grid-card" type="button" data-service-type="mobile" data-screen-target="service">
+        <img src="icon/icon_007.jpg" alt="Giang Hồ Bát Phái" onerror="this.style.display='none'"/>
+        <span>
+            <strong>Giang Hồ Bát Phái</strong>
+            <small>Dịch vụ mobile kiếm hiệp.</small>
+        </span>
+    </button>
+    <button class="service-grid-card" type="button" data-service-type="mobile" data-screen-target="service">
+        <img src="icon/icon_008.jpg" alt="Be A Pro Football" onerror="this.style.display='none'"/>
+        <span>
+            <strong>Be A Pro Football</strong>
+            <small>Dịch vụ bóng đá trên mobile.</small>
+        </span>
+    </button>
+    <button class="service-grid-card" type="button" data-service-type="mobile" data-screen-target="service">
+        <img src="icon/icon_010.jpg" alt="Đại Chiến Tam Quốc" onerror="this.style.display='none'"/>
+        <span>
+            <strong>Đại Chiến Tam Quốc</strong>
+            <small>Dịch vụ chiến thuật trên mobile.</small>
+        </span>
+    </button>
+</section>
+    </div>
+
+    <nav class="bottom-tab" aria-label="Topbar Mobile App">
+        <button class="active" type="button" data-screen-target="home-guest"><i class="fa fa-house"></i><span>Trang chủ</span></button>
+        <button type="button" data-screen-target="shop"><i class="fa fa-store"></i><span>Cửa hàng</span></button>
+        <button type="button" data-screen-target="service"><i class="fa fa-medal"></i><span>Loyalty</span></button>
+        <button type="button" data-screen-target="login-select"><i class="fa fa-user"></i><span>Tài khoản</span></button>
+    </nav>
+</section>
+
+        <section class="app-screen app-main" data-screen="service">
+            <div class="app-content has-bottom-tab">
+                <header class="mobile-header">
+                    <button class="header-icon-btn" type="button" data-screen-target="home-guest" aria-label="Quay lại"><i class="fa fa-arrow-left"></i></button>
+                    <h2>Loyalty</h2>
+                    <button class="header-icon-btn" type="button" data-screen-target="login-select" aria-label="Đăng nhập"><i class="fa fa-user"></i></button>
+                </header>
+
+                <section class="mobile-loyalty-guest">
+                    <div class="mobile-loyalty-hero-card">
+                        <p class="eyebrow">VTC Loyalty</p>
+                        <h1>Tích EXP, lên hạng và nhận ưu đãi</h1>
+                        <p>Đăng nhập để xem hạng thành viên, nhiệm vụ, điểm danh, voucher, kho đồ và thông báo Loyalty.</p>
+                        <button class="primary-btn" type="button" data-screen-target="login-select">Đăng nhập</button>
+                    </div>
+                    <div class="mobile-loyalty-feature-list">
+                        <article><i class="fa fa-crown"></i><div><strong>Hạng thành viên</strong><small>Đồng, Bạc, Vàng, Bạch Kim, Kim Cương.</small></div></article>
+                        <article><i class="fa fa-star"></i><div><strong>Nhiệm vụ và điểm danh</strong><small>Nhận EXP, Point và thưởng chuỗi ngày.</small></div></article>
+                        <article><i class="fa fa-ticket"></i><div><strong>Voucher và kho đồ</strong><small>Quản lý quà tặng đã nhận.</small></div></article>
+                    </div>
+                </section>
+            </div>
+            <nav class="bottom-tab" aria-label="Thanh điều hướng">
+                <button type="button" data-screen-target="home-guest"><i class="fa fa-house"></i><span>Trang chủ</span></button>
+                <button type="button" data-screen-target="shop"><i class="fa fa-store"></i><span>Cửa hàng</span></button>
+                <button class="active" type="button" data-screen-target="service"><i class="fa fa-medal"></i><span>Loyalty</span></button>
+                <button type="button" data-screen-target="login-select"><i class="fa fa-user"></i><span>Tài khoản</span></button>
+            </nav>
+        </section>
+
+        <section class="app-screen app-main" data-screen="shop">
+            <div class="app-content has-bottom-tab">
+                <header class="mobile-header">
+                    <button class="header-icon-btn" type="button" data-screen-target="home-guest" aria-label="Quay lại"><i class="fa fa-arrow-left"></i></button>
+                    <h2>Cửa hàng</h2>
+                    <button class="header-icon-btn" type="button" aria-label="Giỏ hàng"><i class="fa fa-bag-shopping"></i></button>
+                </header>
+
+                <section class="mobile-shop-hero" data-mobile-shop-slider>
+                    <button class="mobile-shop-slide active shop-slide-war" type="button" data-mobile-shop-feature="Giang Hồ Bát Phái">
+                        <span>VTC Mobile</span>
+                        <strong>Dịch vụ chiến thuật cấp SSS</strong>
+                        <small>Nạp số dư, nhận ưu đãi và sẵn sàng vào trận.</small>
+                    </button>
+                    <button class="mobile-shop-slide shop-slide-zombie" type="button" data-mobile-shop-feature="Đột Kích">
+                        <span>Dịch vụ sinh tồn</span>
+                        <strong>Anh hùng cảm địa</strong>
+                        <small>Trang bị vật phẩm, nâng cấp tài khoản và nhận quà.</small>
+                    </button>
+                    <button class="mobile-shop-slide shop-slide-cute" type="button" data-mobile-shop-feature="Ngôi Nhà Trong Mơ">
+                        <span>Ưu đãi mùa đông</span>
+                        <strong>Ngôi nhà trong mơ</strong>
+                        <small>Combo quà tặng, Point và voucher dành cho người chơi.</small>
+                    </button>
+                    <div class="mobile-shop-dots" data-mobile-shop-dots></div>
+                </section>
+
+                <section class="mobile-shop-banners">
+                    <button type="button" data-mobile-shop-service="Nạp số dư MyVTC"><span>Nạp số dư MyVTC</span><strong>Nạp Point nhanh</strong><small>Ưu đãi cho tài khoản đã đăng nhập</small></button>
+                    <button type="button" data-screen-target="service"><span>VTC Loyalty</span><strong>Tích EXP, đổi quà</strong><small>Xem hạng và nhiệm vụ thành viên</small></button>
+                    <button type="button" data-screen-target="service"><span>Hệ sinh thái VTC</span><strong>Khám phá dịch vụ</strong><small>PC Services và Mobile Services</small></button>
+                </section>
+
+                <section class="mobile-shop-section">
+                    <div class="mobile-shop-section-head">
+                        <h3>Dịch vụ của tôi</h3>
+                        <p>Danh sách dịch vụ nổi bật, nạp nhanh trong một thao tác.</p>
+                    </div>
+                    <div class="mobile-shop-recommend" data-mobile-shop-recommend></div>
+                </section>
+
+                <section class="mobile-shop-section">
+                    <div class="mobile-shop-section-head">
+                        <h3>Danh sách dịch vụ</h3>
+                        <p>Lọc theo nền tảng để tìm dịch vụ.</p>
+                    </div>
+                    <div class="mobile-shop-filters">
+                        <button class="active" type="button" data-mobile-shop-filter="all">Tất cả</button>
+                        <button type="button" data-mobile-shop-filter="mobile">Mobile</button>
+                        <button type="button" data-mobile-shop-filter="pc">PC</button>
+                    </div>
+                    <div class="mobile-shop-list" data-mobile-shop-list></div>
+                    <div class="mobile-shop-empty hidden" data-mobile-shop-empty>Không có dịch vụ phù hợp.</div>
+                </section>
+            </div>
+            <nav class="bottom-tab" aria-label="Thanh điều hướng">
+                <button type="button" data-screen-target="home-guest"><i class="fa fa-house"></i><span>Trang chủ</span></button>
+                <button type="button" data-screen-target="service"><i class="fa fa-grip"></i><span>Dịch vụ</span></button>
+                <button class="active" type="button" data-screen-target="shop"><i class="fa fa-store"></i><span>Cửa hàng</span></button>
+                <button type="button" data-screen-target="login-select"><i class="fa fa-user"></i><span>Tài khoản</span></button>
+            </nav>
+        </section>
+
+        <section class="app-screen auth-screen" data-screen="login-select">
+            <div class="auth-content has-bottom-tab">
+                <div class="auth-tabs">
+                    <button class="active" type="button">Đăng nhập</button>
+                    <button type="button" data-screen-target="register-select">Đăng ký</button>
+                </div>
+
+                <h1>Chọn tài khoản đăng nhập</h1>
+                <p class="auth-desc">Chọn tài khoản đã lưu trên thiết bị hoặc đăng nhập bằng tài khoản khác.</p>
+
+                <div class="saved-account-list" id="savedAccountList"></div>
+
+                <button class="primary-btn full-width" type="button" id="useAnotherLoginAccount">Sử dụng một tài khoản khác</button>
+                <button class="danger-link" type="button" id="logoutAllAccounts">Đăng xuất tất cả các tài khoản</button>
+            </div>
+
+            <nav class="bottom-tab" aria-label="Thanh điều hướng">
+                <button type="button" data-screen-target="home-guest"><i class="fa fa-house"></i><span>Trang chủ</span></button>
+                <button type="button" data-screen-target="shop"><i class="fa fa-store"></i><span>Cửa hàng</span></button>
+                <button type="button" data-screen-target="service"><i class="fa fa-medal"></i><span>Loyalty</span></button>
+                <button class="active" type="button" data-screen-target="login-select"><i class="fa fa-user"></i><span>Tài khoản</span></button>
+            </nav>
+        </section>
+
+        <section class="app-screen auth-screen" data-screen="login-username">
+            <div class="auth-content">
+                <header class="mobile-header">
+                    <button class="header-icon-btn" type="button" data-screen-target="login-select" aria-label="Quay lại"><i class="fa fa-arrow-left"></i></button>
+                    <h2>Đăng nhập</h2>
+                    <button class="header-icon-btn" type="button" data-screen-target="home-guest" aria-label="Đóng"><i class="fa fa-xmark"></i></button>
+                </header>
+
+                <label class="field-label" for="mobileUsername">Tài khoản</label>
+                <input class="mobile-input" id="mobileUsername" placeholder="SĐT, Email hoặc tên đăng nhập"/>
+                <p class="form-error-text" id="usernameError">Vui lòng nhập SĐT, Email hoặc tên đăng nhập.</p>
+
+                <div class="form-note-row">
+                    <span></span>
+                    <button type="button" data-screen-target="forgot-account">Quên tài khoản?</button>
+                </div>
+
+                <button class="primary-btn full-width" type="button" id="continueToPassword">Tiếp tục</button>
+
+                <div class="divider-row"><span></span><em>Hoặc</em><span></span></div>
+
+                <div class="social-auth-list compact-social-list">
+                    <button type="button" data-social-provider="Apple ID"><i class="fab fa-apple"></i><span>Đăng nhập với Apple</span></button>
+                    <button type="button" data-social-provider="Google"><strong class="google-mark">G</strong><span>Đăng nhập với Google</span></button>
+                    <button type="button" data-social-provider="Facebook"><i class="fab fa-facebook"></i><span>Đăng nhập với Facebook</span></button>
+                    <button type="button" id="quickLoginBtn"><i class="fa fa-bolt"></i><span>Đăng nhập nhanh</span></button>
+                </div>
+
+                <p class="signup-copy">Bạn chưa có tài khoản? <button type="button" data-screen-target="register-select">Đăng ký</button></p>
+            </div>
+        </section>
+
+        <section class="app-screen auth-screen" data-screen="login-password">
+            <div class="auth-content">
+                <header class="mobile-header">
+                    <button class="header-icon-btn" type="button" data-screen-target="login-username" aria-label="Quay lại"><i class="fa fa-arrow-left"></i></button>
+                    <h2>Nhập mật khẩu</h2>
+                    <button class="header-icon-btn" type="button" data-screen-target="home-guest" aria-label="Đóng"><i class="fa fa-xmark"></i></button>
+                </header>
+
+                <p class="auth-desc" id="passwordAccountLabel">Đăng nhập bằng tài khoản MyVTC</p>
+
+                <label class="field-label" for="mobilePassword">Mật khẩu</label>
+                <div class="password-field">
+                    <input id="mobilePassword" type="password" maxlength="32" placeholder="Nhập mật khẩu"/>
+                    <button class="password-toggle" type="button" data-toggle-password="mobilePassword" aria-label="Hiện mật khẩu"><i class="fa fa-eye-slash"></i></button>
+                </div>
+                <p class="form-error-text" id="passwordError">Mật khẩu 6-32 ký tự, gồm chữ hoa, chữ thường và số.</p>
+
+                <div class="form-note-row">
+                    <span></span>
+                    <button type="button" data-screen-target="forgot-password">Quên mật khẩu?</button>
+                </div>
+
+                <button class="primary-btn full-width" type="button" id="loginByPassword">Đăng nhập</button>
+
+                <div class="divider-row"><span></span><em>Hoặc</em><span></span></div>
+
+                <div class="social-auth-list">
+                    <button type="button" id="loginWithOtpBtn"><i class="fa fa-shield-halved"></i><span>Đăng nhập bằng OTP</span></button>
+                </div>
+            </div>
+        </section>
+
+        <section class="app-screen auth-screen" data-screen="login-otp-select">
+            <div class="auth-content">
+                <header class="mobile-header">
+                    <button class="header-icon-btn" type="button" data-screen-target="login-password" aria-label="Quay lại"><i class="fa fa-arrow-left"></i></button>
+                    <h2>Đăng nhập</h2>
+                    <button class="header-icon-btn" type="button" data-screen-target="home-guest" aria-label="Đóng"><i class="fa fa-xmark"></i></button>
+                </header>
+
+                <h1>Nhận mã OTP</h1>
+                <p class="auth-desc">Chọn kênh nhận mã xác thực cho tài khoản đã nhập.</p>
+
+                <div class="service-list otp-channel-list">
+                    <button class="list-card otp-channel-card" type="button" data-login-otp-channel="SMS">
+                        <i class="fa fa-comment-sms"></i>
+                        <div><strong>SMS</strong><small>Nhận mã qua tin nhắn SMS.</small></div>
+                    </button>
+                    <button class="list-card otp-channel-card" type="button" data-login-otp-channel="Voice">
+                        <i class="fa fa-phone-volume"></i>
+                        <div><strong>Voice</strong><small>Nhận mã qua cuộc gọi thoại.</small></div>
+                    </button>
+                    <button class="list-card otp-channel-card" type="button" data-login-otp-channel="Email">
+                        <i class="fa fa-envelope"></i>
+                        <div><strong>Email</strong><small>Nhận mã qua email đã xác thực.</small></div>
+                    </button>
+                    <button class="list-card otp-channel-card" type="button" data-login-otp-channel="OTP App">
+                        <i class="fa fa-mobile-screen-button"></i>
+                        <div><strong>OTP App</strong><small>Lấy mã trong ứng dụng xác thực.</small></div>
+                    </button>
+                </div>
+            </div>
+        </section>
+
+        <section class="app-screen auth-screen" data-screen="login-otp-verify">
+            <div class="auth-content">
+                <header class="mobile-header">
+                    <button class="header-icon-btn" type="button" data-screen-target="login-otp-select" aria-label="Quay lại"><i class="fa fa-arrow-left"></i></button>
+                    <h2>Đăng nhập</h2>
+                    <button class="header-icon-btn" type="button" data-screen-target="home-guest" aria-label="Đóng"><i class="fa fa-xmark"></i></button>
+                </header>
+
+                <h1>Nhập mã OTP</h1>
+                <p class="auth-desc" id="loginOtpChannelLabel">Nhập mã xác thực đã gửi.</p>
+
+                <label class="field-label" for="loginOtpCode">Mã OTP</label>
+                <input class="mobile-input otp-input" id="loginOtpCode" maxlength="6" inputmode="numeric" placeholder="Nhập mã OTP"/>
+                <p class="form-error-text" id="loginOtpError">Mã OTP không đúng. Mã demo là 123456.</p>
+
+                <button class="primary-btn full-width" type="button" id="verifyLoginOtpBtn">Xác nhận</button>
+                <button class="text-back-btn otp-action-btn" type="button" data-screen-target="login-otp-select">Đổi phương thức</button>
+            </div>
+        </section>
+
+        <section class="app-screen auth-screen" data-screen="social-oauth">
+            <div class="auth-content">
+                <header class="mobile-header">
+                    <button class="header-icon-btn" type="button" data-screen-target="login-username" aria-label="Quay lại"><i class="fa fa-arrow-left"></i></button>
+                    <h2>Liên kết tài khoản</h2>
+                    <button class="header-icon-btn" type="button" data-screen-target="home-guest" aria-label="Đóng"><i class="fa fa-xmark"></i></button>
+                </header>
+
+                <section class="oauth-card">
+                    <span class="oauth-icon"><i class="fa fa-shield-halved"></i></span>
+                    <h1 id="socialProviderTitle">Đăng nhập bằng tài khoản liên kết</h1>
+                    <p>MyVTC cần xác thực và cấp quyền truy cập hồ sơ cơ bản.</p>
+                    <button class="primary-btn full-width" type="button" id="confirmSocialLoginBtn">Xác thực và cho phép</button>
+                    <button class="text-back-btn" type="button" data-screen-target="login-username">Hủy bỏ</button>
+                </section>
+            </div>
+        </section>
+
+        <section class="app-screen auth-screen" data-screen="guest-login">
+            <div class="auth-content">
+                <header class="mobile-header">
+                    <button class="header-icon-btn" type="button" data-screen-target="login-username" aria-label="Quay lại"><i class="fa fa-arrow-left"></i></button>
+                    <h2>Đăng nhập nhanh</h2>
+                    <button class="header-icon-btn" type="button" data-screen-target="home-guest" aria-label="Đóng"><i class="fa fa-xmark"></i></button>
+                </header>
+
+                <section class="oauth-card">
+                    <span class="oauth-icon"><i class="fa fa-user-secret"></i></span>
+                    <h1>Tiếp tục bằng Guest ID</h1>
+                    <p>Dữ liệu demo cục bộ được gắn với mã tạm trên thiết bị.</p>
+                    <strong class="guest-id" id="guestIdLabel">GUEST-000000</strong>
+                    <button class="primary-btn full-width" type="button" id="confirmGuestLoginBtn">Tiếp tục</button>
+                    <button class="text-back-btn" type="button" data-screen-target="login-username">Quay lại</button>
+                </section>
+            </div>
+        </section>
+        <section class="app-screen app-main app-home-auth" data-screen="home-auth">
+    <div class="app-content has-bottom-tab">
+        <header class="mobile-header">
+            <img src="icon/logo_blue.png" alt="MyVTC" class="mobile-header-logo"/>
+            <button class="header-icon-btn" type="button" aria-label="Thông báo"><i class="fa fa-bell"></i></button>
+        </header>
+
+        <section class="account-summary-card secure-account-card mobile-account-quick-card" data-screen-target="account">
+            <span>Xin chào</span>
+            <h1 id="loggedInName">Nguyễn Văn A</h1>
+            <p>Thông tin cá nhân xem nhanh</p>
+            <div class="mobile-quick-profile-grid">
+                <div><small>Username</small><strong id="homeQuickUsername">0389954275</strong></div>
+                <div><small>Hạng thành viên</small><strong id="homeQuickRank">Hạng Đồng</strong></div>
+                <div><small>Số dư</small><strong id="homeQuickBalance">1.000 Points</strong></div>
+            </div>
+        </section>
+
+        <section class="balance-card">
+            <span>Số dư MyVTC</span>
+            <strong id="homeBalanceValue">1.000 Points</strong>
+            <button type="button" data-screen-target="shop-auth">Nạp Points</button>
+        </section>
+
+        <section class="banner-slider home-banner-slider" aria-label="Dịch vụ nổi bật">
+    <article class="banner-card banner-ecosystem active">
+        <div class="banner-art">
+            <i class="fa fa-layer-group"></i>
+        </div>
+        <div class="banner-copy">
+            <strong>Hệ sinh thái VTC</strong>
+            <small>Một tài khoản cho tất cả dịch vụ của VTC.</small>
+        </div>
+    </article>
+    <article class="banner-card banner-balance">
+        <div class="banner-art">
+            <i class="fa fa-wallet"></i>
+        </div>
+        <div class="banner-copy">
+            <strong>Nạp số dư MyVTC</strong>
+            <small>Nạp Points nhanh, theo dõi giao dịch rõ ràng.</small>
+        </div>
+    </article>
+    <article class="banner-card banner-loyalty">
+        <div class="banner-art">
+            <i class="fa fa-medal"></i>
+        </div>
+        <div class="banner-copy">
+            <strong>VTC Loyalty</strong>
+            <small>Tích EXP, nhận voucher và quyền lợi thành viên.</small>
+        </div>
+    </article>
+</section>
+
+       <section class="section-head-row">
+    <div>
+        <p class="eyebrow">Dịch vụ</p>
+        
+    </div>
+    <div class="service-menu-wrap">
+        <button class="service-menu-btn" type="button" data-service-menu-toggle aria-label="Bộ lọc dịch vụ">
+            <i class="fa fa-ellipsis-vertical"></i>
+        </button>
+        <div class="service-filter service-filter-menu" aria-label="Bộ lọc dịch vụ">
+            <button class="active" type="button" data-service-filter="all">All Service</button>
+            <button type="button" data-service-filter="pc">PC Service</button>
+            <button type="button" data-service-filter="mobile">Mobile Service</button>
+        </div>
+    </div>
+</section>
+
+        <section class="service-grid service-catalog-list">
+    <button class="service-grid-card" type="button" data-service-type="all" data-screen-target="shop-auth">
+        <img src="icon/icon_001.jpg" alt="Nạp số dư MyVTC" onerror="this.style.display='none'"/>
+        <span>
+            <strong>Nạp số dư MyVTC</strong>
+            <small>Nạp Points, kiểm tra giao dịch và hoàn tiền.</small>
+        </span>
+    </button>
+    <button class="service-grid-card" type="button" data-service-type="pc" data-screen-target="service-auth">
+        <img src="icon/icon_002.jpg" alt="Audition PC" onerror="this.style.display='none'"/>
+        <span>
+            <strong>Audition PC</strong>
+            <small>Dịch vụ âm nhạc, thời trang và cộng đồng.</small>
+        </span>
+    </button>
+    <button class="service-grid-card" type="button" data-service-type="pc" data-screen-target="service-auth">
+        <img src="icon/icon_003.jpg" alt="Đột Kích Crossfire" onerror="this.style.display='none'"/>
+        <span>
+            <strong>Đột Kích Crossfire</strong>
+            <small>Dịch vụ bắn súng dành cho người chơi PC.</small>
+        </span>
+    </button>
+    <button class="service-grid-card" type="button" data-service-type="pc" data-screen-target="service-auth">
+        <img src="icon/icon_004.jpg" alt="Truy Kích PC" onerror="this.style.display='none'"/>
+        <span>
+            <strong>Truy Kích PC</strong>
+            <small>Dịch vụ FPS trực tuyến trên PC.</small>
+        </span>
+    </button>
+    <button class="service-grid-card" type="button" data-service-type="pc" data-screen-target="service-auth">
+        <img src="icon/icon_006.jpg" alt="Silkroad Origin VTC" onerror="this.style.display='none'"/>
+        <span>
+            <strong>Silkroad Origin VTC</strong>
+            <small>Dịch vụ nhập vai trực tuyến trên PC.</small>
+        </span>
+    </button>
+    <button class="service-grid-card" type="button" data-service-type="mobile" data-screen-target="service-auth">
+        <img src="icon/icon_007.jpg" alt="Giang Hồ Bát Phái" onerror="this.style.display='none'"/>
+        <span>
+            <strong>Giang Hồ Bát Phái</strong>
+            <small>Dịch vụ mobile kiếm hiệp.</small>
+        </span>
+    </button>
+    <button class="service-grid-card" type="button" data-service-type="mobile" data-screen-target="service-auth">
+        <img src="icon/icon_008.jpg" alt="Be A Pro Football" onerror="this.style.display='none'"/>
+        <span>
+            <strong>Be A Pro Football</strong>
+            <small>Dịch vụ bóng đá trên mobile.</small>
+        </span>
+    </button>
+    <button class="service-grid-card" type="button" data-service-type="mobile" data-screen-target="service-auth">
+        <img src="icon/icon_010.jpg" alt="Đại Chiến Tam Quốc" onerror="this.style.display='none'"/>
+        <span>
+            <strong>Đại Chiến Tam Quốc</strong>
+            <small>Dịch vụ chiến thuật trên mobile.</small>
+        </span>
+    </button>
+</section>
+    </div>
+
+    <nav class="bottom-tab" aria-label="Topbar Mobile App">
+        <button class="active" type="button" data-screen-target="home-auth"><i class="fa fa-house"></i><span>Trang chủ</span></button>
+        <button type="button" data-screen-target="shop-auth"><i class="fa fa-store"></i><span>Cửa hàng</span></button>
+        <button type="button" data-screen-target="service-auth"><i class="fa fa-medal"></i><span>Loyalty</span></button>
+        <button type="button" data-screen-target="account"><i class="fa fa-user"></i><span>Tài khoản</span></button>
+    </nav>
+</section>
+
+        <section class="app-screen app-main" data-screen="account">
+            <div class="app-content has-bottom-tab mobile-account-content">
+                <div class="mobile-account-menu-view" id="mobileAccountMenuView">
+                    <header class="mobile-header">
+                        <button class="header-icon-btn" type="button" data-screen-target="home-auth" aria-label="Quay lại"><i class="fa fa-arrow-left"></i></button>
+                        <h2>Tài khoản</h2>
+                        <button class="header-icon-btn" type="button" data-account-panel="notifications" aria-label="Thông báo"><i class="fa fa-bell"></i></button>
+                    </header>
+
+                    <section class="profile-card mobile-profile-card">
+                        <button class="mobile-avatar-btn" type="button" data-account-edit="avatar" aria-label="Đổi ảnh đại diện">
+                            <span class="profile-avatar" id="accountAvatarInitial">A</span>
+                            <img class="mobile-account-avatar-img" id="mobileAccountAvatar" alt="Avatar"/>
+                            <i class="fa fa-camera"></i>
+                        </button>
+                        <h1 id="accountProfileName">Nguyễn Văn A</h1>
+                        <p id="accountProfileEmail">thuyhong.vnt@gmail.com</p>
+                        <div class="mobile-quick-profile-grid in-account">
+                            <div><small>Username</small><strong id="accountQuickUsername">0389954275</strong></div>
+                            <div><small>Hạng thành viên</small><strong id="accountQuickRank">Hạng Đồng</strong></div>
+                            <div><small>Số dư</small><strong id="accountQuickBalance">1.000 Points</strong></div>
+                        </div>
+                    </section>
+
+                    <section class="mobile-account-feature-list" aria-label="Quản lý tài khoản">
+                        <button type="button" data-account-panel="personal"><i class="fa fa-id-card"></i><span>Thông tin cá nhân</span><small>Xem và cập nhật hồ sơ</small><em class="fa fa-chevron-right"></em></button>
+                        <button type="button" data-account-panel="linked"><i class="fa fa-link"></i><span>Tài khoản liên kết</span><small>Google, Facebook, Apple</small><em class="fa fa-chevron-right"></em></button>
+                        <button type="button" data-account-panel="security"><i class="fa fa-shield-halved"></i><span>Bảo mật tài khoản</span><small>Mật khẩu, OTP, phiên đăng nhập</small><em class="fa fa-chevron-right"></em></button>
+                        <button type="button" data-account-panel="payment"><i class="fa fa-credit-card"></i><span>Quản lý thanh toán</span><small>Phương thức và địa chỉ thanh toán</small><em class="fa fa-chevron-right"></em></button>
+                        <button type="button" data-account-panel="transactions"><i class="fa fa-clock-rotate-left"></i><span>Lịch sử giao dịch</span><small>Tra cứu nạp, thanh toán, hoàn tiền</small><em class="fa fa-chevron-right"></em></button>
+                        <button type="button" data-account-panel="bag"><i class="fa fa-box-open"></i><span>Kho đồ</span><small>Quà tặng, vật phẩm và voucher đã nhận</small><em class="fa fa-chevron-right"></em></button>
+                        <button type="button" data-account-panel="invite"><i class="fa fa-user-plus"></i><span>Mời bạn bè</span><small>Mã mời, link chia sẻ và lịch sử thưởng</small><em class="fa fa-chevron-right"></em></button>
+                        <button type="button" data-account-panel="notifications"><i class="fa fa-bell"></i><span>Thông báo</span><small>Tài khoản, giao dịch, ưu đãi Loyalty</small><em class="fa fa-chevron-right"></em></button>
+                        <button type="button" data-account-panel="language"><i class="fa fa-language"></i><span>Đổi ngôn ngữ</span><small>Tiếng Việt hoặc English</small><em class="fa fa-chevron-right"></em></button>
+                        <button type="button" data-account-panel="terms"><i class="fa fa-file-lines"></i><span>Điều khoản chính sách</span><small>Điều khoản sử dụng MyVTC</small><em class="fa fa-chevron-right"></em></button>
+                        <button type="button" data-account-panel="privacy"><i class="fa fa-user-shield"></i><span>Quyền riêng tư</span><small>Dữ liệu cá nhân và quyền truy cập</small><em class="fa fa-chevron-right"></em></button>
+                    </section>
+
+                    <section class="settings-list mobile-logout-list">
+                        <button type="button" id="logoutAccountBtn"><i class="fa fa-right-from-bracket"></i><span>Đăng xuất</span><small></small></button>
+                    </section>
+                </div>
+
+                <div class="mobile-account-detail-view hidden" id="mobileAccountDetailView">
+                    <header class="mobile-header mobile-account-detail-header">
+                        <button class="header-icon-btn" type="button" data-account-back aria-label="Quay lại"><i class="fa fa-arrow-left"></i></button>
+                        <h2 id="mobileAccountDetailTitle">Thông tin cá nhân</h2>
+                        <span class="header-icon-placeholder" aria-hidden="true"></span>
+                    </header>
+
+                <section class="mobile-account-panel active" data-account-panel-content="personal">
+                    <div class="mobile-panel-title"><div><h3>Thông tin cá nhân</h3><p>Cùng dữ liệu giả lập với Website MyAccount.</p></div><button type="button" data-account-edit="basic">Cập nhật</button></div>
+                    <div class="mobile-info-list">
+                        <div><span>Tên đăng nhập</span><strong id="mobileAccountUsername">--</strong></div>
+                        <div class="is-editable" data-account-edit="nickname"><span>Nickname</span><strong id="mobileAccountNickname">--</strong><i class="fa fa-chevron-right"></i></div>
+                        <div class="is-editable" data-account-edit="basic"><span>Họ và tên</span><strong id="mobileAccountFullname">--</strong><i class="fa fa-chevron-right"></i></div>
+                        <div><span>Mã tài khoản</span><strong id="mobileAccountId">--</strong></div>
+                        <div class="is-editable" data-account-edit="basic"><span>Số CCCD</span><strong id="mobileAccountCccd">--</strong><i class="fa fa-chevron-right"></i></div>
+                        <div class="is-editable" data-account-edit="basic"><span>Địa chỉ</span><strong id="mobileAccountAddress">--</strong><i class="fa fa-chevron-right"></i></div>
+                        <div class="is-editable" data-account-edit="basic"><span>Giới tính</span><strong id="mobileAccountGender">--</strong><i class="fa fa-chevron-right"></i></div>
+                        <div class="is-editable" data-account-edit="basic"><span>Ngày sinh</span><strong id="mobileAccountBirthday">--</strong><i class="fa fa-chevron-right"></i></div>
+                        <div><span>Điện thoại</span><strong id="mobileAccountPhone">--</strong></div>
+                        <div><span>Email</span><strong id="mobileAccountEmail">--</strong></div>
+                    </div>
+                </section>
+
+                <section class="mobile-account-panel" data-account-panel-content="linked">
+                    <div class="mobile-panel-title"><div><h3>Tài khoản liên kết</h3><p>Liên kết đăng nhập Google, Facebook, Apple.</p></div></div>
+                    <div class="mobile-linked-list">
+                        <article><i class="fab fa-google linked-google"></i><div><strong>Google</strong><small id="mobileGoogleName">Trần Thúy Hồng</small></div><button type="button" class="danger" data-linked-provider="Google">Ngắt kết nối</button></article>
+                        <article><i class="fab fa-facebook linked-facebook"></i><div><strong>Facebook</strong><small id="mobileFacebookName">Thúy Hồng Trần</small></div><button type="button" class="danger" data-linked-provider="Facebook">Ngắt kết nối</button></article>
+                        <article><i class="fab fa-apple linked-apple"></i><div><strong>Apple</strong><small id="mobileAppleName">Chưa kết nối</small></div><button type="button" data-linked-provider="Apple">Kết nối</button></article>
+                    </div>
+                    <div class="mobile-mini-card"><strong>Dịch vụ đã cấp quyền</strong><p>VTC Pay, Loyalty, Shop đang hoạt động.</p></div>
+                </section>
+
+                <section class="mobile-account-panel" data-account-panel-content="security">
+                    <div class="mobile-panel-title"><div><h3>Bảo mật tài khoản</h3><p>Quản lý mật khẩu, OTP và xác minh 2 bước.</p></div></div>
+                    <div class="mobile-security-list">
+                        <article><i class="fa fa-key"></i><div><strong>Mật khẩu</strong><small>Cập nhật lần cuối 20/06/2026</small></div><button type="button" data-security-action="password">Đổi</button></article>
+                        <article><i class="fa fa-shield-halved"></i><div><strong>Xác minh 2 bước</strong><small id="twoFaStatus">Đang bật SMS OTP, Email OTP</small></div><button type="button" data-security-action="2fa">Quản lý</button></article>
+                        <article><i class="fa fa-mobile-screen"></i><div><strong>Phiên đăng nhập</strong><small>2 thiết bị đang hoạt động</small></div><button type="button" data-security-action="sessions">Kiểm tra</button></article>
+                        <article><i class="fa fa-fingerprint"></i><div><strong>eKYC</strong><small>CCCD đã xác thực</small></div><button type="button" data-security-action="ekyc">Xem</button></article>
+                    </div>
+                </section>
+
+                <section class="mobile-account-panel" data-account-panel-content="payment">
+                    <div class="mobile-panel-title"><div><h3>Quản lý thanh toán</h3><p>Lưu phương thức và địa chỉ thanh toán.</p></div><button type="button" data-payment-action="add-method">Thêm</button></div>
+                    <div class="mobile-payment-list">
+                        <article><i class="fab fa-cc-visa"></i><div><strong id="mobileSavedPaymentName">Visa</strong><small id="mobileSavedPaymentDetail">Thẻ quốc tế đã lưu • ***1234</small></div><span>Ưu tiên</span></article>
+                        <article><i class="fa fa-location-dot"></i><div><strong>Địa chỉ thanh toán</strong><small id="mobileBillingAddress">23 Lạc Trung, Hà Nội</small></div><button type="button" data-payment-action="billing-address">Sửa</button></article>
+                    </div>
+                </section>
+
+                <section class="mobile-account-panel" data-account-panel-content="transactions">
+                    <div class="mobile-panel-title"><div><h3>Lịch sử giao dịch</h3><p>Tra cứu tối đa 90 ngày.</p></div></div>
+                    <div class="mobile-transaction-filter">
+                        <select id="mobileTransactionType"><option value="">Tất cả</option><option>Nạp Point</option><option>Thanh toán Point</option><option>Hoàn tiền</option></select>
+                        <input type="date" id="mobileTransactionStart"/>
+                        <input type="date" id="mobileTransactionEnd"/>
+                        <input type="text" id="mobileTransactionSearch" placeholder="Mã giao dịch hoặc nội dung"/>
+                        <button type="button" id="mobileTransactionReset">Xóa lọc</button>
+                    </div>
+                    <div class="mobile-transaction-list" id="mobileTransactionList"></div>
+                    <div class="mobile-empty-state hidden" id="mobileTransactionEmpty">Không có giao dịch phù hợp.</div>
+                </section>
+
+                <section class="mobile-account-panel" data-account-panel-content="bag">
+                    <div class="mobile-panel-title"><div><h3>Kho đồ</h3><p>Quà tặng, vật phẩm và voucher đã nhận từ Loyalty.</p></div></div>
+                    <div id="mobileAccountBagContent" class="mobile-loyalty-detail-content"></div>
+                </section>
+
+                <section class="mobile-account-panel" data-account-panel-content="invite">
+                    <div class="mobile-panel-title"><div><h3>Mời bạn bè</h3><p>Chia sẻ mã mời và theo dõi lịch sử thưởng.</p></div></div>
+                    <div id="mobileAccountInviteContent" class="mobile-loyalty-detail-content"></div>
+                </section>
+
+                <section class="mobile-account-panel" data-account-panel-content="notifications">
+                    <div class="mobile-panel-title"><div><h3>Thông báo</h3><p>Thông báo tài khoản, giao dịch và ưu đãi Loyalty.</p></div></div>
+                    <div class="mobile-notification-actions"><button type="button" id="mobileMarkAllRead">Đánh dấu đã đọc</button><button type="button" id="mobileClearRead">Ẩn đã đọc</button></div>
+                    <div class="mobile-notification-list" id="mobileNotificationList"></div>
+                </section>
+
+                <section class="mobile-account-panel" data-account-panel-content="language">
+                    <div class="mobile-panel-title"><div><h3>Đổi ngôn ngữ</h3><p>Thiết lập ngôn ngữ hiển thị.</p></div></div>
+                    <div class="mobile-language-list">
+                        <button class="active" type="button" data-language="vi"><span>🇻🇳 Tiếng Việt</span><i class="fa fa-check"></i></button>
+                        <button type="button" data-language="en"><span>🇺🇸 English</span><i class="fa fa-check"></i></button>
+                    </div>
+                </section>
+
+                <section class="mobile-account-panel" data-account-panel-content="terms">
+                    <div class="mobile-panel-title"><div><h3>Điều khoản chính sách</h3><p>Thông tin điều khoản sử dụng tài khoản MyVTC.</p></div></div>
+                    <article class="mobile-terms-card">
+                        <h4>Điều khoản sử dụng</h4>
+                        <p>Người dùng chịu trách nhiệm bảo mật thông tin đăng nhập, OTP và thiết bị xác thực.</p>
+                        <p>MyVTC ghi nhận lịch sử đăng nhập, giao dịch và thay đổi thông tin để phục vụ bảo mật, chăm sóc khách hàng và đối soát.</p>
+                        <p>Giao dịch Points, EXP, voucher và hoàn tiền tuân theo chính sách của từng dịch vụ VTC tại thời điểm phát sinh.</p>
+                    </article>
+                </section>
+
+
+
+                    <section class="mobile-account-panel" data-account-panel-content="privacy">
+                        <div class="mobile-panel-title"><div><h3>Quyền riêng tư</h3><p>Quản lý dữ liệu cá nhân và quyền truy cập dịch vụ.</p></div></div>
+                        <article class="mobile-terms-card">
+                            <h4>Dữ liệu cá nhân</h4>
+                            <p>MyVTC lưu thông tin hồ sơ, đăng nhập, eKYC, giao dịch Points và lịch sử thay đổi để phục vụ định danh, bảo mật và đối soát.</p>
+                            <p>Bạn được xem dữ liệu tài khoản, kiểm tra dịch vụ đã cấp quyền và yêu cầu cập nhật thông tin khi dữ liệu chưa đúng.</p>
+                            <p>Các dịch vụ đã cấp quyền: VTC Pay, Loyalty, Shop.</p>
+                        </article>
+                    </section>
+                </div>
+            </div>
+            <nav class="bottom-tab" aria-label="Thanh điều hướng">
+                <button type="button" data-screen-target="home-auth"><i class="fa fa-house"></i><span>Trang chủ</span></button>
+                <button type="button" data-screen-target="service-auth"><i class="fa fa-medal"></i><span>Loyalty</span></button>
+                <button type="button" data-screen-target="shop-auth"><i class="fa fa-store"></i><span>Cửa hàng</span></button>
+                <button class="active" type="button" data-screen-target="account"><i class="fa fa-user"></i><span>Tài khoản</span></button>
+            </nav>
+        </section>
+
+        <section class="app-screen app-main" data-screen="service-auth">
+            <div class="app-content has-bottom-tab">
+                <header class="mobile-header">
+                    <button class="header-icon-btn" type="button" data-screen-target="home-auth" aria-label="Quay lại"><i class="fa fa-arrow-left"></i></button>
+                    <h2>Loyalty</h2>
+                    <span class="header-icon-placeholder" aria-hidden="true"></span>
+                </header>
+
+                <section id="mobileLoyaltyMenuView" class="mobile-loyalty-view">
+                    <div class="mobile-loyalty-hero-card">
+                        <div class="mobile-loyalty-hero-top">
+                            <div>
+                                <p class="eyebrow">Tổng quan Loyalty</p>
+                                <h1 id="mobileLoyaltyRankName">Hạng Đồng</h1>
+                                <p id="mobileLoyaltyRankDesc">Điểm hiện tại của bạn là 20 / 500 EXP để xét hạng Bạc.</p>
+                            </div>
+                            <span class="mobile-loyalty-medal"><i class="fa fa-crown"></i></span>
+                        </div>
+                        <div class="mobile-loyalty-stats">
+                            <div><span>EXP hiện tại</span><strong id="mobileLoyaltyExp">20</strong></div>
+                            <div><span>Chu kỳ</span><strong id="mobileLoyaltyCycleExp">20</strong></div>
+                            <div><span>Hạng kế tiếp</span><strong id="mobileLoyaltyNextRank">Bạc</strong></div>
+                        </div>
+                        <div class="mobile-loyalty-progress-head"><span>Tiến trình lên hạng</span><strong id="mobileLoyaltyProgressText">20 / 500 EXP</strong></div>
+                        <div class="mobile-loyalty-progress"><span id="mobileLoyaltyProgressFill" style="width: 4%"></span></div>
+                    </div>
+
+                    <section class="mobile-loyalty-section">
+                        <div class="section-head-row compact"><div><p class="eyebrow">Chức năng</p><h3>Danh mục</h3></div></div>
+                        <div class="mobile-loyalty-menu-list">
+                            <button type="button" data-loyalty-panel="rank"><i class="fa fa-crown"></i><span><strong>Hạng thành viên</strong><small>EXP, tiến trình, quyền lợi theo hạng.</small></span><b>›</b></button>
+                            <button type="button" data-loyalty-panel="history"><i class="fa fa-clock-rotate-left"></i><span><strong>Lịch sử EXP</strong><small>Cộng, trừ EXP, voucher và quà tặng.</small></span><b>›</b></button>
+                            <button type="button" data-loyalty-panel="missions"><i class="fa fa-list-check"></i><span><strong>Nhiệm vụ</strong><small>Làm nhiệm vụ để nhận EXP và Point.</small></span><b>›</b></button>
+                            <button type="button" data-loyalty-panel="checkin"><i class="fa fa-calendar-check"></i><span><strong>Điểm danh</strong><small>Nhận +1 Point mỗi ngày, chuỗi 7 ngày nhận +10 Point.</small></span><b>›</b></button>
+                            <button type="button" data-loyalty-panel="voucher"><i class="fa fa-ticket"></i><span><strong>Voucher</strong><small>Voucher nạp Points, giảm giá và ưu đãi dịch vụ.</small></span><b>›</b></button>
+                            <button type="button" data-loyalty-panel="events"><i class="fa fa-gift"></i><span><strong>Sự kiện ưu đãi</strong><small>Chương trình đang hoạt động.</small></span><b>›</b></button>
+                        </div>
+                    </section>
+                </section>
+
+                <section id="mobileLoyaltyDetailView" class="mobile-loyalty-view hidden">
+                    <div class="mobile-detail-header-inline">
+                        <button class="header-icon-btn" type="button" data-loyalty-back aria-label="Quay lại Loyalty"><i class="fa fa-arrow-left"></i></button>
+                        <div><h3 id="mobileLoyaltyDetailTitle">Hạng thành viên</h3></div>
+                    </div>
+                    <div id="mobileLoyaltyDetailContent" class="mobile-loyalty-detail-content"></div>
+                </section>
+            </div>
+            <nav class="bottom-tab" aria-label="Thanh điều hướng">
+                <button type="button" data-screen-target="home-auth"><i class="fa fa-house"></i><span>Trang chủ</span></button>
+                <button type="button" data-screen-target="shop-auth"><i class="fa fa-store"></i><span>Cửa hàng</span></button>
+                <button class="active" type="button" data-screen-target="service-auth"><i class="fa fa-medal"></i><span>Loyalty</span></button>
+                <button type="button" data-screen-target="account"><i class="fa fa-user"></i><span>Tài khoản</span></button>
+            </nav>
+        </section>
+
+        <section class="app-screen app-main" data-screen="shop-auth">
+        <div class="app-content has-bottom-tab">
+            <header class="mobile-header">
+                <button class="header-icon-btn" type="button" data-screen-target="home-auth" aria-label="Quay lại"><i class="fa fa-arrow-left"></i></button>
+                <h2>Cửa hàng</h2>
+                <button class="header-icon-btn" type="button" aria-label="Giỏ hàng"><i class="fa fa-bag-shopping"></i></button>
+            </header>
+
+                <section class="mobile-shop-hero" data-mobile-shop-slider>
+                <button class="mobile-shop-slide active shop-slide-war" type="button" data-mobile-shop-feature="Giang Hồ Bát Phái">
+                    <span>VTC Mobile</span>
+                    <strong>Dịch vụ chiến thuật cấp SSS</strong>
+                    <small>Nạp số dư, nhận ưu đãi và sẵn sàng vào trận.</small>
+                </button>
+                <button class="mobile-shop-slide shop-slide-zombie" type="button" data-mobile-shop-feature="Đột Kích">
+                    <span>Dịch vụ sinh tồn</span>
+                    <strong>Anh hùng cảm địa</strong>
+                    <small>Trang bị vật phẩm, nâng cấp tài khoản và nhận quà.</small>
+                </button>
+                <button class="mobile-shop-slide shop-slide-cute" type="button" data-mobile-shop-feature="Ngôi Nhà Trong Mơ">
+                    <span>Ưu đãi mùa đông</span>
+                    <strong>Ngôi nhà trong mơ</strong>
+                    <small>Combo quà tặng, Point và voucher dành cho người chơi.</small>
+                </button>
+                <div class="mobile-shop-dots" data-mobile-shop-dots></div>
+            </section>
+
+            <section class="mobile-shop-banners">
+                <button type="button" data-mobile-shop-service="Nạp số dư MyVTC"><span>Nạp số dư MyVTC</span><strong>Nạp Point nhanh</strong><small>Ưu đãi cho tài khoản đã đăng nhập</small></button>
+                <button type="button" data-screen-target="service-auth"><span>VTC Loyalty</span><strong>Tích EXP, đổi quà</strong><small>Xem hạng và nhiệm vụ thành viên</small></button>
+                <button type="button" data-screen-target="service-auth"><span>Hệ sinh thái VTC</span><strong>Khám phá dịch vụ</strong><small>PC Services và Mobile Services</small></button>
+            </section>
+
+            <section class="mobile-shop-section">
+                <div class="mobile-shop-section-head">
+                    <h3>Dịch vụ của tôi</h3>
+                    <p>Danh sách dịch vụ nổi bật, nạp nhanh trong một thao tác.</p>
+                </div>
+                <div class="mobile-shop-recommend" data-mobile-shop-recommend></div>
+            </section>
+
+            <section class="mobile-shop-section">
+                <div class="mobile-shop-section-head">
+                    <h3>Danh sách dịch vụ</h3>
+                    <p>Lọc theo nền tảng để tìm dịch vụ.</p>
+                </div>
+                <div class="mobile-shop-filters">
+                    <button class="active" type="button" data-mobile-shop-filter="all">Tất cả</button>
+                    <button type="button" data-mobile-shop-filter="mobile">Mobile</button>
+                    <button type="button" data-mobile-shop-filter="pc">PC</button>
+                </div>
+                <div class="mobile-shop-list" data-mobile-shop-list></div>
+                <div class="mobile-shop-empty hidden" data-mobile-shop-empty>Không có dịch vụ phù hợp.</div>
+            </section>
+        </div>
+
+        <nav class="bottom-tab" aria-label="Thanh điều hướng">
+            <button type="button" data-screen-target="home-auth"><i class="fa fa-house"></i><span>Trang chủ</span></button>
+            <button type="button" data-screen-target="service-auth"><i class="fa fa-medal"></i><span>Loyalty</span></button>
+            <button class="active" type="button" data-screen-target="shop-auth"><i class="fa fa-store"></i><span>Cửa hàng</span></button>
+            <button type="button" data-screen-target="account"><i class="fa fa-user"></i><span>Tài khoản</span></button>
+        </nav>
+        </section>
+
+        <section class="app-screen app-main" data-screen="shop-detail">
+            <div class="app-content shop-detail-mobile-content">
+                <header class="mobile-header">
+                    <button class="header-icon-btn" type="button" data-mobile-shop-back aria-label="Quay lại"><i class="fa fa-arrow-left"></i></button>
+                    <h2>Nạp dịch vụ</h2>
+                    <button class="header-icon-btn" type="button" data-mobile-shop-reset aria-label="Làm mới"><i class="fa fa-rotate-right"></i></button>
+                </header>
+
+                <section class="mobile-recharge-head">
+                    <div class="mobile-recharge-icon" id="mobileRechargeIcon"></div>
+                    <div>
+                        <span>Nạp dịch vụ</span>
+                        <h1 id="mobileRechargeServiceName">Audition PC</h1>
+                    </div>
+                </section>
+
+                <section class="mobile-recharge-card">
+                    <div class="mobile-shop-section-head">
+                        <h3>Tài khoản nạp</h3>
+                        <p>Chọn đúng tài khoản sử dụng dịch vụ cần nạp.</p>
+                    </div>
+                    <div id="mobileRechargeAccountBox"></div>
+                </section>
+
+                <section class="mobile-recharge-card">
+                    <div class="mobile-shop-section-head">
+                        <h3>Danh sách gói</h3>
+                        <p>Chọn gói nạp phù hợp.</p>
+                    </div>
+                    <div class="mobile-shop-filters hidden" id="mobileRechargePackageFilters"></div>
+                    <div class="mobile-recharge-package-list" id="mobileRechargePackageList"></div>
+                </section>
+
+                <section class="mobile-recharge-card mobile-recharge-order-card">
+                    <div class="mobile-shop-section-head">
+                        <h3>Thông tin đơn hàng</h3>
+                        <p>Kiểm tra đơn trước khi thanh toán.</p>
+                    </div>
+                    <div class="mobile-order-row"><span>Tên sản phẩm</span><strong id="mobileOrderProductName">Chưa chọn gói</strong></div>
+                    <div class="mobile-order-row"><span>Số lượng</span><div class="mobile-order-qty"><button type="button" data-mobile-qty="-1">-</button><strong id="mobileOrderQuantity">1</strong><button type="button" data-mobile-qty="1">+</button></div></div>
+                    <details class="mobile-order-collapse" open>
+                        <summary>Phương thức thanh toán</summary>
+                        <div class="mobile-payment-grid" id="mobileRechargePaymentMethods"></div>
+                    </details>
+                    <details class="mobile-order-collapse">
+                        <summary>Voucher</summary>
+                        <div class="mobile-voucher-box">
+                            <input id="mobileRechargeVoucher" placeholder="Nhập mã voucher">
+                            <select id="mobileRechargeVoucherSelect">
+                                <option value="">Chọn mã có sẵn</option>
+                                <option value="MYVTC10">MYVTC10 - Giảm 10%</option>
+                                <option value="VTCPAY20">VTCPAY20 - Giảm 20.000đ</option>
+                                <option value="NEWUSER">NEWUSER - Giảm 30.000đ</option>
+                            </select>
+                            <button type="button" data-mobile-apply-voucher>Dùng</button>
+                            <p id="mobileVoucherMessage"></p>
+                        </div>
+                    </details>
+                    <div class="mobile-total-box">
+                        <div><span>Tạm tính</span><strong id="mobileOrderSubtotal">0đ</strong></div>
+                        <div><span>Giảm giá</span><strong id="mobileOrderDiscount">0đ</strong></div>
+                        <div class="final"><span>Tổng thanh toán</span><strong id="mobileOrderTotal">0đ</strong></div>
+                    </div>
+                    <button class="mobile-pay-btn" type="button" data-mobile-submit-recharge>Thanh toán ngay</button>
+                </section>
+            </div>
+        </section>
+
+        <section class="app-screen auth-screen" data-screen="forgot-account">
+            <div class="auth-content">
+                <header class="mobile-header">
+                    <button class="header-icon-btn" type="button" data-screen-target="login-username" aria-label="Quay lại"><i class="fa fa-arrow-left"></i></button>
+                    <h2>Lấy lại tài khoản</h2>
+                    <button class="header-icon-btn" type="button" data-screen-target="home-guest" aria-label="Đóng"><i class="fa fa-xmark"></i></button>
+                </header>
+
+                <h1>Lấy lại tài khoản</h1>
+                <p class="auth-desc">Nhập số điện thoại hoặc email đã đăng ký để tìm tài khoản.</p>
+
+                <label class="field-label" for="forgotAccountInput">SĐT hoặc Email</label>
+                <input class="mobile-input" id="forgotAccountInput" placeholder="Nhập SĐT hoặc Email"/>
+                <p class="form-error-text" id="forgotAccountError">Không tìm thấy tài khoản phù hợp.</p>
+
+                <button class="primary-btn full-width" type="button" id="findAccountBtn">Tìm tài khoản</button>
+
+                <div class="saved-account-list recovery-list" id="recoveryAccountList"></div>
+            </div>
+        </section>
+
+        <section class="app-screen auth-screen" data-screen="forgot-password">
+            <div class="auth-content">
+                <header class="mobile-header">
+                    <button class="header-icon-btn" type="button" data-screen-target="login-password" aria-label="Quay lại"><i class="fa fa-arrow-left"></i></button>
+                    <h2>Quên mật khẩu</h2>
+                    <button class="header-icon-btn" type="button" data-screen-target="home-guest" aria-label="Đóng"><i class="fa fa-xmark"></i></button>
+                </header>
+
+                <h1>Đặt lại mật khẩu</h1>
+                <p class="auth-desc" id="forgotPasswordLabel">Chọn kênh nhận OTP để đặt lại mật khẩu.</p>
+
+                <div class="service-list otp-channel-list">
+                    <button class="list-card otp-channel-card" type="button" data-reset-otp-channel="SMS"><i class="fa fa-comment-sms"></i><div><strong>SMS</strong><small>Gửi OTP qua tin nhắn.</small></div></button>
+                    <button class="list-card otp-channel-card" type="button" data-reset-otp-channel="Email"><i class="fa fa-envelope"></i><div><strong>Email</strong><small>Gửi OTP qua email.</small></div></button>
+                </div>
+            </div>
+        </section>
+
+        <section class="app-screen auth-screen" data-screen="reset-password">
+            <div class="auth-content">
+                <header class="mobile-header">
+                    <button class="header-icon-btn" type="button" data-screen-target="forgot-password" aria-label="Quay lại"><i class="fa fa-arrow-left"></i></button>
+                    <h2>Đặt lại mật khẩu</h2>
+                    <button class="header-icon-btn" type="button" data-screen-target="home-guest" aria-label="Đóng"><i class="fa fa-xmark"></i></button>
+                </header>
+
+                <p class="auth-desc" id="resetOtpLabel">Nhập OTP và mật khẩu mới.</p>
+
+                <label class="field-label" for="resetOtpCode">Mã OTP</label>
+                <input class="mobile-input otp-input" id="resetOtpCode" maxlength="6" inputmode="numeric" placeholder="Nhập mã OTP"/>
+                <p class="form-error-text" id="resetOtpError">Mã OTP không đúng. Mã demo là 123456.</p>
+
+                <label class="field-label" for="resetNewPassword">Mật khẩu mới</label>
+                <div class="password-field"><input id="resetNewPassword" type="password" maxlength="32" placeholder="Nhập mật khẩu mới"/><button class="password-toggle" type="button" data-toggle-password="resetNewPassword" aria-label="Hiện mật khẩu"><i class="fa fa-eye-slash"></i></button></div>
+                <p class="form-error-text" id="resetPasswordError">Mật khẩu 6-32 ký tự, gồm chữ hoa, chữ thường và số.</p>
+
+                <button class="primary-btn full-width" type="button" id="confirmResetPasswordBtn">Xác nhận</button>
+            </div>
+        </section>
+
+        <section class="app-screen auth-screen" data-screen="otp-select">
+            <div class="auth-content">
+                <header class="mobile-header">
+                    <button class="header-icon-btn" type="button" data-screen-target="register-form" aria-label="Quay lại"><i class="fa fa-arrow-left"></i></button>
+                    <h2>Đăng ký</h2>
+                    <button class="header-icon-btn" type="button" data-screen-target="home-guest" aria-label="Đóng"><i class="fa fa-xmark"></i></button>
+                </header>
+
+                <h1 class="register-form-title">Nhận mã OTP</h1>
+                <p class="auth-desc">Chọn phương thức nhận mã cho số điện thoại đã đăng ký.</p>
+
+                <div class="service-list otp-channel-list">
+                    <button class="list-card otp-channel-card" type="button" data-otp-channel="sms">
+                        <i class="fa fa-comment-sms"></i>
+                        <div><strong>SMS</strong><small>Nhận mã xác thực qua tin nhắn SMS.</small></div>
+                    </button>
+                    <button class="list-card otp-channel-card" type="button" data-otp-channel="voice">
+                        <i class="fa fa-phone-volume"></i>
+                        <div><strong>Voice</strong><small>Nhận mã xác thực qua cuộc gọi thoại.</small></div>
+                    </button>
+                </div>
+            </div>
+        </section>
+
+        <section class="app-screen auth-screen" data-screen="otp-verify">
+            <div class="auth-content">
+                <header class="mobile-header">
+                    <button class="header-icon-btn" type="button" id="registerOtpBackBtn" aria-label="Quay lại"><i class="fa fa-arrow-left"></i></button>
+                    <h2>Đăng ký</h2>
+                    <button class="header-icon-btn" type="button" data-screen-target="home-guest" aria-label="Đóng"><i class="fa fa-xmark"></i></button>
+                </header>
+
+                <h1 class="register-form-title">Nhập mã OTP</h1>
+                <p class="auth-desc" id="otpChannelLabel">Nhập mã xác thực đã gửi qua SMS.</p>
+
+                <label class="field-label" for="otpCode">Mã OTP</label>
+                <input class="mobile-input otp-input" id="otpCode" maxlength="6" inputmode="numeric" placeholder="Nhập mã OTP"/>
+                <p class="form-error-text" id="otpError">Mã OTP không đúng. Mã demo là 123456.</p>
+
+                <button class="primary-btn full-width" type="button" id="verifyOtpBtn">Xác nhận</button>
+                <button class="text-back-btn otp-action-btn" type="button" id="changeOtpMethodBtn">Đổi phương thức</button>
+            </div>
+        </section>
+
+        <section class="app-screen auth-screen" data-screen="ekyc-info">
+            <div class="auth-content">
+                <header class="mobile-header">
+                    <button class="header-icon-btn" type="button" id="ekycBackBtn" aria-label="Quay lại"><i class="fa fa-arrow-left"></i></button>
+                    <h2>Đăng ký</h2>
+                    <button class="header-icon-btn" type="button" data-screen-target="home-guest" aria-label="Đóng"><i class="fa fa-xmark"></i></button>
+                </header>
+
+                <h1>Thông tin eKYC</h1>
+                <p class="auth-desc">Nhập thông tin định danh để hoàn tất đăng ký.</p>
+
+                <label class="field-label" for="ekycNickname">Nickname</label>
+                <input class="mobile-input" id="ekycNickname" maxlength="50" placeholder="Nhập nickname 4-50 ký tự"/>
+                <p class="form-error-text" id="ekycNicknameError">Nickname 4-50 ký tự, chỉ gồm chữ hoặc số.</p>
+
+                <label class="field-label" for="ekycFullName">Họ và tên</label>
+                <input class="mobile-input" id="ekycFullName" placeholder="Nhập họ và tên"/>
+                <p class="form-error-text" id="ekycFullNameError">Họ tên chỉ gồm chữ cái và khoảng trắng.</p>
+
+                <label class="field-label" for="ekycDob">Ngày sinh</label>
+                <input class="mobile-input" id="ekycDob" type="date"/>
+                <p class="form-error-text" id="ekycDobError">Người dùng phải đủ 14 tuổi trở lên.</p>
+
+                <label class="field-label" for="ekycGender">Giới tính</label>
+                <select class="mobile-input" id="ekycGender">
+                    <option value="">Chọn giới tính</option>
+                    <option value="Nam">Nam</option>
+                    <option value="Nữ">Nữ</option>
+                    <option value="Khác">Khác</option>
+                </select>
+                <p class="form-error-text" id="ekycGenderError">Vui lòng chọn giới tính.</p>
+
+                <label class="field-label" for="ekycIdNumber">Số CCCD/Hộ chiếu</label>
+                <input class="mobile-input" id="ekycIdNumber" maxlength="12" inputmode="numeric" placeholder="Nhập 12 chữ số"/>
+                <p class="form-error-text" id="ekycIdNumberError">CCCD phải đủ 12 chữ số.</p>
+
+                <label class="ekyc-policy-check">
+                    <input type="checkbox" id="ekycPolicyAgree"/>
+                    <span>Tôi đồng ý với <button type="button" class="ekyc-policy-link">Chính sách và Quyền riêng tư</button></span>
+                </label>
+                <p class="form-error-text" id="ekycPolicyError">Bạn cần đồng ý với Chính sách và Quyền riêng tư.</p>
+
+                <button class="primary-btn full-width" type="button" id="ekycSubmitBtn">Hoàn tất</button>
+            </div>
+        </section>
+
+        <section class="app-screen auth-screen register-select-screen" data-screen="register-select">
+            <div class="auth-content">
+                <div class="auth-tabs">
+                    <button type="button" data-screen-target="login-select">Đăng nhập</button>
+                    <button class="active" type="button">Đăng ký</button>
+                </div>
+
+                <h1 class="register-title">Chọn cách tạo tài khoản</h1>
+                <p class="auth-desc small-desc">Chọn phương thức phù hợp với tài khoản của bạn.</p>
+
+                <div class="service-list register-method-list">
+                    <button class="list-card register-method-card" type="button" data-register-type="phone">
+                        <i class="fa fa-mobile-screen-button"></i>
+                        <div><strong>Số điện thoại</strong></div>
+                    </button>
+                    <button class="list-card register-method-card" type="button" data-register-type="email">
+                        <i class="fa fa-envelope"></i>
+                        <div><strong>Email</strong></div>
+                    </button>
+                    <button class="list-card register-method-card" type="button" data-register-type="username">
+                        <i class="fa fa-user"></i>
+                        <div><strong>Tên tài khoản</strong></div>
+                    </button>
+                </div>
+            </div>
+        </section>
+
+        <section class="app-screen auth-screen" data-screen="register-form">
+            <div class="auth-content">
+                <header class="mobile-header">
+                    <button class="header-icon-btn" type="button" data-screen-target="register-select" aria-label="Quay lại"><i class="fa fa-arrow-left"></i></button>
+                    <h2>Đăng ký</h2>
+                    <button class="header-icon-btn" type="button" data-screen-target="home-guest" aria-label="Đóng"><i class="fa fa-xmark"></i></button>
+                </header>
+
+                <h1 id="registerFormTitle" class="register-form-title">Đăng ký bằng Số điện thoại</h1>
+                <p class="auth-desc auth-desc-spacer" aria-hidden="true">&nbsp;</p>
+
+                <label class="field-label" id="registerIdentifierLabel" for="registerIdentifier">Số điện thoại</label>
+                <input class="mobile-input" id="registerIdentifier" placeholder="Nhập số điện thoại"/>
+                <p class="form-error-text" id="registerIdentifierError">Thông tin không hợp lệ hoặc đã tồn tại.</p>
+
+                <label class="field-label" for="registerPassword">Mật khẩu</label>
+                <div class="password-field">
+                    <input id="registerPassword" type="password" maxlength="32" placeholder="Nhập mật khẩu"/>
+                    <button class="password-toggle" type="button" data-toggle-password="registerPassword" aria-label="Hiện mật khẩu"><i class="fa fa-eye-slash"></i></button>
+                </div>
+                <p class="form-error-text" id="registerPasswordError">Mật khẩu 6-32 ký tự, gồm chữ hoa, chữ thường và số.</p>
+
+                <label class="field-label" for="registerPasswordConfirm">Nhập lại mật khẩu</label>
+                <div class="password-field">
+                    <input id="registerPasswordConfirm" type="password" maxlength="32" placeholder="Nhập lại mật khẩu"/>
+                    <button class="password-toggle" type="button" data-toggle-password="registerPasswordConfirm" aria-label="Hiện mật khẩu"><i class="fa fa-eye-slash"></i></button>
+                </div>
+                <p class="form-error-text" id="registerPasswordConfirmError">Mật khẩu nhập lại không khớp.</p>
+
+                <button class="primary-btn full-width" type="button" id="registerContinueBtn">Tiếp tục</button>
+            </div>
+        </section>
+    </section>
+</main>
+<script src="scripts/mobile-app.js"></script>
+</body>
+</html>
