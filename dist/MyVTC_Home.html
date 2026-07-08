@@ -10,7 +10,7 @@
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&amp;display=swap" rel="stylesheet"/>
 <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet"/>
 
-<link href="styles/main.css" rel="stylesheet"/></head>
+<link href="styles/website.css" rel="stylesheet"/></head>
 <body class="bg-white text-gray-800 antialiased">
 <!-- ============================================================ -->
 <!-- ===== HEADER – FIXED WIDTH ===== -->
@@ -30,9 +30,13 @@
 <div class="bg-white shadow-sm py-3">
 <div class="site-container main-nav flex items-center justify-between">
 <div class="flex items-center space-x-8">
-<a class="flex items-center" href="MyVTC_Home.html">
+<a class="main-logo-link flex items-center" href="MyVTC_Home.html">
 <img alt="myVTC" class="h-8 w-auto object-contain" src="https://sso.myvtc.vn/img/form-logo.b014d41f.png"/>
 </a>
+<button class="mobile-nav-menu-btn" id="mobile-nav-menu-btn" type="button" onclick="toggleMobileNavMenu()" aria-label="Mở menu">
+    <i class="fas fa-bars"></i>
+</button>
+
 <nav class="nav-links flex items-center gap-2" id="main-nav-links">
 <a class="nav-link text-gray-700 hover:text-blue-600 active:text-blue-600" href="MyVTC_Home.html">Trang chủ</a>
 </nav>
@@ -268,5 +272,5 @@
 <!-- ===== JAVASCRIPT (GIỮ NGUYÊN LOGIC, CHỈ SỬA RENDER) ===== -->
 <!-- ============================================================ -->
 
-<script src="scripts/app.js"></script></body>
+<script src="scripts/website.js"></script></body>
 </html>
