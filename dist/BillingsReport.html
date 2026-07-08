@@ -1,0 +1,128 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+<meta charset="utf-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>MyVTC Billing Report</title>
+<link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet"/>
+<link href="styles/billings-report.css" rel="stylesheet"/>
+</head>
+<body>
+<div class="cms-top-line"></div>
+<header class="cms-header billing-header">
+  <div class="cms-left">
+    <a href="index.html"><img class="cms-logo" src="https://sso.myvtc.vn/img/form-logo.b014d41f.png" alt="MyVTC"/></a>
+    <nav class="cms-nav billing-nav">
+      <div class="cms-menu-item">
+        <button class="cms-nav-btn active" type="button"><i class="fa fa-cogs"></i> Hệ thống <i class="fa fa-caret-down"></i></button>
+        <div class="cms-dropdown">
+          <button class="active" type="button" onclick="showScreen('function-list',this)"><i class="fa fa-wrench"></i> Danh sách chức năng</button>
+          <button type="button" onclick="showScreen('user-admin',this)"><i class="fa fa-user"></i> Quản trị người dùng</button>
+          <button type="button" onclick="showScreen('user-log',this)"><i class="fa fa-refresh"></i> Quản trị log người dùng</button>
+          <button type="button" onclick="showScreen('system-error-log',this)"><i class="fa fa-warning"></i> Quản trị log lỗi hệ thống</button>
+        </div>
+      </div>
+      <div class="cms-menu-item">
+        <button class="cms-nav-btn" type="button"><i class="fa fa-users"></i> Báo cáo người dùng <i class="fa fa-caret-down"></i></button>
+        <div class="cms-dropdown cms-dropdown-wide">
+          <button type="button" onclick="showScreen('user-overview',this)"><i class="fa fa-chart-pie"></i> Báo cáo tổng quan</button>
+          <button type="button" onclick="showScreen('new-account-stat',this)"><i class="fa fa-user-plus"></i> Thống kê tài khoản mới</button>
+          <button type="button" onclick="showScreen('new-account-detail',this)"><i class="fa fa-list"></i> Báo cáo chi tiết tài khoản mới</button>
+        </div>
+      </div>
+      <div class="cms-menu-item">
+        <button class="cms-nav-btn" type="button"><i class="fa fa-credit-card"></i> Báo cáo giao dịch <i class="fa fa-caret-down"></i></button>
+        <div class="cms-dropdown cms-dropdown-wide">
+          <button type="button" onclick="showScreen('point-topup',this)"><i class="fa fa-plus-circle"></i> Giao dịch Nạp Point</button>
+          <button type="button" onclick="showScreen('promo-point',this)"><i class="fa fa-gift"></i> Thống kê Point ưu đãi</button>
+          <button type="button" onclick="showScreen('payment-transaction',this)"><i class="fa fa-shopping-cart"></i> Giao dịch Thanh toán</button>
+          <button type="button" onclick="showScreen('point-recall',this)"><i class="fa fa-undo"></i> Giao dịch Thu hồi Point</button>
+          <button type="button" onclick="showScreen('refund-transaction',this)"><i class="fa fa-reply"></i> Giao dịch Hoàn tiền</button>
+        </div>
+      </div>
+      <div class="cms-menu-item">
+        <button class="cms-nav-btn" type="button"><i class="fa fa-gem"></i> Báo cáo Loyalty <i class="fa fa-caret-down"></i></button>
+        <div class="cms-dropdown cms-dropdown-wide">
+          <button type="button" onclick="showScreen('rank-stat',this)"><i class="fa fa-medal"></i> Thống kê hạng thành viên</button>
+          <button type="button" onclick="showScreen('exp-stat',this)"><i class="fa fa-star"></i> Thống kê EXP</button>
+          <button type="button" onclick="showScreen('offer-event-stat',this)"><i class="fa fa-bolt"></i> Thống kê sự kiện ưu đãi</button>
+        </div>
+      </div>
+      <div class="cms-menu-item">
+        <button class="cms-nav-btn" type="button"><i class="fa fa-mouse-pointer"></i> Báo cáo hành vi <i class="fa fa-caret-down"></i></button>
+        <div class="cms-dropdown">
+          <button type="button" onclick="showScreen('behavior-pending',this)"><i class="fa fa-clock"></i> Chờ cập nhật</button>
+        </div>
+      </div>
+    </nav>
+  </div>
+  <div class="cms-user"><span>hongtt <i class="fa fa-angle-down"></i></span><i class="fa fa-sign-out-alt"></i></div>
+</header>
+
+<section class="screen" id="screen-function-list">
+  <div class="cms-screen-title"><i class="fa fa-wrench"></i> Hệ thống > Danh sách chức năng</div>
+  <div class="cms-content">
+    <div class="cms-actions-center"><button class="btn green"><i class="fa fa-file-export"></i> Xuất Excel</button><button class="btn orange"><i class="fa fa-sync"></i> Làm mới</button></div>
+    <table class="fn-tree billing-tree"><tbody>
+      <tr><td class="level1"><i class="fa fa-angle-down"></i><i class="fa fa-cogs"></i>(1) Hệ thống</td><td class="ops"><button class="icon-round blue"><i class="fa fa-eye"></i></button></td></tr>
+      <tr><td class="indent1"><i class="fa fa-wrench"></i>(2) Danh sách chức năng</td><td class="ops"><button class="icon-round orange" onclick="showScreen('function-list')"><i class="fa fa-edit"></i></button></td></tr>
+      <tr><td class="indent1"><i class="fa fa-user"></i>(3) Quản trị người dùng</td><td class="ops"><button class="icon-round orange" onclick="showScreen('user-admin')"><i class="fa fa-edit"></i></button></td></tr>
+      <tr><td class="indent1"><i class="fa fa-refresh"></i>(4) Quản trị log người dùng</td><td class="ops"><button class="icon-round orange" onclick="showScreen('user-log')"><i class="fa fa-edit"></i></button></td></tr>
+      <tr><td class="indent1"><i class="fa fa-warning"></i>(5) Quản trị log lỗi hệ thống</td><td class="ops"><button class="icon-round orange" onclick="showScreen('system-error-log')"><i class="fa fa-edit"></i></button></td></tr>
+      <tr><td class="level1"><i class="fa fa-angle-down"></i><i class="fa fa-users"></i>(10) Báo cáo người dùng</td><td class="ops"><button class="icon-round blue"><i class="fa fa-eye"></i></button></td></tr>
+      <tr><td class="indent1"><i class="fa fa-chart-pie"></i>(11) Báo cáo tổng quan</td><td class="ops"><button class="icon-round orange" onclick="showScreen('user-overview')"><i class="fa fa-edit"></i></button></td></tr>
+      <tr><td class="indent1"><i class="fa fa-user-plus"></i>(12) Thống kê tài khoản mới</td><td class="ops"><button class="icon-round orange" onclick="showScreen('new-account-stat')"><i class="fa fa-edit"></i></button></td></tr>
+      <tr><td class="indent1"><i class="fa fa-list"></i>(13) Báo cáo chi tiết tài khoản mới</td><td class="ops"><button class="icon-round orange" onclick="showScreen('new-account-detail')"><i class="fa fa-edit"></i></button></td></tr>
+      <tr><td class="level1"><i class="fa fa-angle-down"></i><i class="fa fa-credit-card"></i>(20) Báo cáo giao dịch</td><td class="ops"><button class="icon-round blue"><i class="fa fa-eye"></i></button></td></tr>
+      <tr><td class="indent1"><i class="fa fa-plus-circle"></i>(21) Giao dịch Nạp Point</td><td class="ops"><button class="icon-round orange" onclick="showScreen('point-topup')"><i class="fa fa-edit"></i></button></td></tr>
+      <tr><td class="indent1"><i class="fa fa-gift"></i>(22) Thống kê Point ưu đãi</td><td class="ops"><button class="icon-round orange" onclick="showScreen('promo-point')"><i class="fa fa-edit"></i></button></td></tr>
+      <tr><td class="indent1"><i class="fa fa-shopping-cart"></i>(23) Giao dịch Thanh toán</td><td class="ops"><button class="icon-round orange" onclick="showScreen('payment-transaction')"><i class="fa fa-edit"></i></button></td></tr>
+      <tr><td class="indent1"><i class="fa fa-undo"></i>(24) Giao dịch Thu hồi Point</td><td class="ops"><button class="icon-round orange" onclick="showScreen('point-recall')"><i class="fa fa-edit"></i></button></td></tr>
+      <tr><td class="indent1"><i class="fa fa-reply"></i>(25) Giao dịch Hoàn tiền</td><td class="ops"><button class="icon-round orange" onclick="showScreen('refund-transaction')"><i class="fa fa-edit"></i></button></td></tr>
+      <tr><td class="level1"><i class="fa fa-angle-down"></i><i class="fa fa-gem"></i>(30) Báo cáo Loyalty</td><td class="ops"><button class="icon-round blue"><i class="fa fa-eye"></i></button></td></tr>
+      <tr><td class="indent1"><i class="fa fa-medal"></i>(31) Thống kê hạng thành viên</td><td class="ops"><button class="icon-round orange" onclick="showScreen('rank-stat')"><i class="fa fa-edit"></i></button></td></tr>
+      <tr><td class="indent1"><i class="fa fa-star"></i>(32) Thống kê EXP</td><td class="ops"><button class="icon-round orange" onclick="showScreen('exp-stat')"><i class="fa fa-edit"></i></button></td></tr>
+      <tr><td class="indent1"><i class="fa fa-bolt"></i>(33) Thống kê sự kiện ưu đãi</td><td class="ops"><button class="icon-round orange" onclick="showScreen('offer-event-stat')"><i class="fa fa-edit"></i></button></td></tr>
+      <tr><td class="level1"><i class="fa fa-angle-down"></i><i class="fa fa-mouse-pointer"></i>(40) Báo cáo hành vi</td><td class="ops"><button class="icon-round blue"><i class="fa fa-eye"></i></button></td></tr>
+      <tr><td class="indent1"><i class="fa fa-clock"></i>(41) Chờ cập nhật</td><td class="ops"><button class="icon-round orange" onclick="showScreen('behavior-pending')"><i class="fa fa-edit"></i></button></td></tr>
+    </tbody></table>
+  </div>
+</section>
+
+<section class="screen hidden" id="screen-user-admin">
+  <div class="cms-screen-title"><i class="fa fa-user"></i> Hệ thống > Quản trị người dùng</div>
+  <div class="cms-content">
+    <div class="tools-row"><div class="filter-row"><label>Từ khóa <input class="input" placeholder="Username, họ tên"/></label><label>Trạng thái <select class="select"><option>Tất cả</option><option>Hoạt động</option><option>Tạm khóa</option></select></label></div><button class="btn green"><i class="fa fa-search"></i> Tìm kiếm</button></div>
+    <div class="table-wrap"><table class="data-table"><thead><tr><th>Username</th><th>Họ tên</th><th>Nhóm quyền</th><th>Email</th><th>Trạng thái</th><th>Đăng nhập gần nhất</th><th>Thao tác</th></tr></thead><tbody id="billingAdminRows"></tbody></table></div>
+  </div>
+</section>
+
+<section class="screen hidden" id="screen-user-log">
+  <div class="cms-screen-title"><i class="fa fa-refresh"></i> Hệ thống > Quản trị log người dùng</div>
+  <div class="cms-content"><div class="table-wrap"><table class="data-table"><thead><tr><th>Thời gian</th><th>Người dùng</th><th>Chức năng</th><th>Hành động</th><th>IP</th><th>Kết quả</th></tr></thead><tbody id="billingUserLogRows"></tbody></table></div></div>
+</section>
+
+<section class="screen hidden" id="screen-system-error-log">
+  <div class="cms-screen-title"><i class="fa fa-warning"></i> Hệ thống > Quản trị log lỗi hệ thống</div>
+  <div class="cms-content"><div class="table-wrap"><table class="data-table"><thead><tr><th>Thời gian</th><th>Mã lỗi</th><th>Dịch vụ</th><th>Nội dung lỗi</th><th>Mức độ</th><th>Trạng thái</th></tr></thead><tbody id="billingErrorLogRows"></tbody></table></div></div>
+</section>
+
+<section class="screen hidden report-screen" id="screen-user-overview"><div class="cms-screen-title"><i class="fa fa-chart-pie"></i> Báo cáo người dùng > Báo cáo tổng quan</div><div class="cms-content"><div id="userOverviewReport"></div></div></section>
+<section class="screen hidden report-screen" id="screen-new-account-stat"><div class="cms-screen-title"><i class="fa fa-user-plus"></i> Báo cáo người dùng > Thống kê tài khoản mới</div><div class="cms-content"><div id="newAccountStatReport"></div></div></section>
+<section class="screen hidden report-screen" id="screen-new-account-detail"><div class="cms-screen-title"><i class="fa fa-list"></i> Báo cáo người dùng > Báo cáo chi tiết tài khoản mới</div><div class="cms-content"><div id="newAccountDetailReport"></div></div></section>
+<section class="screen hidden report-screen" id="screen-point-topup"><div class="cms-screen-title"><i class="fa fa-plus-circle"></i> Báo cáo giao dịch > Giao dịch Nạp Point</div><div class="cms-content"><div id="pointTopupReport"></div></div></section>
+<section class="screen hidden report-screen" id="screen-promo-point"><div class="cms-screen-title"><i class="fa fa-gift"></i> Báo cáo giao dịch > Thống kê Point ưu đãi</div><div class="cms-content"><div id="promoPointReport"></div></div></section>
+<section class="screen hidden report-screen" id="screen-payment-transaction"><div class="cms-screen-title"><i class="fa fa-shopping-cart"></i> Báo cáo giao dịch > Giao dịch Thanh toán</div><div class="cms-content"><div id="paymentTransactionReport"></div></div></section>
+<section class="screen hidden report-screen" id="screen-point-recall"><div class="cms-screen-title"><i class="fa fa-undo"></i> Báo cáo giao dịch > Giao dịch Thu hồi Point</div><div class="cms-content"><div id="pointRecallReport"></div></div></section>
+<section class="screen hidden report-screen" id="screen-refund-transaction"><div class="cms-screen-title"><i class="fa fa-reply"></i> Báo cáo giao dịch > Giao dịch Hoàn tiền</div><div class="cms-content"><div id="refundTransactionReport"></div></div></section>
+<section class="screen hidden report-screen" id="screen-rank-stat"><div class="cms-screen-title"><i class="fa fa-medal"></i> Báo cáo Loyalty > Thống kê hạng thành viên</div><div class="cms-content"><div id="rankStatReport"></div></div></section>
+<section class="screen hidden report-screen" id="screen-exp-stat"><div class="cms-screen-title"><i class="fa fa-star"></i> Báo cáo Loyalty > Thống kê EXP</div><div class="cms-content"><div id="expStatReport"></div></div></section>
+<section class="screen hidden report-screen" id="screen-offer-event-stat"><div class="cms-screen-title"><i class="fa fa-bolt"></i> Báo cáo Loyalty > Thống kê sự kiện ưu đãi</div><div class="cms-content"><div id="offerEventReport"></div></div></section>
+<section class="screen hidden" id="screen-behavior-pending">
+  <div class="cms-screen-title"><i class="fa fa-clock"></i> Báo cáo hành vi > Chờ cập nhật</div>
+  <div class="cms-content"><div class="empty-state"><i class="fa fa-clock"></i><h3>Module Báo cáo hành vi đang chờ cập nhật</h3><p>Giữ sẵn menu và màn hình để bổ sung bảng dữ liệu hành vi khi có yêu cầu nghiệp vụ.</p></div></div>
+</section>
+
+<script src="scripts/billings-report.js"></script>
+</body>
+</html>
