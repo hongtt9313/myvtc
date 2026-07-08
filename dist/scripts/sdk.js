@@ -1,3 +1,4 @@
+/* SDK JS: tách riêng để sửa SDK demo mà không ảnh hưởng Website, CMS, Mobile App, Billings Report. */
 // ================================================================
         //  GLOBAL STATE
         // ================================================================

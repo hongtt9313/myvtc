@@ -1,3 +1,4 @@
+/* Website JS: dùng cho MyVTC_Home, MyAccount, Loyalty, Service, Shop, RechargeDetail, Support và Demo Center. */
 // ================================================================
         //  GLOBAL STATE
         // ================================================================
