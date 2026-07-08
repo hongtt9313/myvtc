@@ -7,7 +7,7 @@
 <script src="https://cdn.tailwindcss.com"></script>
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&amp;display=swap" rel="stylesheet"/>
 <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet"/>
-<link href="styles/main.css" rel="stylesheet"/>
+<link href="styles/website.css" rel="stylesheet"/>
 </head>
 <body class="bg-white text-gray-800 antialiased">
 <header>
@@ -24,9 +24,13 @@
 <div class="bg-white shadow-sm py-3">
 <div class="site-container main-nav flex items-center justify-between">
 <div class="flex items-center space-x-8">
-<a class="flex items-center" href="MyVTC_Home.html">
+<a class="main-logo-link flex items-center" href="MyVTC_Home.html">
 <img alt="myVTC" class="h-8 w-auto object-contain" src="https://sso.myvtc.vn/img/form-logo.b014d41f.png"/>
 </a>
+<button class="mobile-nav-menu-btn" id="mobile-nav-menu-btn" type="button" onclick="toggleMobileNavMenu()" aria-label="Mở menu">
+    <i class="fas fa-bars"></i>
+</button>
+
 <nav class="nav-links flex items-center gap-2" id="main-nav-links">
 <a class="nav-link text-gray-700 hover:text-blue-600 active:text-blue-600" href="MyVTC_Home.html">Trang chủ</a>
 </nav>
@@ -42,11 +46,21 @@
 <main id="loyalty-page" class="loyalty-page">
     <div class="site-container loyalty-shell">
         <aside class="account-sidebar loyalty-sidebar">
-            <h2>THÀNH VIÊN</h2>
-            <button class="account-tab-btn active" data-loyalty-tab="rank" onclick="showLoyaltyTab('rank')">Hạng thành viên</button>
-            <button class="account-tab-btn" data-loyalty-tab="missions" onclick="showLoyaltyTab('missions')">Nhiệm vụ</button>
-            <button class="account-tab-btn" data-loyalty-tab="history" onclick="showLoyaltyTab('history')">Lịch sử</button>
-            <button class="account-tab-btn" data-loyalty-tab="bag" onclick="showLoyaltyTab('bag')">Túi đồ</button>
+            <button class="mobile-body-menu-head" type="button" onclick="toggleLoyaltyBodyMenu()" aria-label="Mở danh mục thành viên">
+                <span>
+                    <small>THÀNH VIÊN</small>
+                    <strong id="loyalty-mobile-active-label">Hạng thành viên</strong>
+                </span>
+                <i class="fas fa-chevron-down" id="loyalty-mobile-menu-icon"></i>
+            </button>
+
+            <div class="body-tab-menu" id="loyalty-body-tab-menu">
+                <h2>THÀNH VIÊN</h2>
+                <button class="account-tab-btn active" data-loyalty-tab="rank" onclick="showLoyaltyTab('rank')">Hạng thành viên</button>
+                <button class="account-tab-btn" data-loyalty-tab="missions" onclick="showLoyaltyTab('missions')">Nhiệm vụ</button>
+                <button class="account-tab-btn" data-loyalty-tab="history" onclick="showLoyaltyTab('history')">Lịch sử</button>
+                <button class="account-tab-btn" data-loyalty-tab="bag" onclick="showLoyaltyTab('bag')">Túi đồ</button>
+            </div>
         </aside>
 
         <section class="account-content loyalty-content">
@@ -95,6 +109,16 @@
                     <p id="loyalty-mission-desc">Để mở khóa quyền lợi hạng Bạc, người dùng cần hoàn thành 2 điều kiện:</p>
 
                     <div class="loyalty-task-list" id="loyalty-rank-missions">
+                    </div>
+                </div>
+
+                <div class="loyalty-section-card" id="loyalty-maintain-section">
+                    <div class="loyalty-section-head">
+                        <h3>Điều kiện duy trì hạng</h3>
+                        <span>Áp dụng khi kết thúc chu kỳ</span>
+                    </div>
+                    <p id="loyalty-maintain-desc">Điều kiện duy trì hạng hiển thị theo từng hạng thành viên.</p>
+                    <div class="loyalty-task-list" id="loyalty-maintain-missions">
                     </div>
                 </div>
 
@@ -334,6 +358,6 @@
 </div>
 </footer>
 
-<script src="scripts/app.js"></script>
+<script src="scripts/website.js"></script>
 </body>
 </html>
