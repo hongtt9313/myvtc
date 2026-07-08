@@ -7,7 +7,7 @@
 <script src="https://cdn.tailwindcss.com"></script>
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&amp;display=swap" rel="stylesheet"/>
 <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet"/>
-<link href="styles/main.css" rel="stylesheet"/>
+<link href="styles/website.css" rel="stylesheet"/>
 </head>
 <body class="bg-white text-gray-800 antialiased">
 {{HEADER}}
@@ -78,6 +78,16 @@
                     <p id="loyalty-mission-desc">Để mở khóa quyền lợi hạng Bạc, người dùng cần hoàn thành 2 điều kiện:</p>
 
                     <div class="loyalty-task-list" id="loyalty-rank-missions">
+                    </div>
+                </div>
+
+                <div class="loyalty-section-card" id="loyalty-maintain-section">
+                    <div class="loyalty-section-head">
+                        <h3>Điều kiện duy trì hạng</h3>
+                        <span>Áp dụng khi kết thúc chu kỳ</span>
+                    </div>
+                    <p id="loyalty-maintain-desc">Điều kiện duy trì hạng hiển thị theo từng hạng thành viên.</p>
+                    <div class="loyalty-task-list" id="loyalty-maintain-missions">
                     </div>
                 </div>
 
@@ -284,6 +294,6 @@
 </main>
 
 {{FOOTER}}
-<script src="scripts/app.js"></script>
+<script src="scripts/website.js"></script>
 </body>
 </html>
