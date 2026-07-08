@@ -15,99 +15,87 @@ components = {
     "{{AUTH_MODAL}}": SRC / "components" / "auth-modal.html",
 }
 
-html = (SRC / "index.template.html").read_text(encoding="utf-8")
-for placeholder, path in components.items():
-    html = html.replace(placeholder, path.read_text(encoding="utf-8"))
+pages = {
+    "index.template.html": "MyVTC_Home.html",
+    "demo-selector.template.html": "index.html",
+    "myaccount.template.html": "MyAccount.html",
+    "loyalty.template.html": "Loyalty.html",
+    "service.template.html": "Service.html",
+    "shop.template.html": "Shop.html",
+    "recharge-detail.template.html": "RechargeDetail.html",
+    "support.template.html": "Support.html",
+    "cms.template.html": "CMS.html",
+    "mobile-app.template.html": "MobileApp.html",
+    "billings-report.template.html": "BillingsReport.html",
+    "sdk.template.html": "SDK.html",
+}
 
-account_html = (SRC / "myaccount.template.html").read_text(encoding="utf-8")
-for placeholder, path in components.items():
-    if placeholder in account_html:
-        account_html = account_html.replace(placeholder, path.read_text(encoding="utf-8"))
 
-loyalty_html = (SRC / "loyalty.template.html").read_text(encoding="utf-8")
-for placeholder, path in components.items():
-    if placeholder in loyalty_html:
-        loyalty_html = loyalty_html.replace(placeholder, path.read_text(encoding="utf-8"))
-service_html = (SRC / "service.template.html").read_text(encoding="utf-8")
-for placeholder, path in components.items():
-    if placeholder in service_html:
-        service_html = service_html.replace(placeholder, path.read_text(encoding="utf-8"))
+def render_template(template_path: Path) -> str:
+    html = template_path.read_text(encoding="utf-8")
+    for placeholder, component_path in components.items():
+        if placeholder in html:
+            if component_path.exists():
+                html = html.replace(placeholder, component_path.read_text(encoding="utf-8"))
+            else:
+                html = html.replace(placeholder, "")
+                print(f"Cảnh báo: thiếu component {component_path}")
+    return html
 
-shop_html = (SRC / "shop.template.html").read_text(encoding="utf-8")
-for placeholder, path in components.items():
-    if placeholder in shop_html:
-        shop_html = shop_html.replace(placeholder, path.read_text(encoding="utf-8"))
 
-recharge_html = (SRC / "recharge-detail.template.html").read_text(encoding="utf-8")
-for placeholder, path in components.items():
-    if placeholder in recharge_html:
-        recharge_html = recharge_html.replace(placeholder, path.read_text(encoding="utf-8"))
+def copy_folder_if_exists(folder_name: str) -> None:
+    src_folder = SRC / folder_name
+    dist_folder = DIST / folder_name
+    if not src_folder.exists():
+        print(f"Bỏ qua: không có thư mục src/{folder_name}")
+        return
+    if dist_folder.exists():
+        shutil.rmtree(dist_folder)
+    shutil.copytree(src_folder, dist_folder)
 
-support_html = (SRC / "support.template.html").read_text(encoding="utf-8")
-for placeholder, path in components.items():
-    if placeholder in support_html:
-        support_html = support_html.replace(placeholder, path.read_text(encoding="utf-8"))
 
-cms_html = (SRC / "cms.template.html").read_text(encoding="utf-8")
-for placeholder, path in components.items():
-    if placeholder in cms_html:
-        cms_html = cms_html.replace(placeholder, path.read_text(encoding="utf-8"))
-mobile_app_html = (SRC / "mobile-app.template.html").read_text(encoding="utf-8")
-for placeholder, path in components.items():
-    if placeholder in mobile_app_html:
-        mobile_app_html = mobile_app_html.replace(placeholder, path.read_text(encoding="utf-8"))
+def copy_files_if_exists(folder_name: str, pattern: str) -> None:
+    src_folder = SRC / folder_name
+    dist_folder = DIST / folder_name
+    dist_folder.mkdir(parents=True, exist_ok=True)
+    if not src_folder.exists():
+        print(f"Bỏ qua: không có thư mục src/{folder_name}")
+        return
+    for item in src_folder.glob(pattern):
+        shutil.copy2(item, dist_folder / item.name)
 
-billings_report_html = (SRC / "billings-report.template.html").read_text(encoding="utf-8")
-for placeholder, path in components.items():
-    if placeholder in billings_report_html:
-        billings_report_html = billings_report_html.replace(placeholder, path.read_text(encoding="utf-8"))
-
-sdk_html = (SRC / "sdk.template.html").read_text(encoding="utf-8")
-for placeholder, path in components.items():
-    if placeholder in sdk_html:
-        sdk_html = sdk_html.replace(placeholder, path.read_text(encoding="utf-8"))
-
-demo_selector_html = (SRC / "demo-selector.template.html").read_text(encoding="utf-8")
 
 DIST.mkdir(exist_ok=True)
 (DIST / "styles").mkdir(exist_ok=True)
 (DIST / "scripts").mkdir(exist_ok=True)
 
-for asset_dir in ["icon", "thumbnail"]:
-    src_asset = SRC / asset_dir
-    dist_asset = DIST / asset_dir
-    if src_asset.exists():
-        if dist_asset.exists():
-            shutil.rmtree(dist_asset)
-        shutil.copytree(src_asset, dist_asset)
+copy_folder_if_exists("icon")
+copy_folder_if_exists("thumbnail")
+copy_files_if_exists("styles", "*.css")
+copy_files_if_exists("scripts", "*.js")
 
-for css_file in (SRC / "styles").glob("*.css"):
-    shutil.copy2(css_file, DIST / "styles" / css_file.name)
+for template_name, output_name in pages.items():
+    template_path = SRC / template_name
+    if not template_path.exists():
+        print(f"Bỏ qua: không có {template_path}")
+        continue
+    output_path = DIST / output_name
+    output_path.write_text(render_template(template_path), encoding="utf-8")
+    print(f"Đã build xong: dist/{output_name}")
 
-for js_file in (SRC / "scripts").glob("*.js"):
-    shutil.copy2(js_file, DIST / "scripts" / js_file.name)
-(DIST / "index.html").write_text(demo_selector_html, encoding="utf-8")
-(DIST / "MyVTC_Home.html").write_text(html, encoding="utf-8")
-(DIST / "MyAccount.html").write_text(account_html, encoding="utf-8")
-(DIST / "Loyalty.html").write_text(loyalty_html, encoding="utf-8")
-(DIST / "Service.html").write_text(service_html, encoding="utf-8")
-(DIST / "Shop.html").write_text(shop_html, encoding="utf-8")
-(DIST / "RechargeDetail.html").write_text(recharge_html, encoding="utf-8")
-(DIST / "Support.html").write_text(support_html, encoding="utf-8")
-(DIST / "CMS.html").write_text(cms_html, encoding="utf-8")
-(DIST / "MobileApp.html").write_text(mobile_app_html, encoding="utf-8")
-(DIST / "BillingsReport.html").write_text(billings_report_html, encoding="utf-8")
-(DIST / "SDK.html").write_text(sdk_html, encoding="utf-8")
+required_pages = [
+    "index.html",
+    "MyVTC_Home.html",
+    "MobileApp.html",
+    "CMS.html",
+    "MyAccount.html",
+    "Loyalty.html",
+    "Service.html",
+    "Shop.html",
+    "RechargeDetail.html",
+    "Support.html",
+]
 
-print("Đã build xong: dist/index.html")
-print("Đã build xong: dist/MyVTC_Home.html")
-print("Đã build xong: dist/MyAccount.html")
-print("Đã build xong: dist/Loyalty.html")
-print("Đã build xong: dist/Service.html")
-print("Đã build xong: dist/Shop.html")
-print("Đã build xong: dist/RechargeDetail.html")
-print("Đã build xong: dist/Support.html")
-print("Đã build xong: dist/CMS.html")
-print("Đã build xong: dist/MobileApp.html")
-print("Đã build xong: dist/BillingsReport.html")
-print("Đã build xong: dist/SDK.html")
+missing_pages = [page for page in required_pages if not (DIST / page).exists()]
+if missing_pages:
+    raise FileNotFoundError("Build thiếu file bắt buộc trong dist: " + ", ".join(missing_pages))
