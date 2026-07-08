@@ -88,6 +88,22 @@
     {
       "source": "/Support.html",
       "destination": "/Support.html"
+    },
+    {
+      "source": "/SDK",
+      "destination": "/SDK.html"
+    },
+    {
+      "source": "/SDK.html",
+      "destination": "/SDK.html"
+    },
+    {
+      "source": "/BillingsReport",
+      "destination": "/BillingsReport.html"
+    },
+    {
+      "source": "/BillingsReport.html",
+      "destination": "/BillingsReport.html"
     }
   ]
 }
