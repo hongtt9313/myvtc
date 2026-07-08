@@ -94,6 +94,8 @@ required_pages = [
     "Shop.html",
     "RechargeDetail.html",
     "Support.html",
+    "BillingsReport.html",
+    "SDK.html",
 ]
 
 missing_pages = [page for page in required_pages if not (DIST / page).exists()]
