@@ -7,7 +7,7 @@
 <script src="https://cdn.tailwindcss.com"></script>
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&amp;display=swap" rel="stylesheet"/>
 <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet"/>
-<link href="styles/main.css" rel="stylesheet"/>
+<link href="styles/website.css" rel="stylesheet"/>
 </head>
 <body class="bg-white text-gray-800 antialiased">
 <header>
@@ -24,9 +24,13 @@
 <div class="bg-white shadow-sm py-3">
 <div class="site-container main-nav flex items-center justify-between">
 <div class="flex items-center space-x-8">
-<a class="flex items-center" href="MyVTC_Home.html">
+<a class="main-logo-link flex items-center" href="MyVTC_Home.html">
 <img alt="myVTC" class="h-8 w-auto object-contain" src="https://sso.myvtc.vn/img/form-logo.b014d41f.png"/>
 </a>
+<button class="mobile-nav-menu-btn" id="mobile-nav-menu-btn" type="button" onclick="toggleMobileNavMenu()" aria-label="Mở menu">
+    <i class="fas fa-bars"></i>
+</button>
+
 <nav class="nav-links flex items-center gap-2" id="main-nav-links">
 <a class="nav-link text-gray-700 hover:text-blue-600 active:text-blue-600" href="MyVTC_Home.html">Trang chủ</a>
 </nav>
@@ -42,14 +46,24 @@
 <main id="my-account-page" class="account-page">
     <div class="site-container account-shell">
         <aside class="account-sidebar">
-            <h2>TÀI KHOẢN</h2>
-            <button class="account-tab-btn active" data-tab="personal" onclick="showAccountTab('personal')">Thông tin cá nhân</button>
-<button class="account-tab-btn" data-tab="linked" onclick="showAccountTab('linked')">Tài khoản liên kết</button>
-<button class="account-tab-btn" data-tab="security" onclick="showAccountTab('security')">Bảo mật tài khoản</button>
-<button class="account-tab-btn" data-tab="payment" onclick="showAccountTab('payment')">Quản lý thanh toán</button>
-<button class="account-tab-btn" data-tab="transactions" onclick="showAccountTab('transactions')">Lịch sử giao dịch</button>
-<button class="account-tab-btn" data-tab="notifications" onclick="showAccountTab('notifications')">Thông báo</button>
-<button class="account-tab-btn" data-tab="terms" onclick="showAccountTab('terms')">Điều khoản sử dụng</button>
+            <button class="mobile-body-menu-head" type="button" onclick="toggleAccountBodyMenu()" aria-label="Mở danh mục tài khoản">
+                <span>
+                    <small>TÀI KHOẢN</small>
+                    <strong id="account-mobile-active-label">Thông tin cá nhân</strong>
+                </span>
+                <i class="fas fa-chevron-down" id="account-mobile-menu-icon"></i>
+            </button>
+
+            <div class="body-tab-menu" id="account-body-tab-menu">
+                <h2>TÀI KHOẢN</h2>
+                <button class="account-tab-btn active" data-tab="personal" onclick="showAccountTab('personal')">Thông tin cá nhân</button>
+                <button class="account-tab-btn" data-tab="linked" onclick="showAccountTab('linked')">Tài khoản liên kết</button>
+                <button class="account-tab-btn" data-tab="security" onclick="showAccountTab('security')">Bảo mật tài khoản</button>
+                <button class="account-tab-btn" data-tab="payment" onclick="showAccountTab('payment')">Quản lý thanh toán</button>
+                <button class="account-tab-btn" data-tab="transactions" onclick="showAccountTab('transactions')">Lịch sử giao dịch</button>
+                <button class="account-tab-btn" data-tab="notifications" onclick="showAccountTab('notifications')">Thông báo</button>
+                <button class="account-tab-btn" data-tab="terms" onclick="showAccountTab('terms')">Điều khoản sử dụng</button>
+            </div>
         </aside>
 
         <section class="account-content">
@@ -543,6 +557,6 @@
     </div>
 </div>
 
-<script src="scripts/app.js"></script>
+<script src="scripts/website.js"></script>
 </body>
 </html>
