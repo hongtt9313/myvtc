@@ -52,7 +52,23 @@ cms_html = (SRC / "cms.template.html").read_text(encoding="utf-8")
 for placeholder, path in components.items():
     if placeholder in cms_html:
         cms_html = cms_html.replace(placeholder, path.read_text(encoding="utf-8"))
-        
+mobile_app_html = (SRC / "mobile-app.template.html").read_text(encoding="utf-8")
+for placeholder, path in components.items():
+    if placeholder in mobile_app_html:
+        mobile_app_html = mobile_app_html.replace(placeholder, path.read_text(encoding="utf-8"))
+
+billings_report_html = (SRC / "billings-report.template.html").read_text(encoding="utf-8")
+for placeholder, path in components.items():
+    if placeholder in billings_report_html:
+        billings_report_html = billings_report_html.replace(placeholder, path.read_text(encoding="utf-8"))
+
+sdk_html = (SRC / "sdk.template.html").read_text(encoding="utf-8")
+for placeholder, path in components.items():
+    if placeholder in sdk_html:
+        sdk_html = sdk_html.replace(placeholder, path.read_text(encoding="utf-8"))
+
+demo_selector_html = (SRC / "demo-selector.template.html").read_text(encoding="utf-8")
+
 DIST.mkdir(exist_ok=True)
 (DIST / "styles").mkdir(exist_ok=True)
 (DIST / "scripts").mkdir(exist_ok=True)
@@ -65,8 +81,12 @@ for asset_dir in ["icon", "thumbnail"]:
             shutil.rmtree(dist_asset)
         shutil.copytree(src_asset, dist_asset)
 
-shutil.copy2(SRC / "styles" / "main.css", DIST / "styles" / "main.css")
-shutil.copy2(SRC / "scripts" / "app.js", DIST / "scripts" / "app.js")
+for css_file in (SRC / "styles").glob("*.css"):
+    shutil.copy2(css_file, DIST / "styles" / css_file.name)
+
+for js_file in (SRC / "scripts").glob("*.js"):
+    shutil.copy2(js_file, DIST / "scripts" / js_file.name)
+(DIST / "index.html").write_text(demo_selector_html, encoding="utf-8")
 (DIST / "MyVTC_Home.html").write_text(html, encoding="utf-8")
 (DIST / "MyAccount.html").write_text(account_html, encoding="utf-8")
 (DIST / "Loyalty.html").write_text(loyalty_html, encoding="utf-8")
@@ -75,7 +95,11 @@ shutil.copy2(SRC / "scripts" / "app.js", DIST / "scripts" / "app.js")
 (DIST / "RechargeDetail.html").write_text(recharge_html, encoding="utf-8")
 (DIST / "Support.html").write_text(support_html, encoding="utf-8")
 (DIST / "CMS.html").write_text(cms_html, encoding="utf-8")
+(DIST / "MobileApp.html").write_text(mobile_app_html, encoding="utf-8")
+(DIST / "BillingsReport.html").write_text(billings_report_html, encoding="utf-8")
+(DIST / "SDK.html").write_text(sdk_html, encoding="utf-8")
 
+print("Đã build xong: dist/index.html")
 print("Đã build xong: dist/MyVTC_Home.html")
 print("Đã build xong: dist/MyAccount.html")
 print("Đã build xong: dist/Loyalty.html")
@@ -84,3 +108,6 @@ print("Đã build xong: dist/Shop.html")
 print("Đã build xong: dist/RechargeDetail.html")
 print("Đã build xong: dist/Support.html")
 print("Đã build xong: dist/CMS.html")
+print("Đã build xong: dist/MobileApp.html")
+print("Đã build xong: dist/BillingsReport.html")
+print("Đã build xong: dist/SDK.html")
