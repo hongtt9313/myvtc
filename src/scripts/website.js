@@ -1755,6 +1755,534 @@ function closeAccountEditModal() {
     document.getElementById('account-edit-modal')?.remove();
 }
 
+
+const defaultAccountSecurityState = {
+    twoStep: false,
+    otpSms: true,
+    voiceOtp: true,
+    zaloOtp: false,
+    emailOtp: true,
+    appOtp: false,
+    passwordUpdatedAt: '20/06/2026 09:30',
+    sessions: [
+        {
+            id: 'win-current',
+            name: 'Windows 10 · Chrome',
+            location: 'Hà Nội, Việt Nam',
+            lastActive: 'Đang hoạt động',
+            trusted: true,
+            current: true,
+            icon: 'fa-desktop'
+        },
+        {
+            id: 'iphone-15',
+            name: 'iPhone 15 · Mobile App',
+            location: 'Hà Nội, Việt Nam',
+            lastActive: '08/07/2026 21:15',
+            trusted: true,
+            current: false,
+            icon: 'fa-mobile-screen'
+        },
+        {
+            id: 'edge-office',
+            name: 'Windows 11 · Edge',
+            location: 'Đà Nẵng, Việt Nam',
+            lastActive: '05/07/2026 10:42',
+            trusted: false,
+            current: false,
+            icon: 'fa-laptop'
+        }
+    ]
+};
+
+let accountSecurityState = loadAccountSecurityState();
+let pendingPasswordValue = '';
+
+const securityMethodMap = {
+    'otp-sms': { stateKey: 'otpSms', label: 'OTP SMS', target: currentUser.phone || currentUser.username || 'SĐT tài khoản', icon: 'fa-comment-sms' },
+    'voice-otp': { stateKey: 'voiceOtp', label: 'Voice OTP', target: currentUser.phone || currentUser.username || 'SĐT tài khoản', icon: 'fa-phone' },
+    'zalo-otp': { stateKey: 'zaloOtp', label: 'Zalo OTP', target: currentUser.phone || currentUser.username || 'SĐT Zalo', icon: 'fa-comment' },
+    'email-otp': { stateKey: 'emailOtp', label: 'OTP Email', target: currentUser.email || 'email tài khoản', icon: 'fa-envelope' },
+    'app-otp': { stateKey: 'appOtp', label: 'OTP App', target: 'App Authenticator', icon: 'fa-shield-halved' }
+};
+
+function cloneSecurityState(state) {
+    return JSON.parse(JSON.stringify(state));
+}
+
+function loadAccountSecurityState() {
+    try {
+        const saved = JSON.parse(localStorage.getItem('myvtc_account_security_state') || 'null');
+        return {
+            ...cloneSecurityState(defaultAccountSecurityState),
+            ...(saved || {}),
+            sessions: Array.isArray(saved?.sessions) && saved.sessions.length ? saved.sessions : cloneSecurityState(defaultAccountSecurityState).sessions
+        };
+    } catch (error) {
+        return cloneSecurityState(defaultAccountSecurityState);
+    }
+}
+
+function saveAccountSecurityState() {
+    localStorage.setItem('myvtc_account_security_state', JSON.stringify(accountSecurityState));
+}
+
+function getEnabledSecurityMethods() {
+    return Object.entries(securityMethodMap).filter(([type, method]) => accountSecurityState[method.stateKey]);
+}
+
+function getSecurityMethodSummary() {
+    const enabled = getEnabledSecurityMethods().map(([, method]) => method.label);
+    return enabled.length ? enabled.join(', ') : 'Chưa bật phương thức OTP';
+}
+
+function refreshAccountSecurityStatus() {
+    const setText = (id, value) => {
+        const el = document.getElementById(id);
+        if (el) el.textContent = value || '--';
+    };
+    const setStatus = (id, enabled) => {
+        const el = document.getElementById(id);
+        if (!el) return;
+        el.textContent = enabled ? 'Đang bật' : 'Đang tắt';
+        el.classList.toggle('off', !enabled);
+    };
+
+    setText('security-phone-sms', currentUser.phone || currentUser.username || '--');
+    setText('security-phone-voice', currentUser.phone || currentUser.username || '--');
+    setText('security-phone-zalo', currentUser.phone || currentUser.username || '--');
+    setText('security-email-otp', currentUser.email || '--');
+    setText('security-password-updated', accountSecurityState.passwordUpdatedAt || '--');
+    setText('security-method-summary', getSecurityMethodSummary());
+    setText('security-session-count', `${accountSecurityState.sessions.length} thiết bị`);
+
+    const twoStep = document.getElementById('security-2fa-status');
+    if (twoStep) {
+        twoStep.textContent = accountSecurityState.twoStep ? 'Đang bật' : 'Đang tắt';
+        twoStep.classList.toggle('off', !accountSecurityState.twoStep);
+    }
+
+    setStatus('security-otp-sms-status', accountSecurityState.otpSms);
+    setStatus('security-voice-otp-status', accountSecurityState.voiceOtp);
+    setStatus('security-zalo-otp-status', accountSecurityState.zaloOtp);
+    setStatus('security-email-otp-status', accountSecurityState.emailOtp);
+    setStatus('security-app-otp-status', accountSecurityState.appOtp);
+    renderAccountSecurityDevices(false);
+}
+
+function getSecurityModal() {
+    const old = document.getElementById('account-edit-modal');
+    if (old) old.remove();
+
+    const modal = document.createElement('div');
+    modal.id = 'account-edit-modal';
+    modal.className = 'account-edit-modal';
+    document.body.appendChild(modal);
+    return modal;
+}
+
+function hasVerifiedPhoneForSecurity() {
+    return Boolean((currentUser.phone || currentUser.username || '').trim());
+}
+
+function hasVerifiedEmailForSecurity() {
+    return Boolean((currentUser.email || '').trim());
+}
+
+function canEnableOtpMethod(type) {
+    if (['otp-sms', 'voice-otp', 'zalo-otp'].includes(type)) {
+        return hasVerifiedPhoneForSecurity();
+    }
+    if (type === 'email-otp') {
+        return hasVerifiedEmailForSecurity();
+    }
+    return true;
+}
+
+function getOtpMethodRequirementMessage(type) {
+    if (['otp-sms', 'voice-otp', 'zalo-otp'].includes(type)) {
+        return 'Tài khoản cần xác thực SĐT trước khi bật phương thức này';
+    }
+    if (type === 'email-otp') {
+        return 'Tài khoản cần xác thực Email trước khi bật phương thức này';
+    }
+    return '';
+}
+
+function openSecurityModal(type) {
+    if (securityMethodMap[type]) {
+        openOtpMethodModal(type);
+        return;
+    }
+
+    const modal = getSecurityModal();
+
+    if (type === 'two-step') {
+        modal.innerHTML = `
+            <div class="account-edit-card small">
+                <button class="account-edit-close" onclick="closeAccountEditModal()">×</button>
+                <h2>${accountSecurityState.twoStep ? 'Tắt xác minh 2 bước' : 'Bật xác minh 2 bước'}</h2>
+                <p>Thêm một lớp bảo mật cho tài khoản khi đăng nhập thiết bị lạ, đổi mật khẩu và thực hiện thao tác quan trọng.</p>
+                <div class="security-otp-note">Trạng thái hiện tại: <b>${accountSecurityState.twoStep ? 'Đang bật' : 'Đang tắt'}</b>. Phương thức OTP đang bật: ${getSecurityMethodSummary()}.</div>
+                <div class="security-toggle-actions">
+                    <button class="account-secondary-btn" type="button" onclick="closeAccountEditModal()">Hủy</button>
+                    <button class="account-primary-btn" type="button" onclick="handleTwoStepToggle()">${accountSecurityState.twoStep ? 'Tắt' : 'Bật'}</button>
+                </div>
+            </div>`;
+        return;
+    }
+
+    if (type === 'password') {
+        pendingPasswordValue = '';
+        modal.innerHTML = `
+            <div class="account-edit-card small">
+                <button class="account-edit-close" onclick="closeAccountEditModal()">×</button>
+                <h2>Đổi mật khẩu</h2>
+                <p>Cập nhật mật khẩu đăng nhập và xác nhận bằng phương thức OTP đang bật.</p>
+                <label>Mật khẩu hiện tại</label>
+                <input type="password" id="security-current-password" placeholder="Nhập mật khẩu hiện tại">
+                <label>Mật khẩu mới</label>
+                <input type="password" id="security-new-password" placeholder="Tối thiểu 8 ký tự">
+                <label>Nhập lại mật khẩu mới</label>
+                <input type="password" id="security-confirm-password" placeholder="Nhập lại mật khẩu mới">
+                <div class="security-toggle-actions">
+                    <button class="account-secondary-btn" type="button" onclick="closeAccountEditModal()">Hủy</button>
+                    <button class="account-primary-btn" type="button" onclick="openPasswordOtpStep()">Tiếp theo</button>
+                </div>
+            </div>`;
+        return;
+    }
+}
+
+function handleTwoStepToggle() {
+    if (!accountSecurityState.twoStep) {
+        if (!getEnabledSecurityMethods().length) {
+            showToast('Cần bật ít nhất một phương thức OTP trước khi bật xác minh 2 bước', 'info');
+            return;
+        }
+        accountSecurityState.twoStep = true;
+        saveAccountSecurityState();
+        refreshAccountSecurityStatus();
+        closeAccountEditModal();
+        showToast('Đã bật xác minh 2 bước', 'success');
+        return;
+    }
+
+    openSecurityMethodPicker('two-step-off', {
+        title: 'Chọn OTP tắt xác minh 2 bước',
+        backType: 'two-step'
+    });
+}
+
+function openSecurityMethodPicker(nextAction, options = {}) {
+    const enabledMethods = getEnabledSecurityMethods();
+    if (!enabledMethods.length) {
+        showToast('Cần bật ít nhất một phương thức OTP trước khi xác thực', 'info');
+        return;
+    }
+
+    const titleMap = {
+        password: 'Chọn OTP đổi mật khẩu',
+        'two-step-off': 'Chọn OTP tắt xác minh 2 bước',
+        otpMethodOff: 'Chọn OTP tắt phương thức',
+        otpAppOff: 'Chọn OTP tắt OTP App'
+    };
+    const modal = getSecurityModal();
+    const title = options.title || titleMap[nextAction] || 'Chọn phương thức OTP';
+    const backType = options.backType || (nextAction === 'password' ? 'password' : 'two-step');
+    const methodType = options.methodType || '';
+
+    modal.innerHTML = `
+        <div class="account-edit-card small">
+            <button class="account-edit-close" onclick="closeAccountEditModal()">×</button>
+            <h2>${title}</h2>
+            <p>Chọn phương thức OTP đang bật để xác nhận thao tác bảo mật.</p>
+            <div class="security-method-list">
+                ${enabledMethods.map(([type, method]) => `
+                    <button class="security-method-item" type="button" onclick="openSecurityOtpVerify('${nextAction}', '${method.label}', '${methodType}')">
+                        <i class="fas ${method.icon}"></i><span>${method.label}<small>${method.target}</small></span>
+                    </button>
+                `).join('')}
+            </div>
+            <button class="account-secondary-btn" type="button" onclick="openSecurityModal('${backType}')">Quay lại</button>
+        </div>`;
+}
+
+function openSecurityOtpVerify(nextAction, methodName, methodType = '') {
+    const modal = getSecurityModal();
+    const titleMap = {
+        password: 'Xác thực đổi mật khẩu',
+        'two-step-off': 'Xác thực tắt xác minh 2 bước',
+        otpMethodOn: 'Xác thực bật phương thức OTP',
+        otpMethodOff: 'Xác thực tắt phương thức OTP',
+        otpAppOn: 'Xác thực OTP App',
+        otpAppOff: 'Xác thực tắt OTP App'
+    };
+    const backAction = (nextAction === 'otpMethodOff' || nextAction === 'otpAppOff')
+        ? `openSecurityMethodPicker('${nextAction}', { methodType: '${methodType}', backType: '${methodType}' })`
+        : (nextAction === 'otpMethodOn' || nextAction === 'otpAppOn')
+            ? `openOtpMethodModal('${methodType}')`
+            : nextAction === 'password'
+                ? `openSecurityMethodPicker('password')`
+                : `openSecurityMethodPicker('two-step-off', { backType: 'two-step' })`;
+
+    modal.innerHTML = `
+        <div class="account-edit-card small">
+            <button class="account-edit-close" onclick="closeAccountEditModal()">×</button>
+            <h2>${titleMap[nextAction] || 'Xác thực OTP'}</h2>
+            <p>Mã xác thực đã gửi qua ${methodName}. Nhập mã để hoàn tất thao tác.</p>
+            <label>Nhập mã xác thực</label>
+            <input type="text" id="security-otp-code" maxlength="6" inputmode="numeric" placeholder="Nhập mã xác thực" onkeydown="allowOnlyNumbers(event)">
+            <div class="security-toggle-actions">
+                <button class="account-secondary-btn" type="button" onclick="${backAction}">Quay lại</button>
+                <button class="account-primary-btn" type="button" onclick="completeSecurityOtp('${nextAction}', '${methodType}')">Xác thực</button>
+            </div>
+        </div>`;
+}
+
+function openPasswordOtpStep() {
+    const current = document.getElementById('security-current-password')?.value.trim();
+    const pass = document.getElementById('security-new-password')?.value.trim();
+    const confirm = document.getElementById('security-confirm-password')?.value.trim();
+
+    if (!current || !pass || !confirm) {
+        showToast('Vui lòng nhập đủ thông tin mật khẩu', 'info');
+        return;
+    }
+    if (currentUser.password && current !== currentUser.password) {
+        showToast('Mật khẩu hiện tại không đúng', 'info');
+        return;
+    }
+    if (pass.length < 8) {
+        showToast('Mật khẩu mới cần tối thiểu 8 ký tự', 'info');
+        return;
+    }
+    if (pass !== confirm) {
+        showToast('Mật khẩu nhập lại chưa khớp', 'info');
+        return;
+    }
+
+    pendingPasswordValue = pass;
+    openSecurityMethodPicker('password');
+}
+
+function completeSecurityOtp(nextAction, methodType = '') {
+    const code = document.getElementById('security-otp-code')?.value.trim();
+    if (code !== '123456') {
+        showToast('Mã xác thực không hợp lệ', 'info');
+        return;
+    }
+
+    if (nextAction === 'two-step-off') {
+        accountSecurityState.twoStep = false;
+        saveAccountSecurityState();
+        refreshAccountSecurityStatus();
+        closeAccountEditModal();
+        showToast('Đã tắt xác minh 2 bước', 'success');
+        return;
+    }
+
+    if (nextAction === 'password') {
+        if (!pendingPasswordValue) {
+            showToast('Vui lòng nhập lại mật khẩu mới', 'info');
+            openSecurityModal('password');
+            return;
+        }
+        currentUser.password = pendingPasswordValue;
+        pendingPasswordValue = '';
+        accountSecurityState.passwordUpdatedAt = new Date().toLocaleString('vi-VN', { hour12: false });
+        saveAccountSecurityState();
+        saveCurrentUserAndRefresh();
+        closeAccountEditModal();
+        showToast('Đổi mật khẩu thành công', 'success');
+        return;
+    }
+
+    if (nextAction === 'otpMethodOn' || nextAction === 'otpAppOn') {
+        completeOtpMethodToggle(methodType, true);
+        return;
+    }
+
+    if (nextAction === 'otpMethodOff' || nextAction === 'otpAppOff') {
+        completeOtpMethodToggle(methodType, false);
+    }
+}
+
+function openOtpMethodModal(type) {
+    const method = securityMethodMap[type];
+    if (!method) return;
+
+    const enabled = accountSecurityState[method.stateKey];
+    const modal = getSecurityModal();
+
+    if (type === 'app-otp' && !enabled) {
+        modal.innerHTML = `
+            <div class="account-edit-card small">
+                <button class="account-edit-close" onclick="closeAccountEditModal()">×</button>
+                <h2>Bật OTP App</h2>
+                <p>Liên kết tài khoản với ứng dụng xác thực như Google Authenticator hoặc Microsoft Authenticator.</p>
+                <div class="security-app-setup">
+                    <div class="security-app-qr"><i class="fas fa-qrcode"></i></div>
+                    <div>
+                        <b>Khóa thiết lập</b>
+                        <code>MYVTC-${currentUser.id || 'ACCOUNT'}-2FA</code>
+                        <span>Mở ứng dụng xác thực, quét mã QR hoặc nhập khóa, sau đó nhập mã trên ứng dụng.</span>
+                    </div>
+                </div>
+                <label>Mã trên ứng dụng xác thực</label>
+                <input type="text" id="security-otp-code" maxlength="6" inputmode="numeric" placeholder="Nhập mã xác thực" onkeydown="allowOnlyNumbers(event)">
+                <div class="security-toggle-actions">
+                    <button class="account-secondary-btn" type="button" onclick="closeAccountEditModal()">Hủy</button>
+                    <button class="account-primary-btn" type="button" onclick="completeSecurityOtp('otpAppOn', 'app-otp')">Bật OTP App</button>
+                </div>
+            </div>`;
+        return;
+    }
+
+    modal.innerHTML = `
+        <div class="account-edit-card small">
+            <button class="account-edit-close" onclick="closeAccountEditModal()">×</button>
+            <h2>${enabled ? 'Tắt' : 'Bật'} ${method.label}</h2>
+            <div class="security-otp-note">
+                <b>Trạng thái hiện tại:</b> ${enabled ? 'Đang bật' : 'Đang tắt'}<br>
+                <b>Đích nhận mã:</b> ${method.target}<br>
+                ${enabled ? 'Tắt phương thức này sau khi xác thực bằng một phương thức OTP đang bật.' : `Bật ${method.label} để nhận mã xác thực khi đăng nhập thiết bị lạ, đổi mật khẩu và cập nhật bảo mật.`}
+            </div>
+            <div class="security-toggle-actions">
+                <button class="account-secondary-btn" type="button" onclick="closeAccountEditModal()">Hủy</button>
+                <button class="account-primary-btn" type="button" onclick="startOtpMethodToggle('${type}')">${enabled ? 'Tắt' : 'Bật'}</button>
+            </div>
+        </div>`;
+}
+
+function startOtpMethodToggle(type) {
+    const method = securityMethodMap[type];
+    if (!method) return;
+
+    const enabled = accountSecurityState[method.stateKey];
+    const action = type === 'app-otp' ? (enabled ? 'otpAppOff' : 'otpAppOn') : (enabled ? 'otpMethodOff' : 'otpMethodOn');
+
+    if (!enabled && !canEnableOtpMethod(type)) {
+        showToast(getOtpMethodRequirementMessage(type), 'info');
+        return;
+    }
+
+    if (enabled && getEnabledSecurityMethods().length <= 1) {
+        showToast('Cần giữ lại ít nhất một phương thức OTP', 'info');
+        return;
+    }
+
+    if (!enabled) {
+        openSecurityOtpVerify(action, method.label, type);
+        return;
+    }
+
+    openSecurityMethodPicker(action, {
+        title: `Chọn OTP tắt ${method.label}`,
+        methodType: type,
+        backType: type
+    });
+}
+
+function completeOtpMethodToggle(type, shouldEnable) {
+    const method = securityMethodMap[type];
+    if (!method) return;
+
+    if (shouldEnable && !canEnableOtpMethod(type)) {
+        showToast(getOtpMethodRequirementMessage(type), 'info');
+        return;
+    }
+    if (!shouldEnable && getEnabledSecurityMethods().length <= 1) {
+        showToast('Cần giữ lại ít nhất một phương thức OTP', 'info');
+        return;
+    }
+
+    accountSecurityState[method.stateKey] = shouldEnable;
+    saveAccountSecurityState();
+    refreshAccountSecurityStatus();
+    closeAccountEditModal();
+    showToast(`${shouldEnable ? 'Đã bật' : 'Đã tắt'} ${method.label}`, 'success');
+}
+
+function toggleSecurityMethod(type) {
+    startOtpMethodToggle(type);
+}
+
+function renderDeviceRow(session, compact = false) {
+    return `
+        <div class="security-device-row" data-session-id="${session.id}">
+            <div class="security-device-icon"><i class="fas ${session.icon || 'fa-desktop'}"></i></div>
+            <div class="security-device-main">
+                <strong>${session.name}</strong>
+                <span>${session.location}</span>
+                <span>${session.lastActive}</span>
+                ${session.current ? '<span class="security-device-current"><i class="fas fa-circle-check"></i> Phiên hiện tại</span>' : ''}
+                ${session.trusted ? '<span class="security-device-trusted"><i class="fas fa-shield-check"></i> Thiết bị tin cậy</span>' : '<span class="security-device-untrusted"><i class="fas fa-triangle-exclamation"></i> Chưa tin cậy</span>'}
+            </div>
+            <div class="security-device-actions">
+                ${session.trusted ? `<button class="danger" type="button" onclick="revokeTrustedDevice('${session.id}')">Hủy tin cậy</button>` : ''}
+                <button type="button" onclick="${session.current ? 'logoutCurrentDevice()' : `logoutOtherDevice('${session.id}')`}">Đăng xuất</button>
+            </div>
+        </div>`;
+}
+
+function renderAccountSecurityDevices(limit = true) {
+    const list = document.getElementById('security-device-list');
+    if (!list) return;
+    const sessions = limit ? accountSecurityState.sessions.slice(0, 2) : accountSecurityState.sessions;
+    list.innerHTML = sessions.length ? sessions.map(session => renderDeviceRow(session)).join('') : '<div class="security-empty-device">Không còn phiên đăng nhập nào.</div>';
+
+    const more = document.getElementById('security-device-more');
+    if (more) {
+        more.textContent = limit && accountSecurityState.sessions.length > 2 ? 'Xem tất cả thiết bị' : 'Thu gọn danh sách';
+        more.style.display = accountSecurityState.sessions.length > 2 ? 'block' : 'none';
+        more.dataset.expanded = limit ? 'false' : 'true';
+    }
+}
+
+function toggleSecurityDeviceList() {
+    const more = document.getElementById('security-device-more');
+    const expanded = more?.dataset.expanded === 'true';
+    renderAccountSecurityDevices(expanded);
+}
+
+function renderSecuritySessionModalList() {
+    renderAccountSecurityDevices(false);
+}
+
+function revokeTrustedDevice(sessionId = 'win-current') {
+    const session = accountSecurityState.sessions.find(item => item.id === sessionId);
+    if (session) session.trusted = false;
+    saveAccountSecurityState();
+    refreshAccountSecurityStatus();
+    showToast('Đã hủy tin cậy thiết bị', 'success');
+}
+
+function trustLoginDevice(sessionId) {
+    showToast('Thiết bị đã hủy tin cậy không tự bật lại từ màn này', 'info');
+}
+
+function logoutCurrentDevice() {
+    accountSecurityState.sessions = accountSecurityState.sessions.filter(item => !item.current);
+    saveAccountSecurityState();
+    refreshAccountSecurityStatus();
+    showToast('Đã đăng xuất phiên hiện tại', 'success');
+}
+
+function logoutOtherDevice(sessionId = 'iphone-15') {
+    accountSecurityState.sessions = accountSecurityState.sessions.filter(item => item.id !== sessionId);
+    saveAccountSecurityState();
+    refreshAccountSecurityStatus();
+    showToast('Đã đăng xuất thiết bị đã chọn', 'success');
+}
+
+function logoutAllOtherDevices() {
+    accountSecurityState.sessions = accountSecurityState.sessions.filter(item => item.current);
+    saveAccountSecurityState();
+    refreshAccountSecurityStatus();
+    showToast('Đã đăng xuất toàn bộ thiết bị khác', 'success');
+}
+
 function previewAccountAvatar(event) {
     const file = event.target.files && event.target.files[0];
     if (!file) return;
@@ -2666,6 +3194,10 @@ function initLoyaltyPage() {
 
     if (tabName === 'notifications') {
         renderAccountNotifications();
+    }
+
+    if (tabName === 'security') {
+        refreshAccountSecurityStatus();
     }
 }
 function toggleMobileNavMenu() {
