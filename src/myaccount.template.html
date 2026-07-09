@@ -28,7 +28,6 @@
                 <button class="account-tab-btn active" data-tab="personal" onclick="showAccountTab('personal')">Thông tin cá nhân</button>
                 <button class="account-tab-btn" data-tab="linked" onclick="showAccountTab('linked')">Tài khoản liên kết</button>
                 <button class="account-tab-btn" data-tab="security" onclick="showAccountTab('security')">Bảo mật tài khoản</button>
-                <button class="account-tab-btn" data-tab="payment" onclick="showAccountTab('payment')">Quản lý thanh toán</button>
                 <button class="account-tab-btn" data-tab="transactions" onclick="showAccountTab('transactions')">Lịch sử giao dịch</button>
                 <button class="account-tab-btn" data-tab="notifications" onclick="showAccountTab('notifications')">Thông báo</button>
                 <button class="account-tab-btn" data-tab="terms" onclick="showAccountTab('terms')">Điều khoản sử dụng</button>
@@ -180,57 +179,61 @@
     </div>
 </div>
             <div class="account-tab-panel hidden" data-panel="security">
-                <div class="account-heading"><h1>BẢO MẬT TÀI KHOẢN</h1><p>Quản lý mật khẩu, OTP và xác minh 2 bước.</p></div>
-                <div class="empty-panel">Chưa có dữ liệu bảo mật.</div>
-            </div>
-            <div class="account-tab-panel hidden" data-panel="payment">
-    <div class="account-heading">
-        <h1>Quản lý thanh toán</h1>
-        <p>Bạn có thể sử dụng nhiều phương thức thanh toán với Tài khoản MyVTC của mình.</p>
-    </div>
-
-    <div class="payment-manage-grid">
-        <div class="linked-card payment-manage-card">
-            <div class="payment-card-head">
-                <div>
-                    <h3>Phương thức thanh toán</h3>
-                    <p>Quản lý thẻ và phương thức thanh toán đã lưu.</p>
+                <div class="account-heading">
+                    <h1>BẢO MẬT TÀI KHOẢN</h1>
+                    <p>Thiết lập lớp bảo vệ cho đăng nhập, mật khẩu, OTP và thiết bị đang truy cập tài khoản.</p>
                 </div>
-                <button class="linked-btn" type="button" onclick="openPaymentMethodModal()">Thêm phương thức</button>
-            </div>
-
-            <div class="payment-saved-row">
-                <div class="payment-method-main">
-                    <i class="fab fa-cc-visa payment-visa-icon"></i>
-                    <div>
-                        <strong id="saved-payment-name">Visa</strong>
-<span id="saved-payment-detail">Thẻ quốc tế đã lưu • ***1234</span>
+                <div class="security-manage-card">
+                    <div class="security-row" onclick="openSecurityModal('two-step')">
+                        <div class="security-name">Xác minh 2 bước</div>
+                        <div class="security-value" id="security-method-summary">--</div>
+                        <div class="security-status off" id="security-2fa-status">Đang tắt</div>
+                        <i class="fas fa-chevron-right"></i>
+                    </div>
+                    <div class="security-row" onclick="openSecurityModal('password')">
+                        <div class="security-name">Đổi mật khẩu</div>
+                        <div class="security-value">Cần xác thực OTP trước khi lưu mật khẩu mới</div>
+                        <div class="security-status" id="security-password-updated">--</div>
+                        <i class="fas fa-chevron-right"></i>
+                    </div>
+                    <div class="security-row" onclick="openSecurityModal('otp-sms')">
+                        <div class="security-name">OTP SMS</div>
+                        <div class="security-value" id="security-phone-sms">--</div>
+                        <div class="security-status" id="security-otp-sms-status">Đang bật</div>
+                        <i class="fas fa-chevron-right"></i>
+                    </div>
+                    <div class="security-row" onclick="openSecurityModal('voice-otp')">
+                        <div class="security-name">OTP Voice</div>
+                        <div class="security-value" id="security-phone-voice">--</div>
+                        <div class="security-status" id="security-voice-otp-status">Đang bật</div>
+                        <i class="fas fa-chevron-right"></i>
+                    </div>
+                    <div class="security-row" onclick="openSecurityModal('zalo-otp')">
+                        <div class="security-name">OTP Zalo</div>
+                        <div class="security-value" id="security-phone-zalo">--</div>
+                        <div class="security-status" id="security-zalo-otp-status">Đang tắt</div>
+                        <i class="fas fa-chevron-right"></i>
+                    </div>
+                    <div class="security-row" onclick="openSecurityModal('email-otp')">
+                        <div class="security-name">OTP Email</div>
+                        <div class="security-value" id="security-email-otp">--</div>
+                        <div class="security-status" id="security-email-otp-status">Đang bật</div>
+                        <i class="fas fa-chevron-right"></i>
+                    </div>
+                    <div class="security-row" onclick="openSecurityModal('app-otp')">
+                        <div class="security-name">OTP App</div>
+                        <div class="security-value">App Authenticator</div>
+                        <div class="security-status off" id="security-app-otp-status">Đang tắt</div>
+                        <i class="fas fa-chevron-right"></i>
                     </div>
                 </div>
-                <span class="payment-default-tag">Ưu tiên</span>
-            </div>
-        </div>
 
-        <div class="linked-card payment-manage-card">
-            <div class="payment-card-head">
-                <div>
-                    <h3>Địa chỉ thanh toán</h3>
-                    <p>Địa chỉ dùng cho hóa đơn và chứng từ thanh toán.</p>
-                </div>
-                <button class="linked-btn" type="button" onclick="openBillingAddressModal()">Thêm địa chỉ</button>
-            </div>
-
-            <div class="billing-address-box">
-                <div class="billing-name" id="saved-billing-name">Nguyễn Văn A</div>
-                <div class="billing-address" id="saved-billing-address">65 Lạc Trung, Phường Vĩnh Tuy, Hà Nội, Việt Nam</div>
-                <div class="billing-meta">
-                    <span id="saved-billing-zip">Mã bưu điện 10.000</span>
-                    <span class="payment-default-tag">Mặc định</span>
+                <div class="security-device-card">
+                    <h2 class="security-device-title">Quản lý phiên đăng nhập <small id="security-session-count">--</small></h2>
+                    <div id="security-device-list"></div>
+                    <div class="security-device-more" id="security-device-more" onclick="toggleSecurityDeviceList()">Xem tất cả thiết bị</div>
                 </div>
             </div>
-        </div>
-    </div>
-</div>
 
 <div class="account-tab-panel hidden" data-panel="transactions">
     <div class="account-heading">
