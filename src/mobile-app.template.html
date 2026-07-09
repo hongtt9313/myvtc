@@ -136,13 +136,12 @@
     </button>
 </section>
     </div>
-
-    <nav class="bottom-tab" aria-label="Topbar Mobile App">
-        <button class="active" type="button" data-screen-target="home-guest"><i class="fa fa-house"></i><span>Trang chủ</span></button>
-        <button type="button" data-screen-target="shop"><i class="fa fa-store"></i><span>Cửa hàng</span></button>
-        <button type="button" data-screen-target="service"><i class="fa fa-medal"></i><span>Loyalty</span></button>
-        <button type="button" data-screen-target="login-select"><i class="fa fa-user"></i><span>Tài khoản</span></button>
-    </nav>
+            <nav class="bottom-tab" aria-label="Topbar Mobile App">
+                <button class="active" type="button" data-screen-target="home-guest"><i class="fa fa-house"></i><span>Trang chủ</span></button>
+                <button type="button" data-screen-target="service"><i class="fa fa-medal"></i><span>Loyalty</span></button>
+                <button type="button" data-screen-target="shop"><i class="fa fa-store"></i><span>Cửa hàng</span></button>
+                <button type="button" data-screen-target="login-select"><i class="fa fa-user"></i><span>Tài khoản</span></button>
+            </nav>
 </section>
 
         <section class="app-screen app-main" data-screen="service">
@@ -156,8 +155,7 @@
                 <section class="mobile-loyalty-guest">
                     <div class="mobile-loyalty-hero-card">
                         <p class="eyebrow">VTC Loyalty</p>
-                        <h1>Tích EXP, lên hạng và nhận ưu đãi</h1>
-                        <p>Đăng nhập để xem hạng thành viên, nhiệm vụ, điểm danh, voucher, kho đồ và thông báo Loyalty.</p>
+                        <h1>Tích lũy EXP để lên hạng và nhận ưu đãi</h1>
                         <button class="primary-btn" type="button" data-screen-target="login-select">Đăng nhập</button>
                     </div>
                     <div class="mobile-loyalty-feature-list">
@@ -169,8 +167,8 @@
             </div>
             <nav class="bottom-tab" aria-label="Thanh điều hướng">
                 <button type="button" data-screen-target="home-guest"><i class="fa fa-house"></i><span>Trang chủ</span></button>
-                <button type="button" data-screen-target="shop"><i class="fa fa-store"></i><span>Cửa hàng</span></button>
                 <button class="active" type="button" data-screen-target="service"><i class="fa fa-medal"></i><span>Loyalty</span></button>
+                <button type="button" data-screen-target="shop"><i class="fa fa-store"></i><span>Cửa hàng</span></button>
                 <button type="button" data-screen-target="login-select"><i class="fa fa-user"></i><span>Tài khoản</span></button>
             </nav>
         </section>
@@ -202,29 +200,24 @@
                     <div class="mobile-shop-dots" data-mobile-shop-dots></div>
                 </section>
 
-                <section class="mobile-shop-banners">
-                    <button type="button" data-mobile-shop-service="Nạp số dư MyVTC"><span>Nạp số dư MyVTC</span><strong>Nạp Point nhanh</strong><small>Ưu đãi cho tài khoản đã đăng nhập</small></button>
-                    <button type="button" data-screen-target="service"><span>VTC Loyalty</span><strong>Tích EXP, đổi quà</strong><small>Xem hạng và nhiệm vụ thành viên</small></button>
-                    <button type="button" data-screen-target="service"><span>Hệ sinh thái VTC</span><strong>Khám phá dịch vụ</strong><small>PC Services và Mobile Services</small></button>
-                </section>
-
                 <section class="mobile-shop-section">
                     <div class="mobile-shop-section-head">
                         <h3>Dịch vụ của tôi</h3>
-                        <p>Danh sách dịch vụ nổi bật, nạp nhanh trong một thao tác.</p>
                     </div>
                     <div class="mobile-shop-recommend" data-mobile-shop-recommend></div>
                 </section>
 
                 <section class="mobile-shop-section">
-                    <div class="mobile-shop-section-head">
+                    <div class="mobile-shop-section-head with-menu">
                         <h3>Danh sách dịch vụ</h3>
-                        <p>Lọc theo nền tảng để tìm dịch vụ.</p>
-                    </div>
-                    <div class="mobile-shop-filters">
-                        <button class="active" type="button" data-mobile-shop-filter="all">Tất cả</button>
-                        <button type="button" data-mobile-shop-filter="mobile">Mobile</button>
-                        <button type="button" data-mobile-shop-filter="pc">PC</button>
+                        <div class="service-menu-wrap mobile-shop-menu-wrap">
+                            <button class="service-menu-btn" type="button" data-service-menu-toggle aria-label="Lọc dịch vụ"><i class="fa fa-ellipsis-vertical"></i></button>
+                            <div class="service-filter service-filter-menu mobile-shop-filter-menu">
+                                <button class="active" type="button" data-mobile-shop-filter="all">Tất cả</button>
+                                <button type="button" data-mobile-shop-filter="mobile">Mobile</button>
+                                <button type="button" data-mobile-shop-filter="pc">PC</button>
+                            </div>
+                        </div>
                     </div>
                     <div class="mobile-shop-list" data-mobile-shop-list></div>
                     <div class="mobile-shop-empty hidden" data-mobile-shop-empty>Không có dịch vụ phù hợp.</div>
@@ -232,7 +225,7 @@
             </div>
             <nav class="bottom-tab" aria-label="Thanh điều hướng">
                 <button type="button" data-screen-target="home-guest"><i class="fa fa-house"></i><span>Trang chủ</span></button>
-                <button type="button" data-screen-target="service"><i class="fa fa-grip"></i><span>Dịch vụ</span></button>
+                <button type="button" data-screen-target="service"><i class="fa fa-medal"></i><span>Loyalty</span></button>
                 <button class="active" type="button" data-screen-target="shop"><i class="fa fa-store"></i><span>Cửa hàng</span></button>
                 <button type="button" data-screen-target="login-select"><i class="fa fa-user"></i><span>Tài khoản</span></button>
             </nav>
@@ -253,11 +246,10 @@
                 <button class="primary-btn full-width" type="button" id="useAnotherLoginAccount">Sử dụng một tài khoản khác</button>
                 <button class="danger-link" type="button" id="logoutAllAccounts">Đăng xuất tất cả các tài khoản</button>
             </div>
-
             <nav class="bottom-tab" aria-label="Thanh điều hướng">
                 <button type="button" data-screen-target="home-guest"><i class="fa fa-house"></i><span>Trang chủ</span></button>
-                <button type="button" data-screen-target="shop"><i class="fa fa-store"></i><span>Cửa hàng</span></button>
                 <button type="button" data-screen-target="service"><i class="fa fa-medal"></i><span>Loyalty</span></button>
+                <button type="button" data-screen-target="shop"><i class="fa fa-store"></i><span>Cửa hàng</span></button>
                 <button class="active" type="button" data-screen-target="login-select"><i class="fa fa-user"></i><span>Tài khoản</span></button>
             </nav>
         </section>
@@ -544,13 +536,12 @@
     </button>
 </section>
     </div>
-
-    <nav class="bottom-tab" aria-label="Topbar Mobile App">
-        <button class="active" type="button" data-screen-target="home-auth"><i class="fa fa-house"></i><span>Trang chủ</span></button>
-        <button type="button" data-screen-target="shop-auth"><i class="fa fa-store"></i><span>Cửa hàng</span></button>
-        <button type="button" data-screen-target="service-auth"><i class="fa fa-medal"></i><span>Loyalty</span></button>
-        <button type="button" data-screen-target="account"><i class="fa fa-user"></i><span>Tài khoản</span></button>
-    </nav>
+            <nav class="bottom-tab" aria-label="Topbar Mobile App">
+                <button class="active" type="button" data-screen-target="home-auth"><i class="fa fa-house"></i><span>Trang chủ</span></button>
+                <button type="button" data-screen-target="service-auth"><i class="fa fa-medal"></i><span>Loyalty</span></button>
+                <button type="button" data-screen-target="shop-auth"><i class="fa fa-store"></i><span>Cửa hàng</span></button>
+                <button type="button" data-screen-target="account"><i class="fa fa-user"></i><span>Tài khoản</span></button>
+            </nav>
 </section>
 
         <section class="app-screen app-main" data-screen="account">
@@ -727,24 +718,21 @@
                     <div class="mobile-loyalty-hero-card">
                         <div class="mobile-loyalty-hero-top">
                             <div>
-                                <p class="eyebrow">Tổng quan Loyalty</p>
                                 <h1 id="mobileLoyaltyRankName">Hạng Đồng</h1>
-                                <p id="mobileLoyaltyRankDesc">Điểm hiện tại của bạn là 20 / 500 EXP để xét hạng Bạc.</p>
                             </div>
                             <span class="mobile-loyalty-medal"><i class="fa fa-crown"></i></span>
                         </div>
                         <div class="mobile-loyalty-stats">
-                            <div><span>EXP hiện tại</span><strong id="mobileLoyaltyExp">20</strong></div>
                             <div><span>Chu kỳ</span><strong id="mobileLoyaltyCycleExp">20</strong></div>
                             <div><span>Hạng kế tiếp</span><strong id="mobileLoyaltyNextRank">Bạc</strong></div>
                         </div>
-                        <div class="mobile-loyalty-progress-head"><span>Tiến trình lên hạng</span><strong id="mobileLoyaltyProgressText">20 / 500 EXP</strong></div>
+                        <div class="mobile-loyalty-progress-head"><span>Tích lũy EXP</span><strong id="mobileLoyaltyProgressText">20 / 500 EXP</strong></div>
                         <div class="mobile-loyalty-progress"><span id="mobileLoyaltyProgressFill" style="width: 4%"></span></div>
+                        <small class="mobile-loyalty-deadline" id="mobileLoyaltyDeadline">Trước ngày 31/12/2026</small>
                     </div>
 
                     <section class="mobile-loyalty-section">
-                        <div class="section-head-row compact"><div><p class="eyebrow">Chức năng</p><h3>Danh mục</h3></div></div>
-                        <div class="mobile-loyalty-menu-list">
+                                                <div class="mobile-loyalty-menu-list">
                             <button type="button" data-loyalty-panel="rank"><i class="fa fa-crown"></i><span><strong>Hạng thành viên</strong><small>EXP, tiến trình, quyền lợi theo hạng.</small></span><b>›</b></button>
                             <button type="button" data-loyalty-panel="history"><i class="fa fa-clock-rotate-left"></i><span><strong>Lịch sử EXP</strong><small>Cộng, trừ EXP, voucher và quà tặng.</small></span><b>›</b></button>
                             <button type="button" data-loyalty-panel="missions"><i class="fa fa-list-check"></i><span><strong>Nhiệm vụ</strong><small>Làm nhiệm vụ để nhận EXP và Point.</small></span><b>›</b></button>
@@ -756,8 +744,7 @@
                 </section>
 
                 <section id="mobileLoyaltyDetailView" class="mobile-loyalty-view hidden">
-                    <div class="mobile-detail-header-inline">
-                        <button class="header-icon-btn" type="button" data-loyalty-back aria-label="Quay lại Loyalty"><i class="fa fa-arrow-left"></i></button>
+                    <div class="mobile-detail-header-inline no-back">
                         <div><h3 id="mobileLoyaltyDetailTitle">Hạng thành viên</h3></div>
                     </div>
                     <div id="mobileLoyaltyDetailContent" class="mobile-loyalty-detail-content"></div>
@@ -765,8 +752,8 @@
             </div>
             <nav class="bottom-tab" aria-label="Thanh điều hướng">
                 <button type="button" data-screen-target="home-auth"><i class="fa fa-house"></i><span>Trang chủ</span></button>
-                <button type="button" data-screen-target="shop-auth"><i class="fa fa-store"></i><span>Cửa hàng</span></button>
                 <button class="active" type="button" data-screen-target="service-auth"><i class="fa fa-medal"></i><span>Loyalty</span></button>
+                <button type="button" data-screen-target="shop-auth"><i class="fa fa-store"></i><span>Cửa hàng</span></button>
                 <button type="button" data-screen-target="account"><i class="fa fa-user"></i><span>Tài khoản</span></button>
             </nav>
         </section>
@@ -798,55 +785,48 @@
                 <div class="mobile-shop-dots" data-mobile-shop-dots></div>
             </section>
 
-            <section class="mobile-shop-banners">
-                <button type="button" data-mobile-shop-service="Nạp số dư MyVTC"><span>Nạp số dư MyVTC</span><strong>Nạp Point nhanh</strong><small>Ưu đãi cho tài khoản đã đăng nhập</small></button>
-                <button type="button" data-screen-target="service-auth"><span>VTC Loyalty</span><strong>Tích EXP, đổi quà</strong><small>Xem hạng và nhiệm vụ thành viên</small></button>
-                <button type="button" data-screen-target="service-auth"><span>Hệ sinh thái VTC</span><strong>Khám phá dịch vụ</strong><small>PC Services và Mobile Services</small></button>
-            </section>
-
             <section class="mobile-shop-section">
                 <div class="mobile-shop-section-head">
                     <h3>Dịch vụ của tôi</h3>
-                    <p>Danh sách dịch vụ nổi bật, nạp nhanh trong một thao tác.</p>
                 </div>
                 <div class="mobile-shop-recommend" data-mobile-shop-recommend></div>
             </section>
 
             <section class="mobile-shop-section">
-                <div class="mobile-shop-section-head">
+                <div class="mobile-shop-section-head with-menu">
                     <h3>Danh sách dịch vụ</h3>
-                    <p>Lọc theo nền tảng để tìm dịch vụ.</p>
-                </div>
-                <div class="mobile-shop-filters">
-                    <button class="active" type="button" data-mobile-shop-filter="all">Tất cả</button>
-                    <button type="button" data-mobile-shop-filter="mobile">Mobile</button>
-                    <button type="button" data-mobile-shop-filter="pc">PC</button>
+                    <div class="service-menu-wrap mobile-shop-menu-wrap">
+                        <button class="service-menu-btn" type="button" data-service-menu-toggle aria-label="Lọc dịch vụ"><i class="fa fa-ellipsis-vertical"></i></button>
+                        <div class="service-filter service-filter-menu mobile-shop-filter-menu">
+                            <button class="active" type="button" data-mobile-shop-filter="all">Tất cả</button>
+                            <button type="button" data-mobile-shop-filter="mobile">Mobile</button>
+                            <button type="button" data-mobile-shop-filter="pc">PC</button>
+                        </div>
+                    </div>
                 </div>
                 <div class="mobile-shop-list" data-mobile-shop-list></div>
                 <div class="mobile-shop-empty hidden" data-mobile-shop-empty>Không có dịch vụ phù hợp.</div>
             </section>
         </div>
-
-        <nav class="bottom-tab" aria-label="Thanh điều hướng">
-            <button type="button" data-screen-target="home-auth"><i class="fa fa-house"></i><span>Trang chủ</span></button>
-            <button type="button" data-screen-target="service-auth"><i class="fa fa-medal"></i><span>Loyalty</span></button>
-            <button class="active" type="button" data-screen-target="shop-auth"><i class="fa fa-store"></i><span>Cửa hàng</span></button>
-            <button type="button" data-screen-target="account"><i class="fa fa-user"></i><span>Tài khoản</span></button>
-        </nav>
+            <nav class="bottom-tab" aria-label="Thanh điều hướng">
+                <button type="button" data-screen-target="home-auth"><i class="fa fa-house"></i><span>Trang chủ</span></button>
+                <button type="button" data-screen-target="service-auth"><i class="fa fa-medal"></i><span>Loyalty</span></button>
+                <button class="active" type="button" data-screen-target="shop-auth"><i class="fa fa-store"></i><span>Cửa hàng</span></button>
+                <button type="button" data-screen-target="account"><i class="fa fa-user"></i><span>Tài khoản</span></button>
+            </nav>
         </section>
 
         <section class="app-screen app-main" data-screen="shop-detail">
             <div class="app-content shop-detail-mobile-content">
                 <header class="mobile-header">
                     <button class="header-icon-btn" type="button" data-mobile-shop-back aria-label="Quay lại"><i class="fa fa-arrow-left"></i></button>
-                    <h2>Nạp dịch vụ</h2>
+                    <h2>Nạp chi tiết</h2>
                     <button class="header-icon-btn" type="button" data-mobile-shop-reset aria-label="Làm mới"><i class="fa fa-rotate-right"></i></button>
                 </header>
 
                 <section class="mobile-recharge-head">
                     <div class="mobile-recharge-icon" id="mobileRechargeIcon"></div>
                     <div>
-                        <span>Nạp dịch vụ</span>
                         <h1 id="mobileRechargeServiceName">Audition PC</h1>
                     </div>
                 </section>
@@ -854,7 +834,6 @@
                 <section class="mobile-recharge-card">
                     <div class="mobile-shop-section-head">
                         <h3>Tài khoản nạp</h3>
-                        <p>Chọn đúng tài khoản sử dụng dịch vụ cần nạp.</p>
                     </div>
                     <div id="mobileRechargeAccountBox"></div>
                 </section>
@@ -867,27 +846,37 @@
                     <div class="mobile-shop-filters hidden" id="mobileRechargePackageFilters"></div>
                     <div class="mobile-recharge-package-list" id="mobileRechargePackageList"></div>
                 </section>
+</div>
+        </section>
+
+        <section class="app-screen app-main" data-screen="shop-order">
+            <div class="app-content shop-detail-mobile-content">
+                <header class="mobile-header">
+                    <button class="header-icon-btn" type="button" data-mobile-shop-order-back aria-label="Quay lại"><i class="fa fa-arrow-left"></i></button>
+                    <h2>Thông tin đơn hàng</h2>
+                    <button class="header-icon-btn" type="button" data-mobile-shop-reset aria-label="Làm mới"><i class="fa fa-rotate-right"></i></button>
+                </header>
 
                 <section class="mobile-recharge-card mobile-recharge-order-card">
                     <div class="mobile-shop-section-head">
                         <h3>Thông tin đơn hàng</h3>
-                        <p>Kiểm tra đơn trước khi thanh toán.</p>
                     </div>
                     <div class="mobile-order-row"><span>Tên sản phẩm</span><strong id="mobileOrderProductName">Chưa chọn gói</strong></div>
                     <div class="mobile-order-row"><span>Số lượng</span><div class="mobile-order-qty"><button type="button" data-mobile-qty="-1">-</button><strong id="mobileOrderQuantity">1</strong><button type="button" data-mobile-qty="1">+</button></div></div>
-                    <details class="mobile-order-collapse" open>
-                        <summary>Phương thức thanh toán</summary>
-                        <div class="mobile-payment-grid" id="mobileRechargePaymentMethods"></div>
-                    </details>
+                    <div class="mobile-order-collapse mobile-payment-box">
+                        <div class="mobile-payment-head"><strong>Phương thức thanh toán</strong><button type="button" data-mobile-change-payment>Đổi</button></div>
+                        <p class="mobile-payment-current" id="mobilePaymentCurrent">Số dư MyVTC</p>
+                        <div class="mobile-payment-grid hidden" id="mobileRechargePaymentMethods"></div>
+                    </div>
                     <details class="mobile-order-collapse">
                         <summary>Voucher</summary>
                         <div class="mobile-voucher-box">
                             <input id="mobileRechargeVoucher" placeholder="Nhập mã voucher">
                             <select id="mobileRechargeVoucherSelect">
                                 <option value="">Chọn mã có sẵn</option>
-                                <option value="MYVTC10">MYVTC10 - Giảm 10%</option>
-                                <option value="VTCPAY20">VTCPAY20 - Giảm 20.000đ</option>
-                                <option value="NEWUSER">NEWUSER - Giảm 30.000đ</option>
+                                <option value="MYVTC10">MYVTC10, Giảm 10%</option>
+                                <option value="VTCPAY20">VTCPAY20, Giảm 20.000đ</option>
+                                <option value="NEWUSER">NEWUSER, Giảm 30.000đ</option>
                             </select>
                             <button type="button" data-mobile-apply-voucher>Dùng</button>
                             <p id="mobileVoucherMessage"></p>
