@@ -1222,11 +1222,12 @@ function renderMobileLoyaltyOverview() {
     var data = mobileLoyaltyRankData.dong;
     if (!data) return;
     setTextContent("mobileLoyaltyRankName", "Hạng " + data.name);
-    setTextContent("mobileLoyaltyRankDesc", data.desc);
+    setTextContent("mobileLoyaltyRankDesc", "");
     setTextContent("mobileLoyaltyExp", String(data.exp));
     setTextContent("mobileLoyaltyCycleExp", String(data.cycleExp));
     setTextContent("mobileLoyaltyNextRank", data.nextRank);
     setTextContent("mobileLoyaltyProgressText", data.progress);
+    setTextContent("mobileLoyaltyDeadline", data.deadline || "Trước ngày 31/12/2026");
     var fill = document.getElementById("mobileLoyaltyProgressFill");
     if (fill) fill.style.width = data.percent + "%";
 }
@@ -1278,24 +1279,23 @@ function getMobileLoyaltyRankHtml() {
     var upgrade = data.missions.filter(function (item) { return item.title.indexOf("Duy trì") !== 0; });
     var maintain = data.missions.filter(function (item) { return item.title.indexOf("Duy trì") === 0; });
     return [
+        '<div class="mobile-loyalty-rank-switch">' + buttons + '</div>',
         '<section class="mobile-loyalty-card">',
         '<p class="eyebrow">' + escapeHtml(data.label) + '</p>',
         '<h2>Hạng ' + escapeHtml(data.name) + '</h2>',
-        '<p>' + escapeHtml(data.desc) + '</p>',
         '<div class="mobile-loyalty-progress-head"><span>Tích lũy EXP</span><strong>' + escapeHtml(data.progress) + '</strong></div>',
         '<div class="mobile-loyalty-progress"><span style="width:' + data.percent + '%"></span></div>',
         data.deadline ? '<small class="mobile-loyalty-deadline">' + escapeHtml(data.deadline) + '</small>' : '',
         '</section>',
-        '<div class="mobile-loyalty-rank-switch">' + buttons + '</div>',
-        '<section class="mobile-loyalty-card"><h3>Tiến trình lên hạng</h3><p>' + escapeHtml(data.missionDesc) + '</p>' + renderMobileLoyaltyTaskList(upgrade) + '</section>',
-        maintain.length ? '<section class="mobile-loyalty-card"><h3>Duy trì hạng</h3><p>Điều kiện áp dụng để giữ hạng ' + escapeHtml(data.name) + ' trong chu kỳ tiếp theo.</p>' + renderMobileLoyaltyTaskList(maintain) + '</section>' : '',
-        '<section class="mobile-loyalty-card"><h3>Quyền lợi theo hạng</h3><p>' + escapeHtml(data.alert) + '</p><div class="mobile-loyalty-benefit-list">' + data.benefits.map(function (item) { return '<article><i class="fa ' + escapeHtml(item.icon) + '"></i><div><strong>' + escapeHtml(item.title) + '</strong><small>' + escapeHtml(item.desc) + '</small></div><button type="button" data-loyalty-action="locked-reward">Nhận</button></article>'; }).join('') + '</div></section>'
+        '<section class="mobile-loyalty-card"><h3>Nhiệm vụ thăng hạng</h3>' + renderMobileLoyaltyTaskList(upgrade, "mission") + '</section>',
+        maintain.length ? '<section class="mobile-loyalty-card"><h3>Duy trì hạng</h3>' + renderMobileLoyaltyTaskList(maintain, "mission") + '</section>' : '',
+        '<section class="mobile-loyalty-card"><h3>Quyền lợi theo hạng</h3><div class="mobile-loyalty-benefit-list">' + data.benefits.map(function (item, index) { return '<article class="clickable" data-loyalty-info="benefit" data-loyalty-info-index="' + index + '" data-loyalty-info-title="' + escapeHtml(item.title) + '" data-loyalty-info-desc="' + escapeHtml(item.desc || "") + '" data-loyalty-info-action="Nhận"><i class="fa ' + escapeHtml(item.icon) + '"></i><div><strong>' + escapeHtml(item.title) + '</strong></div><button type="button" data-loyalty-info="benefit" data-loyalty-info-index="' + index + '" aria-label="Xem quyền lợi"><i class="fa fa-chevron-right"></i></button></article>'; }).join('') + '</div></section>'
     ].join('');
 }
 
 function renderMobileLoyaltyTaskList(items) {
-    return '<div class="mobile-loyalty-task-list">' + items.map(function (item) {
-        return '<article><div><strong>' + escapeHtml(item.title) + '</strong><small>' + escapeHtml(item.desc) + '</small></div><button type="button" data-loyalty-task-action="' + escapeHtml(item.action) + '">' + escapeHtml(item.action) + '</button></article>';
+    return '<div class="mobile-loyalty-task-list">' + items.map(function (item, index) {
+        return '<article class="clickable" data-loyalty-info="mission" data-loyalty-info-index="' + index + '" data-loyalty-info-title="' + escapeHtml(item.title) + '" data-loyalty-info-desc="' + escapeHtml(item.desc || "") + '" data-loyalty-info-action="' + escapeHtml(item.action || "Chi tiết") + '"><div><strong>' + escapeHtml(item.title) + '</strong></div><button type="button" data-loyalty-info="mission" data-loyalty-info-index="' + index + '" aria-label="Xem nhiệm vụ"><i class="fa fa-chevron-right"></i></button></article>';
     }).join('') + '</div>';
 }
 
@@ -1465,6 +1465,33 @@ function handleMobileLoyaltyVoucher(code) {
     showMobileToast("Đã áp dụng thử voucher " + voucher.code + ".", "success");
 }
 
+function openMobileLoyaltyInfoPopup(kind, index, titleFromNode, descFromNode, actionFromNode) {
+    var data = mobileLoyaltyRankData[mobileLoyaltyState.selectedRank] || mobileLoyaltyRankData.dong;
+    var item;
+    var title = kind === "benefit" ? "Thông tin quyền lợi" : "Thông tin nhiệm vụ";
+    if (kind === "benefit") {
+        item = (data.benefits || [])[Number(index || 0)];
+    } else {
+        var upgrade = (data.missions || []).filter(function (task) { return task.title.indexOf("Duy trì") !== 0; });
+        item = upgrade[Number(index || 0)] || (data.missions || [])[Number(index || 0)];
+    }
+    if (titleFromNode) {
+        item = { title: titleFromNode, desc: descFromNode || "", action: actionFromNode || (kind === "benefit" ? "Nhận" : "Chi tiết") };
+    }
+    if (!item) return;
+    var modal = document.createElement("div");
+    modal.className = "mobile-account-modal";
+    modal.id = "mobileAccountModal";
+    modal.innerHTML = [
+        '<div class="mobile-account-modal-card">',
+        '<div class="mobile-account-modal-head"><div><h3>' + title + '</h3><p>' + escapeHtml(item.title) + '</p></div><button class="mobile-account-modal-close" type="button" data-close-mobile-modal>×</button></div>',
+        '<div class="mobile-loyalty-popup-body"><strong>' + escapeHtml(item.title) + '</strong><p>' + escapeHtml(item.desc || "") + '</p></div>',
+        '<div class="mobile-account-modal-actions"><button class="secondary" type="button" data-close-mobile-modal>Đóng</button><button type="button" data-loyalty-task-action="' + escapeHtml(item.action || "Chi tiết") + '">' + escapeHtml(item.action || "Chi tiết") + '</button></div>',
+        '</div>'
+    ].join("");
+    document.body.appendChild(modal);
+}
+
 
 // ================================================================
 //  MOBILE SHOP
@@ -1497,7 +1524,8 @@ var mobileShopState = {
     quantity: 1,
     payment: "Số dư MyVTC",
     discount: 0,
-    packageFilter: "all"
+    packageFilter: "all",
+    paymentOptionsVisible: false
 };
 var mobileShopTimer = null;
 
@@ -1550,7 +1578,7 @@ function startMobileShopSlider() {
 }
 
 function renderMobileShopRecommend() {
-    var names = ["Nạp số dư MyVTC", "Audition PC", "Đột Kích", "Giang Hồ Bát Phái", "Be A Pro Football", "Silkroad Origin VTC"];
+    var names = ["Audition PC", "Đột Kích", "Giang Hồ Bát Phái", "Be A Pro Football", "Silkroad Origin VTC", "Ngôi Nhà Trong Mơ"];
     var html = names.map(function (name) {
         var service = getMobileShopServiceByName(name);
         return [
@@ -1571,7 +1599,7 @@ function renderMobileShopList() {
     });
 
     var services = mobileShopServices.filter(function (service) {
-        if (service.type === "balance") return mobileShopState.filter === "all";
+        if (service.type === "balance") return false;
         return mobileShopState.filter === "all" || service.type === mobileShopState.filter;
     });
 
@@ -1579,8 +1607,7 @@ function renderMobileShopList() {
         return [
             '<button type="button" data-mobile-shop-service="' + escapeHtml(service.name) + '">',
             '<img src="' + service.iconImg + '" alt="' + escapeHtml(service.name) + '" onerror="this.style.display=\'none\'">',
-            '<span><strong>' + escapeHtml(service.name) + '</strong><small>' + escapeHtml(service.desc || service.typeLabel || "Dịch vụ VTC") + '</small></span>',
-            '<em>' + escapeHtml(service.typeLabel || "") + '</em>',
+            '<span><strong>' + escapeHtml(service.name) + '</strong><small>' + escapeHtml(service.desc || "Dịch vụ VTC") + '</small></span>',
             '</button>'
         ].join("");
     }).join("");
@@ -1594,6 +1621,11 @@ function renderMobileShopList() {
 }
 
 function openMobileRecharge(serviceName) {
+    if (!isLoggedIn) {
+        showMobileScreen("login-select");
+        showMobileToast("Bạn cần đăng nhập để nạp dịch vụ.", "info");
+        return;
+    }
     var activeScreen = document.querySelector(".app-screen.active");
     mobileShopState.backScreen = activeScreen && activeScreen.dataset.screen === "shop" ? "shop" : "shop-auth";
     var service = getMobileShopServiceByName(serviceName);
@@ -1603,6 +1635,7 @@ function openMobileRecharge(serviceName) {
     mobileShopState.payment = service.isBalanceTopup ? "Thẻ Vcoin" : "Số dư MyVTC";
     mobileShopState.discount = 0;
     mobileShopState.packageFilter = "all";
+    mobileShopState.paymentOptionsVisible = false;
     showMobileScreen("shop-detail");
 }
 
@@ -1635,7 +1668,7 @@ function renderMobileRechargeAccountBox() {
     }
 
     if (service.linkedAccount) {
-        box.innerHTML = '<div class="mobile-recharge-account-found"><strong>' + escapeHtml(service.linkedAccount) + '</strong><span>Tên tài khoản đang dùng ' + escapeHtml(service.name) + '</span></div>';
+        box.innerHTML = '<div class="mobile-recharge-account-found"><strong>' + escapeHtml(service.linkedAccount) + '</strong></div>';
         return;
     }
 
@@ -1643,7 +1676,6 @@ function renderMobileRechargeAccountBox() {
         box.innerHTML = [
             '<div class="mobile-recharge-search">',
             '<strong>Nhập tên tài khoản sử dụng dịch vụ</strong>',
-            '<span>Dịch vụ này cho phép nạp khi chưa liên kết tài khoản.</span>',
             '<div><input id="mobileRechargePlayerName" placeholder="Nhập tên tài khoản"><button type="button" data-mobile-search-player>Tìm</button></div>',
             '</div>'
         ].join("");
@@ -1693,6 +1725,8 @@ function renderMobileRechargePaymentMethods() {
     if (!holder || !service) return;
     var methods = service.isBalanceTopup ? ["Thẻ Vcoin", "Chuyển khoản", "VTC Pay", "Ngân hàng nội địa", "Thẻ quốc tế"] : ["Số dư MyVTC", "Chuyển khoản", "VTC Pay", "Ngân hàng nội địa", "Thẻ quốc tế"];
     if (methods.indexOf(mobileShopState.payment) < 0) mobileShopState.payment = methods[0];
+    setMobileText("mobilePaymentCurrent", mobileShopState.payment);
+    holder.classList.toggle("hidden", !mobileShopState.paymentOptionsVisible);
     holder.innerHTML = methods.map(function (method) {
         return '<button type="button" class="' + (method === mobileShopState.payment ? "active" : "") + '" data-mobile-payment="' + method + '">' + method + '</button>';
     }).join("");
@@ -1766,15 +1800,22 @@ function renderMobileRechargePackages() {
 function selectMobileRechargePackage(packageId) {
     mobileShopState.selectedPackage = getMobileRechargePackages(mobileShopState.service).find(function (pkg) { return pkg.id === packageId; }) || mobileShopState.selectedPackage;
     mobileShopState.discount = 0;
+    mobileShopState.paymentOptionsVisible = false;
     renderMobileRechargePackages();
+    renderMobileRechargePaymentMethods();
     updateMobileRechargeOrder();
+    showMobileScreen("shop-order");
 }
 
 function selectMobileRechargePayment(payment) {
     mobileShopState.payment = payment;
     mobileShopState.packageFilter = "all";
-    mobileShopState.selectedPackage = getMobileRechargePackages(mobileShopState.service)[0];
+    var packages = getMobileRechargePackages(mobileShopState.service);
+    if (!mobileShopState.selectedPackage || !packages.some(function (pkg) { return pkg.id === mobileShopState.selectedPackage.id; })) {
+        mobileShopState.selectedPackage = packages[0];
+    }
     mobileShopState.discount = 0;
+    mobileShopState.paymentOptionsVisible = false;
     renderMobileRechargePaymentMethods();
     renderMobileRechargePackages();
     updateMobileRechargeOrder();
@@ -2121,6 +2162,14 @@ document.addEventListener("click", function (event) {
         return;
     }
 
+    var loyaltyInfoBtn = event.target.closest("[data-loyalty-info]");
+    if (loyaltyInfoBtn) {
+        event.preventDefault();
+        var infoSource = loyaltyInfoBtn.closest("[data-loyalty-info-title]") || loyaltyInfoBtn;
+        openMobileLoyaltyInfoPopup(loyaltyInfoBtn.dataset.loyaltyInfo, loyaltyInfoBtn.dataset.loyaltyInfoIndex, infoSource.dataset.loyaltyInfoTitle, infoSource.dataset.loyaltyInfoDesc, infoSource.dataset.loyaltyInfoAction);
+        return;
+    }
+
     var loyaltyTaskActionBtn = event.target.closest("[data-loyalty-task-action]");
     if (loyaltyTaskActionBtn) {
         event.preventDefault();
@@ -2283,6 +2332,8 @@ document.addEventListener("click", function (event) {
     if (shopFilterBtn) {
         event.preventDefault();
         mobileShopState.filter = shopFilterBtn.dataset.mobileShopFilter || "all";
+        var shopMenuWrap = shopFilterBtn.closest(".service-menu-wrap");
+        if (shopMenuWrap) shopMenuWrap.classList.remove("open");
         renderMobileShopList();
         return;
     }
@@ -2293,9 +2344,22 @@ document.addEventListener("click", function (event) {
         return;
     }
 
+    if (event.target.closest("[data-mobile-shop-order-back]")) {
+        event.preventDefault();
+        showMobileScreen("shop-detail");
+        return;
+    }
+
     if (event.target.closest("[data-mobile-shop-reset]")) {
         event.preventDefault();
         openMobileRecharge(mobileShopState.service ? mobileShopState.service.name : "Audition PC");
+        return;
+    }
+
+    if (event.target.closest("[data-mobile-change-payment]")) {
+        event.preventDefault();
+        mobileShopState.paymentOptionsVisible = !mobileShopState.paymentOptionsVisible;
+        renderMobileRechargePaymentMethods();
         return;
     }
 
