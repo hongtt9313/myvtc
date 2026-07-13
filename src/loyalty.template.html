@@ -296,25 +296,31 @@
                     <p>Quản lý quà tặng, voucher và vật phẩm đã nhận</p>
                 </div>
 
-                <div class="loyalty-bag-grid">
-                    <div class="loyalty-bag-card">
+                <div class="loyalty-bag-grid voucher-inventory-grid">
+                    <article class="loyalty-bag-card available voucher-inventory-card">
                         <div class="loyalty-bag-icon"><i class="fas fa-ticket-alt"></i></div>
-                        <strong>Voucher Nạp Points giảm giá 10%</strong>
-                        <span>Chưa mở khóa</span>
-                        <button type="button" disabled>Chưa đủ điều kiện</button>
-                    </div>
-                    <div class="loyalty-bag-card">
-                        <div class="loyalty-bag-icon"><i class="fas fa-coins"></i></div>
-                        <strong>Thẻ Vcoin 10K</strong>
-                        <span>Chưa mở khóa</span>
-                        <button type="button" disabled>Chưa đủ điều kiện</button>
-                    </div>
-                    <div class="loyalty-bag-card available">
-                        <div class="loyalty-bag-icon"><i class="fas fa-star"></i></div>
-                        <strong>EXP checkin hằng ngày</strong>
-                        <span>Đã nhận hôm nay</span>
-                        <button type="button">Xem lịch sử</button>
-                    </div>
+                        <strong>Voucher nạp Point giảm 10%</strong>
+                        <div class="voucher-inventory-meta"><span>Giá trị</span><b>10%</b></div>
+                        <div class="voucher-inventory-meta"><span>Đơn vị</span><b>Point</b></div>
+                        <span class="voucher-status available">Khả dụng</span>
+                        <button type="button" onclick="openVoucherDetail('point10')">Xem chi tiết</button>
+                    </article>
+                    <article class="loyalty-bag-card available voucher-inventory-card">
+                        <div class="loyalty-bag-icon"><i class="fas fa-gift"></i></div>
+                        <strong>Voucher giảm 20.000 VNĐ</strong>
+                        <div class="voucher-inventory-meta"><span>Giá trị</span><b>20.000</b></div>
+                        <div class="voucher-inventory-meta"><span>Đơn vị</span><b>VNĐ</b></div>
+                        <span class="voucher-status used">Đã sử dụng</span>
+                        <button type="button" onclick="openVoucherDetail('vtcpay20')">Xem chi tiết</button>
+                    </article>
+                    <article class="loyalty-bag-card available voucher-inventory-card">
+                        <div class="loyalty-bag-icon"><i class="fas fa-ticket"></i></div>
+                        <strong>Voucher tân thủ giảm 30.000 VNĐ</strong>
+                        <div class="voucher-inventory-meta"><span>Giá trị</span><b>30.000</b></div>
+                        <div class="voucher-inventory-meta"><span>Đơn vị</span><b>VNĐ</b></div>
+                        <span class="voucher-status expired">Hết hạn</span>
+                        <button type="button" onclick="openVoucherDetail('newuser30')">Xem chi tiết</button>
+                    </article>
                 </div>
             </div>
         </section>
