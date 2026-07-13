@@ -5,6 +5,7 @@
     <meta content="width=device-width, initial-scale=1.0" name="viewport"/>
     <title>Chi tiết nạp - MyVTC</title>
     <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://www.google.com/recaptcha/api.js" async defer></script>
     <link href="styles/website.css" rel="stylesheet"/>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet"/>
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" rel="stylesheet"/>
@@ -29,15 +30,14 @@
                 <section class="recharge-card">
                     <div class="recharge-card-head">
                         <h2>Tài khoản nạp</h2>
-                        <p>Chọn đúng tài khoản sử dụng dịch vụ cần nạp.</p>
                     </div>
                     <div id="recharge-account-box"></div>
                 </section>
 
                 <section class="recharge-card">
                     <div class="recharge-card-head">
-                        <h2>Danh sách gói</h2>
-                        <p>Chọn gói nạp phù hợp.</p>
+                        <h2 id="recharge-package-title">Danh sách gói</h2>
+                        <p id="recharge-package-description">Chọn gói nạp phù hợp.</p>
                     </div>
 		<div class="recharge-package-filters hidden" id="recharge-package-filters"></div>
                     <div class="recharge-package-grid" id="recharge-package-list"></div>
@@ -87,7 +87,6 @@
                                 <option value="VTCPAY20">VTCPAY20 - Giảm 20.000đ</option>
                                 <option value="NEWUSER">NEWUSER - Giảm 30.000đ</option>
                             </select>
-                            <button type="button" onclick="applyRechargeVoucher()">Dùng</button>
                         </div>
                         <p id="voucher-message"></p>
                     </div>
