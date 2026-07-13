@@ -92,16 +92,18 @@
                         <i class="fas fa-chevron-right"></i>
                     </div>
 
-                    <div class="profile-row">
+                    <div class="profile-row profile-contact-row">
                         <div class="profile-label">Điện thoại</div>
                         <div class="profile-value" id="account-phone">--</div>
-                        <span class="verify-badge success">Đã xác thực</span>
+                        <span class="verify-badge" id="account-phone-status">Chưa xác thực</span>
+                        <button class="profile-verify-btn profile-contact-action" id="account-phone-action" type="button" onclick="openContactVerification('phone')" aria-label="Xác thực SĐT" title="Xác thực SĐT"><i class="fas fa-chevron-right"></i></button>
                     </div>
 
-                    <div class="profile-row">
+                    <div class="profile-row profile-contact-row">
                         <div class="profile-label">Email</div>
                         <div class="profile-value" id="account-email">--</div>
-                        <span class="verify-badge success">Đã xác thực</span>
+                        <span class="verify-badge" id="account-email-status">Chưa xác thực</span>
+                        <button class="profile-verify-btn profile-contact-action" id="account-email-action" type="button" onclick="openContactVerification('email')" aria-label="Xác thực Email" title="Xác thực Email"><i class="fas fa-chevron-right"></i></button>
                     </div>
                 </div>
             </div>
@@ -150,31 +152,30 @@
         </div>
     </div>
 
-        <div class="linked-card mt-18">
-        <h3>Liên kết tài khoản chơi ngay</h3>
-        <p>Để bảo vệ tiến trình sử dụng dịch vụ được lưu trên thiết bị này, chúng tôi khuyến nghị bạn liên kết tài khoản MyVTC.</p>
-
-        <div class="guest-link-actions">
-            <button type="button" onclick="startGuestLinkFlow('login')">
-                <i class="fas fa-user-check"></i>
-                <span>Đã có tài khoản</span>
-            </button>
-            <button type="button" onclick="startGuestLinkFlow('register')">
-                <i class="fas fa-user-plus"></i>
-                <span>Chưa có tài khoản</span>
-            </button>
-        </div>
-    </div>
-
     <div class="linked-card mt-18">
         <h3>Kết nối dịch vụ VTC</h3>
         <p>Bạn đang đăng nhập tài khoản MyVTC vào các dịch vụ trong hệ sinh thái VTC.</p>
 
         <div class="service-link-list">
-            <div><i class="fas fa-cubes"></i><span>Web VTC Services</span></div>
-            <div><i class="fas fa-mobile-alt"></i><span>Au Mobile</span></div>
-            <div><i class="fas fa-id-card"></i><span>Website VTC ID</span></div>
-            <div><i class="fas fa-shield-alt"></i><span>GZ04 Cabal</span></div>
+            <button type="button" class="service-link-item" onclick="openLinkedServiceModal('Audition PC', 'thumbnail/thumb_001.png')"><img src="thumbnail/thumb_001.png" alt="Audition PC"><span>Audition PC</span></button>
+            <button type="button" class="service-link-item" onclick="openLinkedServiceModal('Đột Kích (Crossfire)', 'thumbnail/thumb_002.png')"><img src="thumbnail/thumb_002.png" alt="Đột Kích (Crossfire)"><span>Đột Kích (Crossfire)</span></button>
+            <button type="button" class="service-link-item" onclick="openLinkedServiceModal('Truy Kích PC', 'thumbnail/thumb_003.png')"><img src="thumbnail/thumb_003.png" alt="Truy Kích PC"><span>Truy Kích PC</span></button>
+            <button type="button" class="service-link-item" onclick="openLinkedServiceModal('Phi Đội (Ace Online)', 'thumbnail/thumb_004.png')"><img src="thumbnail/thumb_004.png" alt="Phi Đội (Ace Online)"><span>Phi Đội (Ace Online)</span></button>
+            <button type="button" class="service-link-item" onclick="openLinkedServiceModal('Silkroad Origin VTC', 'thumbnail/thumb_005.png')"><img src="thumbnail/thumb_005.png" alt="Silkroad Origin VTC"><span>Silkroad Origin VTC</span></button>
+            <button type="button" class="service-link-item" onclick="openLinkedServiceModal('Ghost Online PC VTC', 'thumbnail/thumb_006.png')"><img src="thumbnail/thumb_006.png" alt="Ghost Online PC VTC"><span>Ghost Online PC VTC</span></button>
+            <button type="button" class="service-link-item" onclick="openLinkedServiceModal('Mật Lệnh FPS PC', 'thumbnail/thumb_007.png')"><img src="thumbnail/thumb_007.png" alt="Mật Lệnh FPS PC"><span>Mật Lệnh FPS PC</span></button>
+            <button type="button" class="service-link-item" onclick="openLinkedServiceModal('Ragnarok Online', 'thumbnail/thumb_008.png')"><img src="thumbnail/thumb_008.png" alt="Ragnarok Online"><span>Ragnarok Online</span></button>
+            <button type="button" class="service-link-item" onclick="openLinkedServiceModal('Hiệp Khách Giang Hồ PC', 'thumbnail/thumb_009.png')"><img src="thumbnail/thumb_009.png" alt="Hiệp Khách Giang Hồ PC"><span>Hiệp Khách Giang Hồ PC</span></button>
+            <button type="button" class="service-link-item" onclick="openLinkedServiceModal('Giang Hồ: Bát Phái Phân Tranh', 'thumbnail/thumb_010.png')"><img src="thumbnail/thumb_010.png" alt="Giang Hồ: Bát Phái Phân Tranh"><span>Giang Hồ: Bát Phái Phân Tranh</span></button>
+            <button type="button" class="service-link-item" onclick="openLinkedServiceModal('Be A Pro: Football', 'thumbnail/thumb_011.png')"><img src="thumbnail/thumb_011.png" alt="Be A Pro: Football"><span>Be A Pro: Football</span></button>
+            <button type="button" class="service-link-item" onclick="openLinkedServiceModal('Football Pro VTC', 'thumbnail/thumb_012.png')"><img src="thumbnail/thumb_012.png" alt="Football Pro VTC"><span>Football Pro VTC</span></button>
+            <button type="button" class="service-link-item" onclick="openLinkedServiceModal('Đại Chiến Tam Quốc', 'thumbnail/thumb_013.png')"><img src="thumbnail/thumb_013.png" alt="Đại Chiến Tam Quốc"><span>Đại Chiến Tam Quốc</span></button>
+            <button type="button" class="service-link-item" onclick="openLinkedServiceModal('Gogo Tam Quốc', 'thumbnail/thumb_014.png')"><img src="thumbnail/thumb_014.png" alt="Gogo Tam Quốc"><span>Gogo Tam Quốc</span></button>
+            <button type="button" class="service-link-item" onclick="openLinkedServiceModal('AU BEAT / AU TOP', 'thumbnail/thumb_015.png')"><img src="thumbnail/thumb_015.png" alt="AU BEAT / AU TOP"><span>AU BEAT / AU TOP</span></button>
+            <button type="button" class="service-link-item" onclick="openLinkedServiceModal('Supersus', 'thumbnail/thumb_016.png')"><img src="thumbnail/thumb_016.png" alt="Supersus"><span>Supersus</span></button>
+            <button type="button" class="service-link-item" onclick="openLinkedServiceModal('War and Order', 'thumbnail/thumb_017.png')"><img src="thumbnail/thumb_017.png" alt="War and Order"><span>War and Order</span></button>
+            <button type="button" class="service-link-item" onclick="openLinkedServiceModal('Au Mobile', 'thumbnail/thumb_018.png')"><img src="thumbnail/thumb_018.png" alt="Au Mobile"><span>Au Mobile</span></button>
+            <button type="button" class="service-link-item" onclick="openLinkedServiceModal('Cabal Mobile', 'thumbnail/thumb_019.png')"><img src="thumbnail/thumb_019.png" alt="Cabal Mobile"><span>Cabal Mobile</span></button>
         </div>
     </div>
 </div>
@@ -276,112 +277,56 @@
 
         <div class="linked-card transaction-card">
     <div id="transaction-list" class="transaction-list">
-        <div class="transaction-row transaction-item" data-type="Nạp Point" data-date="2026-06-25" data-code="MYVTC250625001" data-desc="Nạp Point qua thẻ quốc tế Visa">
-            <div class="transaction-field transaction-main-field" data-label="Nội dung">
-                <strong>Nạp Point qua thẻ quốc tế Visa</strong>
-                <span>25/06/2026 09:30</span>
-            </div>
-            <div class="transaction-field transaction-code-field" data-label="Mã giao dịch">MYVTC250625001</div>
-            <div class="transaction-field transaction-amount-field" data-label="Số tiền">
-                <span class="transaction-money plus">+100.000 Point</span>
-            </div>
-            <div class="transaction-field transaction-method-field" data-label="Phương thức thanh toán">Thẻ quốc tế</div>
-            <div class="transaction-field transaction-note-field" data-label="Ghi chú">
-                <div class="transaction-note-line">
-                    <span>VTC Pay: VTP250625998, Voucher: WELCOME10</span>
-                    <strong class="transaction-success">Thành công</strong>
-                </div>
-            </div>
+        <div class="transaction-table-head" aria-hidden="true">
+            <span>STT</span><span>Tiêu đề</span><span>Số tiền</span><span>Trạng thái</span><span>Thao tác</span>
         </div>
 
-        <div class="transaction-row transaction-item" data-type="Mua hàng" data-date="2026-06-24" data-code="MYVTC240624008" data-desc="Thanh toán gói dịch vụ VTC Services">
-            <div class="transaction-field transaction-main-field" data-label="Nội dung">
-                <strong>Thanh toán gói dịch vụ VTC Services</strong>
-                <span>24/06/2026 20:12</span>
-            </div>
-            <div class="transaction-field transaction-code-field" data-label="Mã giao dịch">MYVTC240624008</div>
-            <div class="transaction-field transaction-amount-field" data-label="Số tiền">
-                <span class="transaction-money minus">-50.000 Point</span>
-            </div>
-            <div class="transaction-field transaction-method-field" data-label="Phương thức thanh toán">Point</div>
-            <div class="transaction-field transaction-note-field" data-label="Ghi chú">
-                <div class="transaction-note-line">
-                    <span>Third Party: VTCSERVICES, gói dịch vụ: VIP30</span>
-                    <strong class="transaction-pending">Đang xử lý</strong>
-                </div>
-            </div>
+        <div class="transaction-row transaction-item" data-type="Nạp Point" data-date="2026-06-25" data-code="MYVTC250625001" data-desc="Nạp Point qua thẻ quốc tế Visa" data-time="25/06/2026 09:30" data-title="Nạp Point qua thẻ quốc tế Visa" data-method="Thẻ quốc tế" data-amount="+100.000 Point" data-status="Thành công" data-note="VTC Pay: VTP250625998" data-voucher="WELCOME10">
+            <div class="transaction-index">1</div>
+            <div class="transaction-title">Nạp Point qua thẻ quốc tế Visa</div>
+            <div class="transaction-amount"><span class="transaction-money plus">+100.000 Point</span></div>
+            <div><strong class="transaction-success">Thành công</strong></div>
+            <button type="button" class="transaction-view-btn" onclick="openTransactionDetail(this)" aria-label="Xem chi tiết" title="Xem chi tiết"><i class="fas fa-eye"></i></button>
         </div>
 
-        <div class="transaction-row transaction-item" data-type="Hoàn GD" data-date="2026-06-23" data-code="MYVTC230623017" data-desc="Hoàn giao dịch thanh toán lỗi">
-            <div class="transaction-field transaction-main-field" data-label="Nội dung">
-                <strong>Hoàn giao dịch thanh toán lỗi</strong>
-                <span>23/06/2026 18:05</span>
-            </div>
-            <div class="transaction-field transaction-code-field" data-label="Mã giao dịch">MYVTC230623017</div>
-            <div class="transaction-field transaction-amount-field" data-label="Số tiền">
-                <span class="transaction-money plus">+25.000đ</span>
-            </div>
-            <div class="transaction-field transaction-method-field" data-label="Phương thức thanh toán">VTC Pay</div>
-            <div class="transaction-field transaction-note-field" data-label="Ghi chú">
-                <div class="transaction-note-line">
-                    <span>VTC Pay: REF230623445, GD gốc: MYVTC220623011</span>
-                    <strong class="transaction-pending">Đang xử lý</strong>
-                </div>
-            </div>
+        <div class="transaction-row transaction-item" data-type="Mua hàng" data-date="2026-06-24" data-code="MYVTC240624008" data-desc="Thanh toán gói dịch vụ VTC Services" data-time="24/06/2026 20:12" data-title="Thanh toán gói dịch vụ VTC Services" data-method="Point" data-amount="-50.000 Point" data-status="Đang xử lý" data-note="Third Party: VTCSERVICES, gói dịch vụ: VIP30" data-voucher="">
+            <div class="transaction-index">2</div>
+            <div class="transaction-title">Thanh toán gói dịch vụ VTC Services</div>
+            <div class="transaction-amount"><span class="transaction-money minus">-50.000 Point</span></div>
+            <div><strong class="transaction-pending">Đang xử lý</strong></div>
+            <button type="button" class="transaction-view-btn" onclick="openTransactionDetail(this)" aria-label="Xem chi tiết" title="Xem chi tiết"><i class="fas fa-eye"></i></button>
         </div>
 
-        <div class="transaction-row transaction-item" data-type="Mua hàng" data-date="2026-06-20" data-code="MYVTC200620026" data-desc="Mua vật phẩm trong Túi đồ">
-            <div class="transaction-field transaction-main-field" data-label="Nội dung">
-                <strong>Mua vật phẩm trong Túi đồ</strong>
-                <span>20/06/2026 14:40</span>
-            </div>
-            <div class="transaction-field transaction-code-field" data-label="Mã giao dịch">MYVTC200620026</div>
-            <div class="transaction-field transaction-amount-field" data-label="Số tiền">
-                <span class="transaction-money minus">-30.000đ</span>
-            </div>
-            <div class="transaction-field transaction-method-field" data-label="Phương thức thanh toán">Thẻ ATM</div>
-            <div class="transaction-field transaction-note-field" data-label="Ghi chú">
-                <div class="transaction-note-line">
-                    <span>Ngân hàng từ chối giao dịch, mã bank: ATM-VCB-009</span>
-                    <strong class="transaction-failed">Thất bại</strong>
-                </div>
-            </div>
+        <div class="transaction-row transaction-item" data-type="Hoàn GD" data-date="2026-06-23" data-code="MYVTC230623017" data-desc="Hoàn giao dịch thanh toán lỗi" data-time="23/06/2026 18:05" data-title="Hoàn giao dịch thanh toán lỗi" data-method="VTC Pay" data-amount="+25.000đ" data-status="Đang xử lý" data-note="VTC Pay: REF230623445, GD gốc: MYVTC220623011" data-voucher="">
+            <div class="transaction-index">3</div>
+            <div class="transaction-title">Hoàn giao dịch thanh toán lỗi</div>
+            <div class="transaction-amount"><span class="transaction-money plus">+25.000đ</span></div>
+            <div><strong class="transaction-pending">Đang xử lý</strong></div>
+            <button type="button" class="transaction-view-btn" onclick="openTransactionDetail(this)" aria-label="Xem chi tiết" title="Xem chi tiết"><i class="fas fa-eye"></i></button>
         </div>
 
-        <div class="transaction-row transaction-item" data-type="Nạp Point" data-date="2026-06-18" data-code="MYVTC180620032" data-desc="Nạp Point qua chuyển khoản">
-            <div class="transaction-field transaction-main-field" data-label="Nội dung">
-                <strong>Nạp Point qua chuyển khoản</strong>
-                <span>18/06/2026 11:22</span>
-            </div>
-            <div class="transaction-field transaction-code-field" data-label="Mã giao dịch">MYVTC180620032</div>
-            <div class="transaction-field transaction-amount-field" data-label="Số tiền">
-                <span class="transaction-money plus">+200.000 Point</span>
-            </div>
-            <div class="transaction-field transaction-method-field" data-label="Phương thức thanh toán">Chuyển khoản</div>
-            <div class="transaction-field transaction-note-field" data-label="Ghi chú">
-                <div class="transaction-note-line">
-                    <span>Quá thời gian xác nhận giao dịch</span>
-                    <strong class="transaction-cancelled">Đã hủy</strong>
-                </div>
-            </div>
+        <div class="transaction-row transaction-item" data-type="Mua hàng" data-date="2026-06-20" data-code="MYVTC200620026" data-desc="Mua vật phẩm trong Túi đồ" data-time="20/06/2026 14:40" data-title="Mua vật phẩm trong Túi đồ" data-method="Thẻ ATM" data-amount="-30.000đ" data-status="Thất bại" data-note="Ngân hàng từ chối giao dịch, mã bank: ATM-VCB-009" data-voucher="">
+            <div class="transaction-index">4</div>
+            <div class="transaction-title">Mua vật phẩm trong Túi đồ</div>
+            <div class="transaction-amount"><span class="transaction-money minus">-30.000đ</span></div>
+            <div><strong class="transaction-failed">Thất bại</strong></div>
+            <button type="button" class="transaction-view-btn" onclick="openTransactionDetail(this)" aria-label="Xem chi tiết" title="Xem chi tiết"><i class="fas fa-eye"></i></button>
         </div>
 
-        <div class="transaction-row transaction-item" data-type="Mua hàng" data-date="2026-06-12" data-code="MYVTC120620014" data-desc="Thanh toán bằng Vcoin">
-            <div class="transaction-field transaction-main-field" data-label="Nội dung">
-                <strong>Thanh toán bằng Vcoin</strong>
-                <span>12/06/2026 08:15</span>
-            </div>
-            <div class="transaction-field transaction-code-field" data-label="Mã giao dịch">MYVTC120620014</div>
-            <div class="transaction-field transaction-amount-field" data-label="Số tiền">
-                <span class="transaction-money minus">-80.000đ</span>
-            </div>
-            <div class="transaction-field transaction-method-field" data-label="Phương thức thanh toán">Vcoin</div>
-            <div class="transaction-field transaction-note-field" data-label="Ghi chú">
-                <div class="transaction-note-line">
-                    <span>Third Party: VTCSERVICES, mã Vcoin: VC26061201</span>
-                    <strong class="transaction-success">Thành công</strong>
-                </div>
-            </div>
+        <div class="transaction-row transaction-item" data-type="Nạp Point" data-date="2026-06-18" data-code="MYVTC180620032" data-desc="Nạp Point qua chuyển khoản" data-time="18/06/2026 11:25" data-title="Nạp Point qua chuyển khoản" data-method="Chuyển khoản" data-amount="+200.000 Point" data-status="Thành công" data-note="Nội dung chuyển khoản: MYVTC 0389954275" data-voucher="TOPUP20">
+            <div class="transaction-index">5</div>
+            <div class="transaction-title">Nạp Point qua chuyển khoản</div>
+            <div class="transaction-amount"><span class="transaction-money plus">+200.000 Point</span></div>
+            <div><strong class="transaction-success">Thành công</strong></div>
+            <button type="button" class="transaction-view-btn" onclick="openTransactionDetail(this)" aria-label="Xem chi tiết" title="Xem chi tiết"><i class="fas fa-eye"></i></button>
+        </div>
+
+        <div class="transaction-row transaction-item" data-type="Mua hàng" data-date="2026-06-12" data-code="MYVTC120620014" data-desc="Thanh toán bằng Vcoin" data-time="12/06/2026 08:15" data-title="Thanh toán bằng Vcoin" data-method="Thẻ Vcoin" data-amount="-100.000đ" data-status="Thành công" data-note="Third Party: VTCSERVICES, mã Vcoin: VC26061201" data-voucher="">
+            <div class="transaction-index">6</div>
+            <div class="transaction-title">Thanh toán bằng Vcoin</div>
+            <div class="transaction-amount"><span class="transaction-money minus">-100.000đ</span></div>
+            <div><strong class="transaction-success">Thành công</strong></div>
+            <button type="button" class="transaction-view-btn" onclick="openTransactionDetail(this)" aria-label="Xem chi tiết" title="Xem chi tiết"><i class="fas fa-eye"></i></button>
         </div>
     </div>
 
@@ -425,6 +370,19 @@
         </section>
     </div>
 </main>
+
+<div class="linked-service-modal hidden" id="linked-service-modal" onclick="closeLinkedServiceModal(event)">
+    <div class="linked-service-modal-card" role="dialog" aria-modal="true" aria-labelledby="linked-service-modal-title">
+        <button type="button" class="linked-service-modal-close" onclick="closeLinkedServiceModal()" aria-label="Đóng">×</button>
+        <img id="linked-service-modal-icon" src="" alt="">
+        <h2 id="linked-service-modal-title">Dịch vụ VTC</h2>
+        <div class="linked-service-account">
+            <span>Tên tài khoản trong game</span>
+            <strong id="linked-service-account-name">hongtran_01</strong>
+        </div>
+        <button type="button" class="linked-service-cancel-btn" onclick="cancelLinkedService()">Hủy gắn kết</button>
+    </div>
+</div>
 
 {{FOOTER}}
 
