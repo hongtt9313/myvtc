@@ -147,18 +147,24 @@ function findRecoveryAccounts(keyword) {
 
     const currentPage = window.location.pathname.split('/').pop() || 'MyVTC_Home.html';
 
-            if (navLinks) {
-        navLinks.innerHTML = `
-            <a class="nav-link ${currentPage === 'MyVTC_Home.html' ? 'active' : ''}" href="MyVTC_Home.html">Trang chủ</a>
-            <a class="nav-link ${currentPage === 'Service.html' ? 'active' : ''}" href="Service.html">Dịch vụ</a>
-            <a class="nav-link ${currentPage === 'Shop.html' || currentPage === 'RechargeDetail.html' ? 'active' : ''}" href="Shop.html">Cửa hàng</a>
-            <a class="nav-link ${currentPage === 'Loyalty.html' ? 'active' : ''}" href="Loyalty.html">Hạng thành viên</a>
-            <a class="nav-link ${currentPage === 'Support.html' ? 'active' : ''}" href="Support.html">Hỗ trợ</a>
-        `;
+    if (navLinks) {
+        const activePageMap = {
+            'MyVTC_Home.html': 'MyVTC_Home.html',
+            'Service.html': 'Service.html',
+            'Shop.html': 'Shop.html',
+            'RechargeDetail.html': 'Shop.html',
+            'Loyalty.html': 'Loyalty.html',
+            'Support.html': 'Support.html'
+        };
+        const activeHref = activePageMap[currentPage] || '';
+
+        navLinks.querySelectorAll('.nav-link').forEach(link => {
+            link.classList.toggle('active', link.getAttribute('href') === activeHref);
+        });
 
         const mobileNavBtn = document.getElementById('mobile-nav-menu-btn');
         if (mobileNavBtn) {
-            mobileNavBtn.classList.toggle('hidden', navLinks.children.length === 0);
+            mobileNavBtn.classList.remove('hidden');
         }
     }
 
@@ -1654,6 +1660,7 @@ function submitRecoveryPassword() {
             setText('account-username', currentUser.username || currentUser.phone || currentUser.email);
             setText('account-phone', currentUser.phone);
             setText('account-email', currentUser.email);
+            refreshContactVerificationStatus();
             setText('account-id', currentUser.id);
             setText('account-cccd', currentUser.cccd);
             setText('account-address', currentUser.address);
@@ -1747,6 +1754,195 @@ function openAccountEditModal(type) {
     }
 
     document.body.appendChild(modal);
+}
+
+
+const contactVerificationState = {
+    type: '',
+    mode: '',
+    step: 1,
+    newValue: '',
+    otpMethod: ''
+};
+
+function isContactVerified(type) {
+    return Boolean(String(type === 'phone' ? currentUser.phone || '' : currentUser.email || '').trim());
+}
+
+function refreshContactVerificationStatus() {
+    ['phone', 'email'].forEach(type => {
+        const verified = isContactVerified(type);
+        const status = document.getElementById(`account-${type}-status`);
+        const action = document.getElementById(`account-${type}-action`);
+        if (status) {
+            status.textContent = verified ? 'Đã xác thực' : 'Chưa xác thực';
+            status.classList.toggle('success', verified);
+        }
+        if (action) {
+            const actionLabel = verified ? (type === 'phone' ? 'Cập nhật SĐT' : 'Cập nhật Email') : (type === 'phone' ? 'Xác thực SĐT' : 'Xác thực Email');
+            action.innerHTML = '<i class="fas fa-chevron-right"></i>';
+            action.setAttribute('aria-label', actionLabel);
+            action.setAttribute('title', actionLabel);
+        }
+    });
+}
+
+function openContactVerification(type) {
+    contactVerificationState.type = type;
+    contactVerificationState.mode = isContactVerified(type) ? 'update' : 'verify';
+    contactVerificationState.step = contactVerificationState.mode === 'update' ? 1 : 3;
+    contactVerificationState.newValue = '';
+    contactVerificationState.otpMethod = '';
+    renderContactVerificationModal();
+}
+
+function getContactLabel(type) {
+    return type === 'phone' ? 'SĐT' : 'Email';
+}
+
+function getAvailableCurrentOtpMethods() {
+    const methods = [];
+    if (currentUser.phone) {
+        methods.push(['sms', 'SMS'], ['voice', 'Voice']);
+    }
+    if (currentUser.email) methods.push(['email', 'Email']);
+    if (accountSecurityState?.appOtp) methods.push(['app', 'OTP App']);
+    return methods;
+}
+
+function renderOtpMethodButtons(methods, handler) {
+    return methods.map(([value, label]) => `
+        <button type="button" class="contact-method-btn" onclick="${handler}('${value}')">
+            <span>${label}</span><i class="fas fa-chevron-right"></i>
+        </button>
+    `).join('');
+}
+
+function renderContactVerificationModal() {
+    const type = contactVerificationState.type;
+    const mode = contactVerificationState.mode;
+    const step = contactVerificationState.step;
+    const label = getContactLabel(type);
+    const modal = getSecurityModal();
+    let title = mode === 'update' ? `Cập nhật ${label}` : `Xác thực ${label}`;
+    let content = '';
+
+    if (step === 1) {
+        const methods = getAvailableCurrentOtpMethods();
+        content = `
+            <div class="contact-method-list">
+                ${renderOtpMethodButtons(methods, 'selectCurrentContactOtpMethod')}
+            </div>
+        `;
+    } else if (step === 2) {
+        content = `
+            <label>Mã OTP</label>
+            <input type="text" id="contact-current-otp" maxlength="6" inputmode="numeric" placeholder="Nhập 6 chữ số">
+            <div class="account-modal-actions">
+                <button class="account-secondary-btn" type="button" onclick="contactVerificationState.step=1;renderContactVerificationModal()">Quay lại</button>
+                <button class="account-primary-btn" type="button" onclick="verifyCurrentContactOtp()">Xác nhận</button>
+            </div>
+        `;
+    } else if (step === 3) {
+        const placeholder = type === 'phone' ? 'Ví dụ: 0912345678' : 'name@example.com';
+        content = `
+            <label>${label}</label>
+            <input type="${type === 'phone' ? 'tel' : 'email'}" id="contact-new-value" value="${contactVerificationState.newValue || ''}" placeholder="${placeholder}" ${type === 'phone' ? 'maxlength="10" inputmode="numeric"' : ''}>
+            <div id="contact-value-error" class="account-field-error hidden"></div>
+            <button class="account-primary-btn" type="button" onclick="submitNewContactValue()">Tiếp tục</button>
+        `;
+    } else if (step === 4 && type === 'phone') {
+        content = `
+            <div class="contact-method-list">
+                ${renderOtpMethodButtons([['sms', 'SMS'], ['voice', 'Voice']], 'selectNewContactOtpMethod')}
+            </div>
+        `;
+    } else if (step === 5) {
+        const methodText = type === 'email' ? 'Email' : contactVerificationState.otpMethod.toUpperCase();
+        content = `
+            <label>Mã OTP</label>
+            <input type="text" id="contact-new-otp" maxlength="6" inputmode="numeric" placeholder="Nhập 6 chữ số">
+            <div id="contact-otp-error" class="account-field-error hidden"></div>
+            <button class="account-primary-btn" type="button" onclick="completeContactVerification()">Xác nhận</button>
+        `;
+    }
+
+    modal.innerHTML = `
+        <div class="account-edit-card small contact-verification-card">
+            <button class="account-edit-close" onclick="closeAccountEditModal()">×</button>
+            <h2>${title}</h2>
+            ${content}
+        </div>
+    `;
+}
+
+function selectCurrentContactOtpMethod(method) {
+    contactVerificationState.otpMethod = method;
+    contactVerificationState.step = 2;
+    renderContactVerificationModal();
+}
+
+function verifyCurrentContactOtp() {
+    const otp = document.getElementById('contact-current-otp')?.value.trim();
+    if (otp !== '123456') {
+        showToast('Mã OTP không đúng', 'info');
+        return;
+    }
+    contactVerificationState.step = 3;
+    contactVerificationState.otpMethod = '';
+    renderContactVerificationModal();
+}
+
+function validateContactValue(type, value) {
+    if (type === 'phone') return validateVietnamesePhone(value);
+    return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(value);
+}
+
+function submitNewContactValue() {
+    const type = contactVerificationState.type;
+    const value = document.getElementById('contact-new-value')?.value.trim() || '';
+    const error = document.getElementById('contact-value-error');
+    if (!validateContactValue(type, value)) {
+        if (error) {
+            error.textContent = type === 'phone' ? 'SĐT không đúng định dạng' : 'Email không đúng định dạng';
+            error.classList.remove('hidden');
+        }
+        return;
+    }
+    if (value === (type === 'phone' ? currentUser.phone : currentUser.email)) {
+        if (error) {
+            error.textContent = `${getContactLabel(type)} mới phải khác thông tin hiện tại`;
+            error.classList.remove('hidden');
+        }
+        return;
+    }
+    contactVerificationState.newValue = value;
+    contactVerificationState.step = type === 'phone' ? 4 : 5;
+    contactVerificationState.otpMethod = type === 'email' ? 'email' : '';
+    renderContactVerificationModal();
+}
+
+function selectNewContactOtpMethod(method) {
+    contactVerificationState.otpMethod = method;
+    contactVerificationState.step = 5;
+    renderContactVerificationModal();
+}
+
+function completeContactVerification() {
+    const otp = document.getElementById('contact-new-otp')?.value.trim();
+    const error = document.getElementById('contact-otp-error');
+    if (otp !== '123456') {
+        if (error) {
+            error.textContent = 'Mã OTP không đúng';
+            error.classList.remove('hidden');
+        }
+        return;
+    }
+    if (contactVerificationState.type === 'phone') currentUser.phone = contactVerificationState.newValue;
+    else currentUser.email = contactVerificationState.newValue;
+    saveCurrentUserAndRefresh();
+    closeAccountEditModal();
+    showToast(`${getContactLabel(contactVerificationState.type)} đã được xác thực thành công`, 'success');
 }
 
 function closeAccountEditModal() {
@@ -2604,6 +2800,38 @@ function handleTransactionPageInput(event) {
     }
 }
 
+
+function escapeTransactionText(value) {
+    return String(value || '').replace(/[&<>'"]/g, char => ({'&':'&amp;','<':'&lt;','>':'&gt;',"'":'&#39;','"':'&quot;'}[char]));
+}
+
+function openTransactionDetail(button) {
+    const row = button?.closest('.transaction-row');
+    if (!row) return;
+    const data = row.dataset;
+    const voucherRow = data.voucher ? `
+        <div class="transaction-detail-row"><span>Mã Voucher</span><strong>${escapeTransactionText(data.voucher)}</strong></div>
+    ` : '';
+    const modal = getSecurityModal();
+    modal.innerHTML = `
+        <div class="account-edit-card transaction-detail-card">
+            <button class="account-edit-close" onclick="closeAccountEditModal()">×</button>
+            <h2>Thông tin giao dịch</h2>
+            <div class="transaction-detail-list">
+                <div class="transaction-detail-row"><span>Thời gian</span><strong>${escapeTransactionText(data.time)}</strong></div>
+                <div class="transaction-detail-row"><span>Tiêu đề</span><strong>${escapeTransactionText(data.title)}</strong></div>
+                <div class="transaction-detail-row"><span>Mã MyVTC</span><strong>${escapeTransactionText(data.code)}</strong></div>
+                <div class="transaction-detail-row"><span>Hình thức thanh toán</span><strong>${escapeTransactionText(data.method)}</strong></div>
+                <div class="transaction-detail-row"><span>Số tiền</span><strong>${escapeTransactionText(data.amount)}</strong></div>
+                <div class="transaction-detail-row"><span>Trạng thái</span><strong>${escapeTransactionText(data.status)}</strong></div>
+                <div class="transaction-detail-row"><span>Mô tả</span><strong>${escapeTransactionText(data.note)}</strong></div>
+                ${voucherRow}
+            </div>
+            <button class="account-primary-btn" type="button" onclick="closeAccountEditModal()">Đóng</button>
+        </div>
+    `;
+}
+
 function resetTransactionFilters() {
     const type = document.getElementById('transaction-type-filter');
     const start = document.getElementById('transaction-start-date');
@@ -3265,6 +3493,21 @@ document.addEventListener('click', function (event) {
     const navBtn = document.getElementById('mobile-nav-menu-btn');
 
     if (navLinks && navBtn && !navLinks.contains(event.target) && !navBtn.contains(event.target)) {
+        closeMobileNavMenu();
+    }
+});
+
+document.addEventListener('DOMContentLoaded', function () {
+    const navLinks = document.getElementById('main-nav-links');
+    if (navLinks) {
+        navLinks.querySelectorAll('a').forEach(link => {
+            link.addEventListener('click', closeMobileNavMenu);
+        });
+    }
+});
+
+window.addEventListener('resize', function () {
+    if (window.innerWidth > 640) {
         closeMobileNavMenu();
     }
 });
@@ -4127,3 +4370,84 @@ function clearReadNotifications() {
     renderAccountNotifications();
     showToast('Đã ẩn thông báo đã đọc', 'success');
 }
+
+
+// ================================================================
+//  LINKED VTC SERVICES
+// ================================================================
+let activeLinkedServiceName = '';
+
+function openLinkedServiceModal(serviceName, iconSrc) {
+    const modal = document.getElementById('linked-service-modal');
+    if (!modal) return;
+    activeLinkedServiceName = serviceName;
+    const title = document.getElementById('linked-service-modal-title');
+    const icon = document.getElementById('linked-service-modal-icon');
+    const accountName = document.getElementById('linked-service-account-name');
+    if (title) title.textContent = serviceName;
+    if (icon) { icon.src = iconSrc; icon.alt = serviceName; }
+    if (accountName) accountName.textContent = (currentUser && (currentUser.username || currentUser.phone || currentUser.email)) || 'hongtran_01';
+    modal.classList.remove('hidden');
+    document.body.style.overflow = 'hidden';
+}
+
+function closeLinkedServiceModal(event) {
+    const modal = document.getElementById('linked-service-modal');
+    if (!modal) return;
+    if (event && event.target !== modal) return;
+    modal.classList.add('hidden');
+    document.body.style.overflow = '';
+}
+
+function cancelLinkedService() {
+    closeLinkedServiceModal();
+    showToast(`Đã hủy gắn kết ${activeLinkedServiceName}`, 'success');
+}
+
+// ================================================================
+//  VTC CLUB RANKING
+// ================================================================
+function renderLoyaltyRanking() {
+    const list = document.getElementById('loyalty-ranking-list');
+    const self = document.getElementById('loyalty-ranking-self');
+    if (!list || !self) return;
+
+    const levels = [
+        { name: 'Kim Cương', min: 1, max: 8 },
+        { name: 'Bạch Kim', min: 9, max: 25 },
+        { name: 'Vàng', min: 26, max: 50 },
+        { name: 'Bạc', min: 51, max: 78 },
+        { name: 'Đồng', min: 79, max: 100 }
+    ];
+    const avatars = [12, 32, 47, 14, 5, 25, 36, 44, 52, 18];
+    const names = ['SkyHunter', 'HanaVTC', 'DragonVN', 'MochiStar', 'Kaito', 'LinhMoon', 'KenPro', 'NắngMai', 'ZeroOne', 'MèoLười'];
+    const rows = Array.from({ length: 100 }, (_, index) => {
+        const rank = index + 1;
+        const level = levels.find(item => rank >= item.min && rank <= item.max).name;
+        const exp = 268500 - index * 2173;
+        return { rank, level, exp, nickname: `${names[index % names.length]}${String(rank).padStart(2, '0')}`, avatar: avatars[index % avatars.length] };
+    });
+
+    list.innerHTML = rows.map(item => `
+        <div class="loyalty-ranking-row ${item.rank <= 3 ? `top-${item.rank}` : ''}">
+            <div class="loyalty-ranking-position">${item.rank <= 3 ? `<i class="fas fa-trophy"></i>` : ''}<strong>#${item.rank}</strong></div>
+            <div class="loyalty-ranking-user"><img src="https://i.pravatar.cc/80?img=${item.avatar}" alt="${item.nickname}"><span>${item.nickname}</span></div>
+            <div><span class="loyalty-level-badge level-${item.level.toLowerCase().replace(/\s+/g, '-').replace('ạ','a').replace('ồ','o').replace('à','a').replace('ạ','a').replace('ươ','uo').replace('ươ','uo')}">${item.level}</span></div>
+            <div class="loyalty-ranking-exp">${item.exp.toLocaleString('vi-VN')} EXP</div>
+        </div>
+    `).join('');
+
+    const selfRank = 128;
+    const selfName = (currentUser && (currentUser.nickname || currentUser.username || currentUser.name)) || 'Bạn';
+    const selfAvatar = currentUser && currentUser.avatar ? currentUser.avatar : 'https://i.pravatar.cc/80?img=12';
+    self.innerHTML = `
+        <div class="loyalty-ranking-row self-row">
+            <div class="loyalty-ranking-position"><strong>#${selfRank}</strong></div>
+            <div class="loyalty-ranking-user"><img src="${selfAvatar}" alt="${selfName}"><span>${selfName}<small>Vị trí của bạn</small></span></div>
+            <div><span class="loyalty-level-badge">Đồng</span></div>
+            <div class="loyalty-ranking-exp">20 EXP</div>
+        </div>
+    `;
+}
+
+document.addEventListener('DOMContentLoaded', renderLoyaltyRanking);
