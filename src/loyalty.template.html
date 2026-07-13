@@ -26,6 +26,7 @@
             <div class="body-tab-menu" id="loyalty-body-tab-menu">
                 <h2>THÀNH VIÊN</h2>
                 <button class="account-tab-btn active" data-loyalty-tab="rank" onclick="showLoyaltyTab('rank')">Hạng thành viên</button>
+                <button class="account-tab-btn" data-loyalty-tab="ranking" onclick="showLoyaltyTab('ranking')">Bảng xếp hạng</button>
                 <button class="account-tab-btn" data-loyalty-tab="missions" onclick="showLoyaltyTab('missions')">Nhiệm vụ</button>
                 <button class="account-tab-btn" data-loyalty-tab="history" onclick="showLoyaltyTab('history')">Lịch sử</button>
                 <button class="account-tab-btn" data-loyalty-tab="bag" onclick="showLoyaltyTab('bag')">Túi đồ</button>
@@ -35,8 +36,8 @@
         <section class="account-content loyalty-content">
             <div class="loyalty-tab-panel" data-loyalty-panel="rank">
                 <div class="account-heading">
-                    <h1>Hạng thành viên</h1>
-                    <p>Thông tin hạng thành viên của bạn</p>
+                    <h1>VTC CLUB</h1>
+                    <p>Thông tin hạng thành viên và vị trí xếp hạng của bạn</p>
                 </div>
 
                                 <div class="loyalty-rank-card">
@@ -70,6 +71,7 @@
                     </div>
                 </div>
 
+
                 <div class="loyalty-section-card">
                     <div class="loyalty-section-head">
                         <h3>Nhiệm vụ thăng hạng</h3>
@@ -101,6 +103,31 @@
 
                                         <div class="loyalty-gift-grid" id="loyalty-benefit-list">
                     </div>
+                </div>
+            </div>
+
+
+            <div class="loyalty-tab-panel hidden" data-loyalty-panel="ranking">
+                <div class="account-heading">
+                    <h1>BẢNG XẾP HẠNG</h1>
+                    <p>TOP 100 tài khoản có thứ hạng cao nhất theo hạng thành viên và tổng EXP đã tích lũy</p>
+                </div>
+
+                <div class="loyalty-section-card loyalty-ranking-card">
+                    <div class="loyalty-section-head loyalty-ranking-head">
+                        <div>
+                            <h3>Bảng xếp hạng</h3>
+                            <p>Xếp hạng theo Level và tổng EXP đã tích lũy</p>
+                        </div>
+                        <span>TOP 100</span>
+                    </div>
+                    <div class="loyalty-ranking-table-wrap">
+                        <div class="loyalty-ranking-table-head">
+                            <span>Thứ hạng</span><span>Avatar / Nickname</span><span>Level</span><span>Tổng EXP</span>
+                        </div>
+                        <div class="loyalty-ranking-list" id="loyalty-ranking-list"></div>
+                    </div>
+                    <div class="loyalty-ranking-self" id="loyalty-ranking-self"></div>
                 </div>
             </div>
 
