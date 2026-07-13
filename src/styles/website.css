@@ -6283,3 +6283,32 @@ font-size: 16px;
     .service-link-list { grid-template-columns: repeat(2, minmax(0, 1fr)); }
     .profile-contact-row { grid-template-columns: 88px minmax(0, 1fr) auto auto; }
 }
+
+
+/* Voucher inventory and check-in EXP effect */
+.voucher-inventory-card { opacity: 1 !important; }
+.voucher-inventory-meta { display:flex; align-items:center; justify-content:space-between; gap:12px; color:#64748b; font-size:13px; }
+.voucher-inventory-meta b { color:#0f172a; }
+.voucher-status { width:max-content; margin:0 !important; padding:5px 10px; border-radius:999px; font-weight:800; }
+.voucher-status.available { background:#dcfce7; color:#15803d; }
+.voucher-status.used { background:#e2e8f0; color:#475569; }
+.voucher-status.expired { background:#fee2e2; color:#b91c1c; }
+.voucher-detail-layout { display:grid; grid-template-columns:minmax(0,1fr) 130px; gap:18px; align-items:start; margin:18px 0; }
+.voucher-detail-list { display:grid; gap:0; border:1px solid #e2e8f0; border-radius:16px; overflow:hidden; }
+.voucher-detail-list > div { display:grid; grid-template-columns:140px minmax(0,1fr); gap:12px; padding:11px 13px; border-bottom:1px solid #e2e8f0; }
+.voucher-detail-list > div:last-child { border-bottom:0; }
+.voucher-detail-list span { color:#64748b; font-size:13px; }
+.voucher-detail-list strong { color:#0f172a; font-size:13px; line-height:1.45; }
+.voucher-qr { aspect-ratio:1; border:1px solid #cbd5e1; border-radius:16px; display:flex; flex-direction:column; align-items:center; justify-content:center; gap:8px; color:#0f172a; background:#fff; }
+.voucher-qr i { font-size:78px; }
+.voucher-qr span { font-size:12px; font-weight:800; }
+.checkin-exp-effect { position:fixed; inset:0; z-index:12000; display:flex; flex-direction:column; align-items:center; justify-content:center; pointer-events:none; background:rgba(15,23,42,.18); opacity:0; transition:opacity .25s ease; }
+.checkin-exp-effect.show { opacity:1; }
+.checkin-exp-effect.hide { opacity:0; }
+.checkin-exp-effect span { width:92px; height:92px; border-radius:50%; display:flex; align-items:center; justify-content:center; background:#fef3c7; color:#f59e0b; font-size:42px; box-shadow:0 20px 50px rgba(15,23,42,.22); animation:checkinPop .65s ease both; }
+.checkin-exp-effect strong { margin-top:14px; color:#fff; font-size:38px; text-shadow:0 4px 16px rgba(15,23,42,.45); animation:checkinRise .75s ease both; }
+.checkin-exp-effect p { color:#fff; font-size:16px; font-weight:800; text-shadow:0 3px 12px rgba(15,23,42,.45); }
+.google-recaptcha-wrap { margin-top:8px; min-height:78px; overflow:auto; }
+@keyframes checkinPop { 0%{transform:scale(.4) rotate(-25deg)} 70%{transform:scale(1.12) rotate(8deg)} 100%{transform:scale(1) rotate(0)} }
+@keyframes checkinRise { 0%{transform:translateY(24px);opacity:0} 100%{transform:translateY(0);opacity:1} }
+@media (max-width:640px){ .voucher-detail-layout{grid-template-columns:1fr}.voucher-qr{width:130px}.voucher-detail-list>div{grid-template-columns:1fr;gap:4px}.voucher-inventory-grid{grid-template-columns:1fr} }
