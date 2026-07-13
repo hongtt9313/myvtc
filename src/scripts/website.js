@@ -148,15 +148,13 @@ function findRecoveryAccounts(keyword) {
     const currentPage = window.location.pathname.split('/').pop() || 'MyVTC_Home.html';
 
             if (navLinks) {
-        if (currentPage === 'Service.html' || currentPage === 'Shop.html' || currentPage === 'Support.html' || currentPage === 'RechargeDetail.html') {
-            navLinks.innerHTML = '';
-        } else {
-            navLinks.innerHTML = `
-                <a class="nav-link ${currentPage === 'MyVTC_Home.html' ? 'active' : ''}" href="MyVTC_Home.html">Trang chủ</a>
-                <a class="nav-link ${currentPage === 'MyAccount.html' ? 'active' : ''}" href="MyAccount.html">Tài khoản</a>
-                <a class="nav-link ${currentPage === 'Loyalty.html' ? 'active' : ''}" href="Loyalty.html">Thành viên</a>
-            `;
-        }
+        navLinks.innerHTML = `
+            <a class="nav-link ${currentPage === 'MyVTC_Home.html' ? 'active' : ''}" href="MyVTC_Home.html">Trang chủ</a>
+            <a class="nav-link ${currentPage === 'Service.html' ? 'active' : ''}" href="Service.html">Dịch vụ</a>
+            <a class="nav-link ${currentPage === 'Shop.html' || currentPage === 'RechargeDetail.html' ? 'active' : ''}" href="Shop.html">Cửa hàng</a>
+            <a class="nav-link ${currentPage === 'Loyalty.html' ? 'active' : ''}" href="Loyalty.html">Hạng thành viên</a>
+            <a class="nav-link ${currentPage === 'Support.html' ? 'active' : ''}" href="Support.html">Hỗ trợ</a>
+        `;
 
         const mobileNavBtn = document.getElementById('mobile-nav-menu-btn');
         if (mobileNavBtn) {
