@@ -3266,22 +3266,7 @@ function openCheckinMissionModal() {
                 <div class="loyalty-checkin-trophy"><i class="fas fa-trophy"></i></div>
                 <div>
                     <h3>Nhiệm vụ điểm danh</h3>
-                    <p>Vào mỗi ngày để giữ chuỗi và nhận Point.</p>
-                </div>
-            </div>
-
-            <div class="loyalty-checkin-score">
-                <div>
-                    <span>Chuỗi hiện tại</span>
-                    <strong>3/7</strong>
-                </div>
-                <div>
-                    <span>Thưởng hôm nay</span>
-                    <strong>+1 Point</strong>
-                </div>
-                <div>
-                    <span>Mốc 7 ngày</span>
-                    <strong>+10 Point</strong>
+                    <p>Vào mỗi ngày để nhận EXP.</p>
                 </div>
             </div>
 
@@ -3293,11 +3278,6 @@ function openCheckinMissionModal() {
                 <span><i class="fas fa-lock"></i><b>T6</b></span>
                 <span><i class="fas fa-lock"></i><b>T7</b></span>
                 <span><i class="fas fa-crown"></i><b>CN</b></span>
-            </div>
-
-            <div class="loyalty-checkin-bonus service">
-                <strong>Còn 4 ngày để nhận thưởng tuần.</strong>
-                <span>Giữ chuỗi liên tục để mở phần thưởng +10 Point.</span>
             </div>
 
             <button type="button" class="loyalty-modal-primary service" onclick="checkinMission()">Điểm danh hôm nay</button>
@@ -3383,7 +3363,46 @@ function claimMissionReward(name) {
 
 function checkinMission() {
     closeLoyaltyModal();
-    showToast('Điểm danh thành công, bạn nhận +1 Point', 'success');
+    const effect = document.createElement('div');
+    effect.className = 'checkin-exp-effect';
+    effect.innerHTML = '<span><i class="fas fa-star"></i></span><strong>+10 EXP</strong><p>Điểm danh thành công</p>';
+    document.body.appendChild(effect);
+    window.setTimeout(() => effect.classList.add('show'), 20);
+    window.setTimeout(() => effect.classList.add('hide'), 1500);
+    window.setTimeout(() => effect.remove(), 2100);
+    showToast('Điểm danh thành công, tài khoản được cộng 10 EXP', 'success');
+}
+
+const loyaltyVoucherDetails = {
+    point10: { name: 'Voucher nạp Point giảm 10%', code: 'MYVTC10', value: 'Giảm 10%, tối đa 50 Point', status: 'Khả dụng', received: '10/07/2026', used: '-', validity: '10/07/2026 - 31/12/2026', condition: 'Đơn nạp Point từ 100 Point', description: 'Giảm giá khi nạp Point trên Cửa hàng MyVTC.', guide: 'Chọn voucher tại bước thanh toán. Hệ thống kiểm tra mã ngay sau khi chọn.' },
+    vtcpay20: { name: 'Voucher giảm 20.000 VNĐ', code: 'VTCPAY20', value: 'Giảm 20.000 VNĐ', status: 'Đã sử dụng', received: '01/07/2026', used: '08/07/2026', validity: '01/07/2026 - 31/07/2026', condition: 'Đơn thanh toán từ 100.000 VNĐ qua VTC Pay', description: 'Ưu đãi dành cho giao dịch thanh toán qua VTC Pay.', guide: 'Nhập hoặc chọn mã tại bước thanh toán. Mỗi tài khoản áp dụng một lần.' },
+    newuser30: { name: 'Voucher tân thủ giảm 30.000 VNĐ', code: 'NEWUSER', value: 'Giảm 30.000 VNĐ', status: 'Hết hạn', received: '01/06/2026', used: '-', validity: '01/06/2026 - 30/06/2026', condition: 'Đơn đầu tiên từ 150.000 VNĐ', description: 'Ưu đãi dành cho tài khoản mới.', guide: 'Chọn voucher trong đơn hàng đầu tiên trước ngày hết hạn.' }
+};
+
+function openVoucherDetail(voucherId) {
+    const item = loyaltyVoucherDetails[voucherId];
+    if (!item) return;
+    openLoyaltyModal(`
+        <div class="voucher-detail-modal">
+            <div class="loyalty-modal-icon"><i class="fas fa-ticket-alt"></i></div>
+            <h3>${item.name}</h3>
+            <div class="voucher-detail-layout">
+                <div class="voucher-detail-list">
+                    <div><span>Mã code</span><strong>${item.code}</strong></div>
+                    <div><span>Giá trị</span><strong>${item.value}</strong></div>
+                    <div><span>Trạng thái</span><strong>${item.status}</strong></div>
+                    <div><span>Ngày nhận</span><strong>${item.received}</strong></div>
+                    <div><span>Ngày dùng</span><strong>${item.used}</strong></div>
+                    <div><span>Thời gian hiệu lực</span><strong>${item.validity}</strong></div>
+                    <div><span>Điều kiện áp dụng</span><strong>${item.condition}</strong></div>
+                    <div><span>Mô tả</span><strong>${item.description}</strong></div>
+                    <div><span>Hướng dẫn</span><strong>${item.guide}</strong></div>
+                </div>
+                <div class="voucher-qr" aria-label="QR Code"><i class="fas fa-qrcode"></i><span>QR Code</span></div>
+            </div>
+            <button type="button" class="loyalty-modal-primary" onclick="copyTextToClipboard('${item.code}', 'Đã sao chép mã voucher')"><i class="far fa-copy"></i> Sao chép mã</button>
+        </div>
+    `);
 }
 
 function initLoyaltyPage() {
@@ -3996,7 +4015,12 @@ function renderRechargePackages() {
     const list = document.getElementById('recharge-package-list');
     if (!list || !rechargeState.service) return;
 
+    const packageTitle = document.getElementById('recharge-package-title');
+    const packageDescription = document.getElementById('recharge-package-description');
+
     if (rechargeState.service.isBalanceTopup && rechargeState.payment === 'Thẻ Vcoin') {
+        if (packageTitle) packageTitle.textContent = 'Thông tin Thẻ Vcoin';
+        if (packageDescription) packageDescription.textContent = '';
         list.innerHTML = `
             <div class="vcoin-card-form">
                 <div class="vcoin-field">
@@ -4008,10 +4032,9 @@ function renderRechargePackages() {
                     <input id="vcoin-code" placeholder="Nhập mã thẻ Vcoin">
                 </div>
                 <div class="vcoin-field">
-                    <label for="vcoin-captcha">Mã captcha</label>
-                    <div class="captcha-line">
-                        <input id="vcoin-captcha" placeholder="Nhập captcha">
-                        <strong>8P4K</strong>
+                    <label>Xác nhận bảo mật</label>
+                    <div class="google-recaptcha-wrap">
+                        <div class="g-recaptcha" data-sitekey="6LeIxAcTAAAAAJcZVRqyHh71UMIEGNQ_MXjiZKhI"></div>
                     </div>
                 </div>
             </div>
@@ -4025,7 +4048,9 @@ function renderRechargePackages() {
         return;
     }
 
-         renderRechargePackageFilters();
+    if (packageTitle) packageTitle.textContent = 'Danh sách gói';
+    if (packageDescription) packageDescription.textContent = 'Chọn gói nạp phù hợp.';
+    renderRechargePackageFilters();
 
     list.innerHTML = getVisibleRechargePackages().map(pkg => {
     const packageThumb = pkg.thumb || rechargeState.service.thumb;
@@ -4071,6 +4096,7 @@ function selectRechargeVoucherCode() {
 
     if (select && input) {
         input.value = select.value;
+        if (select.value) applyRechargeVoucher();
     }
 }
 function applyRechargeVoucher() {
@@ -4135,10 +4161,10 @@ function submitRechargeOrder() {
 	    if (rechargeState.service?.isBalanceTopup && rechargeState.payment === 'Thẻ Vcoin') {
         const serial = document.getElementById('vcoin-serial')?.value.trim();
         const code = document.getElementById('vcoin-code')?.value.trim();
-        const captcha = document.getElementById('vcoin-captcha')?.value.trim();
+        const captchaVerified = typeof grecaptcha !== 'undefined' && grecaptcha.getResponse();
 
-        if (!serial || !code || !captcha) {
-            showToast('Vui lòng nhập đủ Serial, Mã thẻ và Captcha', 'info');
+        if (!serial || !code || !captchaVerified) {
+            showToast('Vui lòng nhập đủ Serial, Mã thẻ và xác nhận CAPTCHA', 'info');
             return;
         }
     }
@@ -4451,3 +4477,11 @@ function renderLoyaltyRanking() {
 }
 
 document.addEventListener('DOMContentLoaded', renderLoyaltyRanking);
+
+
+document.addEventListener('keydown', function (event) {
+    if (event.key === 'Enter' && event.target && event.target.id === 'recharge-voucher') {
+        event.preventDefault();
+        applyRechargeVoucher();
+    }
+});
