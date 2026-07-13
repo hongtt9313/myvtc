@@ -151,7 +151,7 @@ function findRecoveryAccounts(keyword) {
             <a class="nav-link ${currentPage === 'MyVTC_Home.html' ? 'active' : ''}" href="MyVTC_Home.html">Trang chủ</a>
             <a class="nav-link ${currentPage === 'Service.html' ? 'active' : ''}" href="Service.html">Dịch vụ</a>
             <a class="nav-link ${currentPage === 'Shop.html' || currentPage === 'RechargeDetail.html' ? 'active' : ''}" href="Shop.html">Cửa hàng</a>
-            <a class="nav-link ${currentPage === 'Loyalty.html' ? 'active' : ''}" href="Loyalty.html">Hạng thành viên</a>
+            <a class="nav-link ${currentPage === 'Loyalty.html' ? 'active' : ''}" href="Loyalty.html">VTC Club</a>
             <a class="nav-link ${currentPage === 'Support.html' ? 'active' : ''}" href="Support.html">Hỗ trợ</a>
         `;
 
@@ -188,7 +188,6 @@ function findRecoveryAccounts(keyword) {
 
             <div class="avatar-dropdown" id="avatar-dropdown">
                 <div class="user-info">
-                    <div class="user-label">Username</div>
                     <div class="name">${displayUsername}</div>
 
                     <div class="id-row">
