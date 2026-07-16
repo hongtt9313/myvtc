@@ -1004,7 +1004,10 @@ const savedAccounts = getSavedLoginAccounts();
             if (authState.otpRequestsCount >= 3) { showFeedback('Quá số lần yêu cầu OTP.'); return; }
             authState.otpRequestsCount++;
             authState.tempData.otpMethod = method;
-            finishSimpleRegistration();
+            authState.step = 4;
+            hideFeedback();
+            showToast(method === 'OTP App' ? 'Mở ứng dụng xác thực OTP' : `Đã gửi OTP qua ${method}`, 'info');
+            renderStep();
         }
 
         function verifyLoginOTP() {
