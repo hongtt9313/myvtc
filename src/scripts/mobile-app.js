@@ -320,6 +320,7 @@ function handleRegisterStep1() {
     var identifier = (document.getElementById("registerIdentifier") || {}).value || "";
     var password = (document.getElementById("registerPassword") || {}).value || "";
     var passwordConfirm = (document.getElementById("registerPasswordConfirm") || {}).value || "";
+    var policyChecked = !!((document.getElementById("registerPolicyAgree") || {}).checked);
     identifier = identifier.trim();
 
     var identifierValid = validateRegisterIdentifier(authMobileState.registerType, identifier);
@@ -330,8 +331,9 @@ function handleRegisterStep1() {
     setVisible("registerIdentifierError", !identifierValid || isDuplicated);
     setVisible("registerPasswordError", !passwordValid);
     setVisible("registerPasswordConfirmError", !passwordConfirmValid);
+    setVisible("registerPolicyError", !policyChecked);
 
-    if (!identifierValid || isDuplicated || !passwordValid || !passwordConfirmValid) return;
+    if (!identifierValid || isDuplicated || !passwordValid || !passwordConfirmValid || !policyChecked) return;
 
     authMobileState.registerIdentifier = identifier;
     authMobileState.registerPassword = password;
@@ -352,7 +354,7 @@ function handleRegisterStep1() {
         return;
     }
 
-    showMobileScreen("ekyc-info");
+    performRegisterLogin(authMobileState.registerIdentifier);
 }
 
 function setRegisterOtpLabel(method) {
@@ -392,7 +394,7 @@ function verifyRegisterOtp() {
     }
 
     clearAuthErrors();
-    showMobileScreen("ekyc-info");
+    performRegisterLogin(authMobileState.registerIdentifier);
 }
 
 function handleEkycSubmit() {
