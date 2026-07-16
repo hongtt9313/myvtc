@@ -490,9 +490,7 @@ renderStep();
 
         function selectOTPMethod(method) {
             authState.otpMethod = method;
-            authState.step = 3;
-            hideFeedback();
-            renderStep();
+            finishSimpleRegistration();
         }
 
         function showFeedback(msg, isSuccess = false) {
@@ -818,10 +816,6 @@ const savedAccounts = getSavedLoginAccounts();
         </div>
 
         <div class="quick-login">
-            <button onclick="handleGuestLogin()">
-                <i class="fas fa-user-secret"></i>
-                <span>Đăng nhập nhanh</span>
-            </button>
         </div>
     </div>
 `;
@@ -1002,9 +996,7 @@ const savedAccounts = getSavedLoginAccounts();
             if (authState.otpRequestsCount >= 3) { showFeedback('Quá số lần yêu cầu OTP.'); return; }
             authState.otpRequestsCount++;
             authState.tempData.otpMethod = method;
-            authState.step = 4;
-            hideFeedback();
-            renderStep();
+            finishSimpleRegistration();
         }
 
         function verifyLoginOTP() {
@@ -1330,6 +1322,7 @@ function submitRecoveryPassword() {
                             <div><label class="block text-[11px] font-bold text-gray-400 uppercase tracking-wider mb-1.5">Xác nhận</label>
                                 <input type="password" id="reg-pass-confirm" maxlength="32" placeholder="Nhập lại mật khẩu" class="auth-input">
                             </div>
+                            <label class="flex items-start gap-2 text-xs text-gray-500"><input type="checkbox" id="reg-policy" class="mt-0.5"> <span>Tôi đồng ý với Điều khoản và Chính sách quyền riêng tư.</span></label>
                         </div>
                     `;
                     buttonText = 'Tiếp tục';
@@ -1358,10 +1351,6 @@ function submitRecoveryPassword() {
                         </div>
                     `;
                     buttonText = 'Tiếp tục';
-                } else if (authState.step === 4) {
-                    title = 'Thông tin eKYC';
-                    renderIdentityForm(wrapper);
-                    buttonText = 'Hoàn tất';
                 }
             } else if (authState.subType === 'email') {
                 if (authState.step === 1) {
@@ -1377,6 +1366,7 @@ function submitRecoveryPassword() {
                             <div><label class="block text-[11px] font-bold text-gray-400 uppercase tracking-wider mb-1.5">Xác nhận</label>
                                 <input type="password" id="reg-pass-confirm" maxlength="32" placeholder="Nhập lại mật khẩu" class="auth-input">
                             </div>
+                            <label class="flex items-start gap-2 text-xs text-gray-500"><input type="checkbox" id="reg-policy" class="mt-0.5"> <span>Tôi đồng ý với Điều khoản và Chính sách quyền riêng tư.</span></label>
                         </div>
                     `;
                     buttonText = 'Tiếp tục';
@@ -1389,10 +1379,6 @@ function submitRecoveryPassword() {
                         </div>
                     `;
                     buttonText = 'Tiếp tục';
-                } else if (authState.step === 3) {
-                    title = 'Thông tin eKYC';
-                    renderIdentityForm(wrapper);
-                    buttonText = 'Hoàn tất';
                 }
             } else if (authState.subType === 'username') {
                 if (authState.step === 1) {
@@ -1408,13 +1394,10 @@ function submitRecoveryPassword() {
                             <div><label class="block text-[11px] font-bold text-gray-400 uppercase tracking-wider mb-1.5">Xác nhận</label>
                                 <input type="password" id="reg-pass-confirm" maxlength="32" placeholder="Nhập lại mật khẩu" class="auth-input">
                             </div>
+                            <label class="flex items-start gap-2 text-xs text-gray-500"><input type="checkbox" id="reg-policy" class="mt-0.5"> <span>Tôi đồng ý với Điều khoản và Chính sách quyền riêng tư.</span></label>
                         </div>
                     `;
                     buttonText = 'Tiếp tục';
-                } else if (authState.step === 2) {
-                    title = 'Thông tin eKYC';
-                    renderIdentityForm(wrapper);
-                    buttonText = 'Hoàn tất';
                 }
             }
 
@@ -1493,6 +1476,7 @@ function submitRecoveryPassword() {
             if (mockExistingUsers.includes(p)) { showFeedback('SĐT đã được đăng ký.'); return; }
             if (!validatePasswordFormat(pwd)) { showFeedback('Mật khẩu 6-32 ký tự, gồm hoa, thường, số.'); return; }
             if (pwd !== pwdC) { showFeedback('Mật khẩu xác nhận không khớp'); return; }
+            if (!document.getElementById('reg-policy').checked) { showFeedback('Bạn cần đồng ý với điều khoản'); return; }
             authState.tempData.phone = p;
             authState.tempData.password = pwd;
             authState.step = 2;
@@ -1520,6 +1504,7 @@ function submitRecoveryPassword() {
             if (mockExistingUsers.includes(e)) { showFeedback('Email đã được sử dụng.'); return; }
             if (!validatePasswordFormat(pwd)) { showFeedback('Mật khẩu 6-32 ký tự, gồm hoa, thường, số.'); return; }
             if (pwd !== pwdC) { showFeedback('Mật khẩu xác nhận không khớp'); return; }
+            if (!document.getElementById('reg-policy').checked) { showFeedback('Bạn cần đồng ý với điều khoản'); return; }
             authState.tempData.email = e;
             authState.tempData.password = pwd;
             authState.step = 2;
@@ -1547,11 +1532,20 @@ function submitRecoveryPassword() {
             if (mockExistingUsers.includes(u)) { showFeedback('Tên tài khoản đã tồn tại.'); return; }
             if (!validatePasswordFormat(pwd)) { showFeedback('Mật khẩu 6-32 ký tự, gồm hoa, thường, số.'); return; }
             if (pwd !== pwdC) { showFeedback('Mật khẩu xác nhận không khớp'); return; }
+            if (!document.getElementById('reg-policy').checked) { showFeedback('Bạn cần đồng ý với điều khoản'); return; }
             authState.tempData.username = u;
             authState.tempData.password = pwd;
-            authState.step = 2;
-            hideFeedback();
-            renderStep();
+            finishSimpleRegistration();
+        }
+
+        function finishSimpleRegistration() {
+            currentUser.username = authState.tempData.phone || authState.tempData.email || authState.tempData.username || currentUser.username;
+            currentUser.phone = authState.tempData.phone || currentUser.phone;
+            currentUser.email = authState.tempData.email || currentUser.email;
+            localStorage.setItem('myvtc_current_user', JSON.stringify(currentUser));
+            showToast('Đăng ký thành công và đã tự động đăng nhập', 'success');
+            closeAuthModal();
+            updateAuthUI();
         }
 
         function submitRegistrationFinal() {
@@ -3868,7 +3862,6 @@ function renderRechargeAccountBox() {
                 <span>Đăng nhập MyVTC để kiểm tra tài khoản sử dụng dịch vụ và thanh toán.</span>
                 <div class="recharge-login-actions">
                     <button type="button" onclick="openAuthModal('login')">Đăng nhập</button>
-                    <button type="button" onclick="quickLoginAndRefreshRecharge()">Đăng nhập nhanh</button>
                 </div>
                 <div class="recharge-social-actions">
                     <button type="button" onclick="initSocialLogin('Google')"><i class="fab fa-google"></i> Google</button>
