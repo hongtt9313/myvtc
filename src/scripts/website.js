@@ -489,8 +489,16 @@ renderStep();
         }
 
         function selectOTPMethod(method) {
+            if (authState.otpRequestsCount >= 3) {
+                showFeedback('Quá số lần yêu cầu OTP.');
+                return;
+            }
+            authState.otpRequestsCount++;
             authState.otpMethod = method;
-            finishSimpleRegistration();
+            authState.tempData.otpMethod = method;
+            authState.step = 3;
+            hideFeedback();
+            renderStep();
         }
 
         function showFeedback(msg, isSuccess = false) {
@@ -1347,7 +1355,7 @@ function submitRecoveryPassword() {
                     wrapper.innerHTML = `
                         <div class="space-y-4 w-full">
                             <p class="text-sm text-gray-500 text-center">Mã đã gửi đến SĐT của bạn</p>
-                            <input type="text" id="reg-otp-code" placeholder="${placeholder}" class="auth-input text-center font-bold text-lg mt-1">
+                            <input type="text" id="reg-otp-code" placeholder="${placeholder}" maxlength="6" inputmode="numeric" onkeydown="allowOnlyNumbers(event)" class="auth-input text-center font-bold text-lg mt-1">
                         </div>
                     `;
                     buttonText = 'Tiếp tục';
@@ -1375,7 +1383,7 @@ function submitRecoveryPassword() {
                     wrapper.innerHTML = `
                         <div class="space-y-4 w-full">
                             <p class="text-sm text-gray-500 text-center">Mã xác thực đã gửi đến Email của bạn</p>
-                            <input type="text" id="reg-otp-code" placeholder="Nhập mã OTP" class="auth-input text-center font-bold text-lg mt-1">
+                            <input type="text" id="reg-otp-code" placeholder="Nhập mã OTP" maxlength="6" inputmode="numeric" onkeydown="allowOnlyNumbers(event)" class="auth-input text-center font-bold text-lg mt-1">
                         </div>
                     `;
                     buttonText = 'Tiếp tục';
@@ -1490,9 +1498,8 @@ function submitRecoveryPassword() {
             if (authState.otpWrongCount >= 2) { showFeedback('Sai OTP quá nhiều. Khóa 15 phút.'); return; }
             if (otp !== '123456') { authState.otpWrongCount++;
                 showFeedback('Mã OTP không đúng.'); return; }
-            authState.step = 4;
             hideFeedback();
-            renderStep();
+            finishSimpleRegistration();
         }
 
         function handleEmailRegStep1() {
@@ -1518,9 +1525,8 @@ function submitRecoveryPassword() {
             if (authState.otpWrongCount >= 2) { showFeedback('Sai OTP quá nhiều. Khóa 15 phút.'); return; }
             if (otp !== '123456') { authState.otpWrongCount++;
                 showFeedback('Mã OTP không đúng.'); return; }
-            authState.step = 3;
             hideFeedback();
-            renderStep();
+            finishSimpleRegistration();
         }
 
         function handleUsernameRegStep1() {
