@@ -41,6 +41,8 @@ var authMobileState = {
     registerPassword: "",
     registerOtpMethod: "sms",
     resetOtpMethod: "",
+    resetOtpMethods: [],
+    recoveryAccount: null,
     otpRequestsCount: 0,
     otpWrongCount: 0,
     socialProvider: ""
@@ -513,58 +515,81 @@ function startGuestLogin() {
     showMobileScreen("guest-login");
 }
 
-function findRecoveryAccounts() {
-    var keyword = ((document.getElementById("forgotAccountInput") || {}).value || "").trim().toLowerCase();
-    var list = document.getElementById("recoveryAccountList");
-    if (!list) return;
-
-    var accounts = mockRecoveryAccounts.filter(function (account) {
-        return account.username.toLowerCase().indexOf(keyword) > -1 || account.phone.indexOf(keyword) > -1 || account.email.toLowerCase().indexOf(keyword) > -1;
+function getMobileRecoveryAccount(identifier) {
+    var key = String(identifier || "").trim().toLowerCase();
+    return mockRecoveryAccounts.find(function (account) {
+        return [account.username, account.phone, account.email].some(function (value) { return String(value || "").toLowerCase() === key; });
     });
+}
 
-    if (!keyword || !accounts.length) {
-        setVisible("forgotAccountError", true);
-        list.innerHTML = "";
-        return;
-    }
+function getMobileRecoveryConfig(identifier) {
+    if (identifier.indexOf("@") > -1) return { method: "Email", methods: ["Email", "OTP App"] };
+    if (/^0\d{9}$/.test(identifier)) return { method: "SMS", methods: ["SMS", "Voice", "OTP App"] };
+    return { method: "OTP App", methods: ["OTP App", "Email", "SMS"] };
+}
 
-    setVisible("forgotAccountError", false);
-    list.innerHTML = accounts.map(function (account) {
-        return [
-            '<button class="saved-account" type="button" data-recovery-username="' + escapeHtml(account.username) + '">',
-            '<span class="account-avatar">' + escapeHtml(account.name.charAt(0)) + '</span>',
-            '<span><strong>' + escapeHtml(account.name) + '</strong><small>' + escapeHtml(account.username) + '</small></span>',
-            '<i class="fa fa-chevron-right"></i>',
-            '</button>'
-        ].join("");
+function continueForgotPassword() {
+    var input = document.getElementById("forgotPasswordInput");
+    var identifier = (input ? input.value : "").trim();
+    var account = getMobileRecoveryAccount(identifier);
+    setVisible("forgotPasswordError", !account);
+    if (!account) return;
+    var config = getMobileRecoveryConfig(identifier);
+    authMobileState.loginIdentifier = identifier;
+    authMobileState.recoveryAccount = account;
+    authMobileState.resetOtpMethod = config.method;
+    authMobileState.resetOtpMethods = config.methods;
+    authMobileState.otpWrongCount = 0;
+    renderForgotOtpMethodList();
+    updateForgotOtpLabel();
+    showMobileScreen("forgot-otp");
+}
+
+function updateForgotOtpLabel() {
+    var label = document.getElementById("forgotOtpLabel");
+    if (label) label.textContent = "Mã xác thực đã gửi qua " + (authMobileState.resetOtpMethod === "OTP App" ? "Authenticator" : authMobileState.resetOtpMethod) + ".";
+}
+
+function renderForgotOtpMethodList() {
+    var list = document.getElementById("forgotOtpMethodList");
+    if (!list) return;
+    list.innerHTML = (authMobileState.resetOtpMethods || []).map(function (method) {
+        var icon = method === "Voice" ? "fa-phone-volume" : method === "Email" ? "fa-envelope" : method === "OTP App" ? "fa-mobile-screen-button" : "fa-comment-sms";
+        var label = method === "OTP App" ? "Authenticator" : method;
+        return '<button class="list-card otp-channel-card" type="button" data-forgot-otp-method="' + escapeHtml(method) + '"><i class="fa ' + icon + '"></i><div><strong>' + escapeHtml(label) + '</strong></div></button>';
     }).join("");
 }
 
-function startResetPassword(method) {
+function selectForgotOtpMethod(method) {
     authMobileState.resetOtpMethod = method;
-    var label = document.getElementById("resetOtpLabel");
-    if (label) label.textContent = "Nhập OTP đã gửi qua " + method + " và mật khẩu mới.";
     resetOtpInputs();
     clearAuthErrors();
+    updateForgotOtpLabel();
+    showMobileScreen("forgot-otp");
+}
+
+function verifyForgotOtp() {
+    var otp = ((document.getElementById("forgotOtpCode") || {}).value || "").trim();
+    if (otp !== demoOtpCode) {
+        authMobileState.otpWrongCount++;
+        setVisible("forgotOtpError", true);
+        return;
+    }
+    setVisible("forgotOtpError", false);
     showMobileScreen("reset-password");
 }
 
 function confirmResetPassword() {
-    var otp = ((document.getElementById("resetOtpCode") || {}).value || "").trim();
     var password = (document.getElementById("resetNewPassword") || {}).value || "";
-
-    var otpOk = otp === demoOtpCode;
+    var confirmPassword = (document.getElementById("resetNewPasswordConfirm") || {}).value || "";
     var passwordOk = validatePasswordFormat(password);
-
-    setVisible("resetOtpError", !otpOk);
+    var confirmOk = password === confirmPassword;
     setVisible("resetPasswordError", !passwordOk);
-
-    if (!otpOk || !passwordOk) return;
-
-    showMobileToast("Đặt lại mật khẩu thành công.", "success");
-    showMobileScreen("login-password");
+    setVisible("resetPasswordConfirmError", !confirmOk);
+    if (!passwordOk || !confirmOk) return;
+    showMobileToast("Cập nhật mật khẩu thành công.", "success");
+    showMobileScreen("login-username");
 }
-
 function showMobileToast(message, type) {
     var old = document.getElementById("mobile-toast");
     if (old) old.remove();
@@ -2041,35 +2066,12 @@ document.addEventListener("click", function (event) {
         return;
     }
 
-    if (event.target.closest("#findAccountBtn")) {
-        event.preventDefault();
-        findRecoveryAccounts();
-        return;
-    }
-
-    var recoveryBtn = event.target.closest("[data-recovery-username]");
-    if (recoveryBtn) {
-        event.preventDefault();
-        var input = document.getElementById("mobileUsername");
-        if (input) input.value = recoveryBtn.dataset.recoveryUsername;
-        authMobileState.loginIdentifier = recoveryBtn.dataset.recoveryUsername;
-        showMobileScreen("login-username");
-        showMobileToast("Đã chọn tài khoản khôi phục.", "success");
-        return;
-    }
-
-    var resetOtpBtn = event.target.closest("[data-reset-otp-channel]");
-    if (resetOtpBtn) {
-        event.preventDefault();
-        startResetPassword(resetOtpBtn.dataset.resetOtpChannel);
-        return;
-    }
-
-    if (event.target.closest("#confirmResetPasswordBtn")) {
-        event.preventDefault();
-        confirmResetPassword();
-        return;
-    }
+    if (event.target.closest("#continueForgotPasswordBtn")) { event.preventDefault(); continueForgotPassword(); return; }
+    if (event.target.closest("#confirmForgotOtpBtn")) { event.preventDefault(); verifyForgotOtp(); return; }
+    if (event.target.closest("#resendForgotOtpBtn")) { event.preventDefault(); showMobileToast("Đã gửi lại mã OTP.", "success"); return; }
+    var forgotOtpMethodBtn = event.target.closest("[data-forgot-otp-method]");
+    if (forgotOtpMethodBtn) { event.preventDefault(); selectForgotOtpMethod(forgotOtpMethodBtn.dataset.forgotOtpMethod); return; }
+    if (event.target.closest("#confirmResetPasswordBtn")) { event.preventDefault(); confirmResetPassword(); return; }
 
     var registerTypeBtn = event.target.closest("[data-register-type]");
     if (registerTypeBtn) {
