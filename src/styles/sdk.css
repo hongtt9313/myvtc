@@ -162,10 +162,21 @@ button { border: 0; }
     max-width: 352px;
     min-height: 0;
     margin: 0 auto;
-    overflow: hidden;
-    padding: 0 1px 4px;
+    overflow-y: auto;
+    overflow-x: hidden;
+    -webkit-overflow-scrolling: touch;
+    scrollbar-width: none;
+    -ms-overflow-style: none;
+    padding: 0 4px 14px 1px;
 }
 .sdk-frame.landscape .sdk-auth-content { max-width: 720px; }
+.sdk-auth-content::-webkit-scrollbar,
+.sdk-management::-webkit-scrollbar {
+    width: 0;
+    height: 0;
+    display: none;
+}
+
 .sdk-stack, .sdk-form { display: grid; gap: 10px; }
 .sdk-frame.landscape .sdk-stack, .sdk-frame.landscape .sdk-form { gap: 8px; }
 
@@ -281,6 +292,14 @@ button { border: 0; }
     font-weight: 900;
 }
 .sdk-form-note-row .sdk-inline-link { justify-self: auto; }
+
+.sdk-login-button-row {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 10px;
+}
+.sdk-login-button-row .sdk-primary-btn,
+.sdk-login-button-row .sdk-secondary-btn { min-width: 0; }
 
 .sdk-login-actions { display: grid; gap: 10px; }
 .sdk-divider { display: flex; align-items: center; gap: 12px; color: #c1c8d2; font-size: 13px; font-weight: 600; }
@@ -408,7 +427,7 @@ button { border: 0; }
 @keyframes sdkPushIn { from { opacity: 0; transform: translate(-50%, -12px); } to { opacity: 1; transform: translate(-50%, 0); } }
 .sdk-policy-inline { padding: 2px 0; }
 .sdk-policy-inline input { flex: 0 0 auto; margin: 1px 0 0; accent-color: var(--sdk-blue); }
-.sdk-management { display: grid; gap: 10px; height: 100%; overflow: auto; padding: 1px 1px 8px; }
+.sdk-management { display: grid; gap: 10px; height: 100%; overflow: auto; padding: 1px 1px 8px; scrollbar-width: none; -ms-overflow-style: none; }
 .sdk-account-summary { display: grid; grid-template-columns: auto minmax(0,1fr) auto; align-items: center; gap: 10px; padding: 12px; border: 1px solid var(--sdk-line); border-radius: 18px; background: #fff; }
 .sdk-account-avatar { width: 42px; height: 42px; display: inline-flex; align-items: center; justify-content: center; border-radius: 15px; color: #fff; background: linear-gradient(135deg, var(--sdk-blue-dark), var(--sdk-blue)); }
 .sdk-account-summary div { min-width: 0; }
@@ -449,3 +468,167 @@ button { border: 0; }
     .sdk-linked-icon { width: 30px; height: 30px; }
     .sdk-link-action { min-width: 80px; height: 34px; padding: 0 9px; font-size: 11px; }
 }
+
+.sdk-auth-tabs { display:grid; grid-template-columns:repeat(2,minmax(0,1fr)); width:100%; gap:0; border-bottom:1px solid var(--sdk-line); margin:0 0 14px; }
+.sdk-auth-tab { position:relative; width:100%; padding:0 12px 12px; color:#8b96a5; background:transparent; font-size:16px; font-weight:800; text-align:center; cursor:pointer; }
+.sdk-auth-tab.active { color:var(--sdk-blue); }
+.sdk-auth-tab.active::after { content:""; position:absolute; left:0; right:0; bottom:-1px; height:3px; border-radius:3px 3px 0 0; background:var(--sdk-blue); }
+
+
+/* Auth header order and scrolling fix */
+.sdk-auth-shell { min-height: 0; overflow: hidden; }
+.sdk-auth-header { display: flex; flex-direction: column; gap: 10px; }
+.sdk-auth-header .sdk-auth-tabs { order: 0; margin: 0; }
+.sdk-auth-header .sdk-top-row { order: 1; }
+.sdk-auth-content { scrollbar-width: none; -ms-overflow-style: none; overscroll-behavior: contain; }
+.sdk-frame.landscape .sdk-auth-header { gap: 6px; }
+.sdk-frame.landscape .sdk-auth-header .sdk-auth-tab { padding-bottom: 8px; }
+.sdk-frame.landscape .sdk-auth-content { padding-bottom: 18px; }
+
+/* SDK login layout aligned with the supplied design */
+.sdk-main-auth-header {
+    position: relative;
+    display: grid;
+    grid-template-columns: 40px minmax(0, 1fr) 40px;
+    align-items: center;
+    gap: 12px;
+}
+.sdk-main-auth-header .sdk-auth-tabs {
+    justify-self: stretch;
+    width: 100%;
+    margin: 0;
+}
+.sdk-main-auth-header .sdk-back-btn,
+.sdk-main-auth-header .sdk-icon-btn {
+    width: 40px;
+    height: 40px;
+    border-radius: 12px;
+}
+.sdk-main-auth-header .sdk-icon-btn { justify-self: end; }
+.sdk-main-auth-header .sdk-back-btn { justify-self: start; }
+
+.sdk-frame.landscape .sdk-auth-shell {
+    padding: 28px 26px 14px;
+}
+.sdk-frame.landscape .sdk-auth-header {
+    padding: 0 0 12px;
+}
+.sdk-frame.landscape .sdk-auth-content {
+    max-width: 790px;
+    padding: 0 4px 16px;
+}
+.sdk-frame.landscape .sdk-form {
+    gap: 10px;
+}
+.sdk-frame.landscape .sdk-field label {
+    margin-bottom: 6px;
+    font-size: 13px;
+}
+.sdk-frame.landscape .sdk-input,
+.sdk-frame.landscape .sdk-select {
+    height: 44px;
+    border-radius: 13px;
+}
+.sdk-frame.landscape .sdk-password-toggle {
+    top: 2px;
+    height: 40px;
+}
+.sdk-frame.landscape .sdk-form-note-row {
+    min-height: 26px;
+    margin-top: -2px;
+}
+.sdk-frame.landscape .sdk-primary-btn {
+    min-height: 44px;
+    border-radius: 13px;
+}
+.sdk-frame.landscape .sdk-login-actions {
+    margin-top: 8px;
+    gap: 10px;
+}
+.sdk-frame.landscape .sdk-divider {
+    margin: 0 -4px;
+}
+.sdk-frame.landscape .sdk-social-btn {
+    min-height: 56px;
+    border-radius: 15px;
+}
+.sdk-frame.landscape .sdk-social-btn i,
+.sdk-frame.landscape .sdk-social-btn .sdk-google-mark {
+    font-size: 22px;
+}
+
+
+/* Registration form with cyclic account type switch */
+.sdk-register-identifier-row {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) 48px;
+    align-items: center;
+    gap: 8px;
+}
+.sdk-register-type-switch {
+    width: 48px;
+    height: 48px;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    border: 1.5px solid var(--sdk-line);
+    border-radius: 12px;
+    color: var(--sdk-blue-dark);
+    background: #fff;
+    cursor: pointer;
+    font-size: 17px;
+}
+.sdk-register-type-switch:hover,
+.sdk-register-type-switch:focus-visible {
+    border-color: var(--sdk-blue);
+    outline: none;
+    box-shadow: 0 0 0 3px rgba(8, 120, 216, 0.1);
+}
+.sdk-register-type-switch:active { transform: rotate(30deg); }
+.sdk-frame.landscape .sdk-register-type-switch {
+    width: 44px;
+    height: 44px;
+    border-radius: 13px;
+}
+
+.sdk-logout-all-btn {
+    width: 100%;
+    min-height: 42px;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    padding: 9px 14px;
+    border: 0;
+    background: transparent;
+    color: #e11d48;
+    font: inherit;
+    font-size: 13px;
+    font-weight: 700;
+    cursor: pointer;
+}
+.sdk-logout-all-btn:hover, .sdk-logout-all-btn:focus-visible { background: #fff1f3; border-radius: 12px; outline: none; }
+.sdk-logout-all-btn:active { transform: translateY(1px); }
+
+/* Register steps after the form use a focused header without auth tabs. */
+.sdk-flow-header {
+    display: grid;
+    grid-template-columns: 40px minmax(0, 1fr) 40px;
+    align-items: center;
+    gap: 12px;
+}
+.sdk-flow-header .sdk-title-group {
+    justify-self: center;
+    min-width: 0;
+    text-align: center;
+}
+.sdk-flow-header .sdk-title-group h2 {
+    margin: 0;
+    overflow: hidden;
+    font-size: 18px;
+    line-height: 1.3;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+.sdk-flow-header .sdk-back-btn { justify-self: start; }
+.sdk-flow-header .sdk-icon-btn { justify-self: end; }
