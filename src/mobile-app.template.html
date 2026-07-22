@@ -266,11 +266,6 @@
                 <input class="mobile-input" id="mobileUsername" placeholder="SĐT, Email hoặc tên đăng nhập"/>
                 <p class="form-error-text" id="usernameError">Vui lòng nhập SĐT, Email hoặc tên đăng nhập.</p>
 
-                <div class="form-note-row">
-                    <span></span>
-                    <button type="button" data-screen-target="forgot-account">Quên tài khoản?</button>
-                </div>
-
                 <button class="primary-btn full-width" type="button" id="continueToPassword">Tiếp tục</button>
 
                 <div class="divider-row"><span></span><em>Hoặc</em><span></span></div>
@@ -289,7 +284,7 @@
         <section class="app-screen auth-screen" data-screen="login-password">
             <div class="auth-content">
                 <header class="mobile-header">
-                    <button class="header-icon-btn" type="button" data-screen-target="login-username" aria-label="Quay lại"><i class="fa fa-arrow-left"></i></button>
+                    <span class="header-icon-placeholder" aria-hidden="true"></span>
                     <h2>Nhập mật khẩu</h2>
                     <button class="header-icon-btn" type="button" data-screen-target="home-guest" aria-label="Đóng"><i class="fa fa-xmark"></i></button>
                 </header>
@@ -892,64 +887,45 @@
             </div>
         </section>
 
-        <section class="app-screen auth-screen" data-screen="forgot-account">
+        <section class="app-screen auth-screen" data-screen="forgot-password">
             <div class="auth-content">
-                <header class="mobile-header">
-                    <button class="header-icon-btn" type="button" data-screen-target="login-username" aria-label="Quay lại"><i class="fa fa-arrow-left"></i></button>
-                    <h2>Lấy lại tài khoản</h2>
-                    <button class="header-icon-btn" type="button" data-screen-target="home-guest" aria-label="Đóng"><i class="fa fa-xmark"></i></button>
-                </header>
-
-                <h1>Lấy lại tài khoản</h1>
-                <p class="auth-desc">Nhập số điện thoại hoặc email đã đăng ký để tìm tài khoản.</p>
-
-                <label class="field-label" for="forgotAccountInput">SĐT hoặc Email</label>
-                <input class="mobile-input" id="forgotAccountInput" placeholder="Nhập SĐT hoặc Email"/>
-                <p class="form-error-text" id="forgotAccountError">Không tìm thấy tài khoản phù hợp.</p>
-
-                <button class="primary-btn full-width" type="button" id="findAccountBtn">Tìm tài khoản</button>
-
-                <div class="saved-account-list recovery-list" id="recoveryAccountList"></div>
+                <header class="mobile-header"><button class="header-icon-btn" type="button" data-screen-target="login-password" aria-label="Quay lại"><i class="fa fa-arrow-left"></i></button><h2>Lấy lại mật khẩu</h2><button class="header-icon-btn" type="button" data-screen-target="home-guest" aria-label="Đóng"><i class="fa fa-xmark"></i></button></header>
+                <label class="field-label" for="forgotPasswordInput">Tài khoản</label>
+                <input class="mobile-input" id="forgotPasswordInput" placeholder="SĐT, Email hoặc tên đăng nhập"/>
+                <p class="form-error-text" id="forgotPasswordError">Tài khoản không hợp lệ.</p>
+                <button class="primary-btn full-width" type="button" id="continueForgotPasswordBtn">Tiếp tục</button>
             </div>
         </section>
 
-        <section class="app-screen auth-screen" data-screen="forgot-password">
+        <section class="app-screen auth-screen" data-screen="forgot-otp">
             <div class="auth-content">
-                <header class="mobile-header">
-                    <button class="header-icon-btn" type="button" data-screen-target="login-password" aria-label="Quay lại"><i class="fa fa-arrow-left"></i></button>
-                    <h2>Quên mật khẩu</h2>
-                    <button class="header-icon-btn" type="button" data-screen-target="home-guest" aria-label="Đóng"><i class="fa fa-xmark"></i></button>
-                </header>
+                <header class="mobile-header"><button class="header-icon-btn" type="button" data-screen-target="forgot-password" aria-label="Quay lại"><i class="fa fa-arrow-left"></i></button><h2>Xác thực OTP</h2><button class="header-icon-btn" type="button" data-screen-target="home-guest" aria-label="Đóng"><i class="fa fa-xmark"></i></button></header>
+                <p class="auth-desc" id="forgotOtpLabel">Mã xác thực đã gửi qua phương thức mặc định.</p>
+                <label class="field-label" for="forgotOtpCode">Mã xác thực OTP</label>
+                <input class="mobile-input otp-input" id="forgotOtpCode" maxlength="6" inputmode="numeric" placeholder="Nhập mã OTP"/>
+                <p class="form-error-text" id="forgotOtpError">Mã OTP không đúng.</p>
+                <button class="primary-btn full-width" type="button" id="confirmForgotOtpBtn">Xác nhận</button>
+                <div class="form-note-row forgot-otp-actions"><button type="button" id="resendForgotOtpBtn">Nhận lại OTP</button><button type="button" data-screen-target="forgot-otp-method">Tùy chọn khác</button></div>
+            </div>
+        </section>
 
-                <h1>Đặt lại mật khẩu</h1>
-                <p class="auth-desc" id="forgotPasswordLabel">Chọn kênh nhận OTP để đặt lại mật khẩu.</p>
-
-                <div class="service-list otp-channel-list">
-                    <button class="list-card otp-channel-card" type="button" data-reset-otp-channel="SMS"><i class="fa fa-comment-sms"></i><div><strong>SMS</strong><small>Gửi OTP qua tin nhắn.</small></div></button>
-                    <button class="list-card otp-channel-card" type="button" data-reset-otp-channel="Email"><i class="fa fa-envelope"></i><div><strong>Email</strong><small>Gửi OTP qua email.</small></div></button>
-                </div>
+        <section class="app-screen auth-screen" data-screen="forgot-otp-method">
+            <div class="auth-content">
+                <header class="mobile-header"><button class="header-icon-btn" type="button" data-screen-target="forgot-otp" aria-label="Quay lại"><i class="fa fa-arrow-left"></i></button><h2>Tùy chọn xác thực</h2><button class="header-icon-btn" type="button" data-screen-target="home-guest" aria-label="Đóng"><i class="fa fa-xmark"></i></button></header>
+                <div class="service-list otp-channel-list" id="forgotOtpMethodList"></div>
             </div>
         </section>
 
         <section class="app-screen auth-screen" data-screen="reset-password">
             <div class="auth-content">
-                <header class="mobile-header">
-                    <button class="header-icon-btn" type="button" data-screen-target="forgot-password" aria-label="Quay lại"><i class="fa fa-arrow-left"></i></button>
-                    <h2>Đặt lại mật khẩu</h2>
-                    <button class="header-icon-btn" type="button" data-screen-target="home-guest" aria-label="Đóng"><i class="fa fa-xmark"></i></button>
-                </header>
-
-                <p class="auth-desc" id="resetOtpLabel">Nhập OTP và mật khẩu mới.</p>
-
-                <label class="field-label" for="resetOtpCode">Mã OTP</label>
-                <input class="mobile-input otp-input" id="resetOtpCode" maxlength="6" inputmode="numeric" placeholder="Nhập mã OTP"/>
-                <p class="form-error-text" id="resetOtpError">Mã OTP không đúng. Mã demo là 123456.</p>
-
+                <header class="mobile-header"><button class="header-icon-btn" type="button" data-screen-target="forgot-otp" aria-label="Quay lại"><i class="fa fa-arrow-left"></i></button><h2>Tạo mật khẩu mới</h2><button class="header-icon-btn" type="button" data-screen-target="home-guest" aria-label="Đóng"><i class="fa fa-xmark"></i></button></header>
                 <label class="field-label" for="resetNewPassword">Mật khẩu mới</label>
                 <div class="password-field"><input id="resetNewPassword" type="password" maxlength="32" placeholder="Nhập mật khẩu mới"/><button class="password-toggle" type="button" data-toggle-password="resetNewPassword" aria-label="Hiện mật khẩu"><i class="fa fa-eye-slash"></i></button></div>
                 <p class="form-error-text" id="resetPasswordError">Mật khẩu 6-32 ký tự, gồm chữ hoa, chữ thường và số.</p>
-
-                <button class="primary-btn full-width" type="button" id="confirmResetPasswordBtn">Xác nhận</button>
+                <label class="field-label" for="resetNewPasswordConfirm">Nhập lại mật khẩu mới</label>
+                <div class="password-field"><input id="resetNewPasswordConfirm" type="password" maxlength="32" placeholder="Nhập lại mật khẩu mới"/><button class="password-toggle" type="button" data-toggle-password="resetNewPasswordConfirm" aria-label="Hiện mật khẩu"><i class="fa fa-eye-slash"></i></button></div>
+                <p class="form-error-text" id="resetPasswordConfirmError">Mật khẩu nhập lại không khớp.</p>
+                <button class="primary-btn full-width" type="button" id="confirmResetPasswordBtn">Cập nhật</button>
             </div>
         </section>
 
