@@ -786,9 +786,6 @@ const savedAccounts = getSavedLoginAccounts();
         <input type="text" id="login-username" placeholder="SĐT, Email hoặc tên đăng nhập" class="auth-input">
     </div>
 
-    <div class="flex justify-end mt-3">
-        <button onclick="switchMode('forgot_account')" class="link-text">Quên tài khoản?</button>
-    </div>
 </div>
 
         <button onclick="handleLoginStep1()" class="auth-btn-primary">Tiếp tục</button>
@@ -830,7 +827,7 @@ const savedAccounts = getSavedLoginAccounts();
 
                         <div class="flex justify-center gap-4 text-xs text-gray-400 pt-1">
                             <button onclick="authState.step = 3; renderStep();" class="link-text"><i class="fas fa-shield-alt mr-1"></i>Đăng nhập bằng OTP</button>
-                            <button onclick="authState.step = 1; renderStep();" class="link-text">Quay lại</button>
+                            <button onclick="switchMode('forgot');" class="link-text">Quên mật khẩu?</button>
                         </div>
                     </div>
                 `;
@@ -858,12 +855,24 @@ const savedAccounts = getSavedLoginAccounts();
                     </div>
                 `;
             } else if (authState.step === 4) {
+                const loginOtpMethod = authState.tempData.otpMethod || 'SMS';
+                const loginOtpAccount = authState.tempData.username || 'tài khoản của bạn';
+                let loginOtpDescription = '';
+                if (loginOtpMethod === 'Voice') {
+                    loginOtpDescription = `Nhập mã xác thực đã gửi qua cuộc gọi về Số điện thoại ${loginOtpAccount}`;
+                } else if (loginOtpMethod === 'Email') {
+                    loginOtpDescription = `Nhập mã xác thực đã gửi qua email về địa chỉ ${loginOtpAccount}`;
+                } else if (loginOtpMethod === 'OTP App') {
+                    loginOtpDescription = 'Nhập mã xác thực trên ứng dụng Authenticator đã thiết lập';
+                } else {
+                    loginOtpDescription = `Nhập mã xác thực đã gửi qua tin nhắn SMS về Số điện thoại ${loginOtpAccount}`;
+                }
                 container.innerHTML = `
                     <div class="space-y-4 w-full pt-1 slide-up">
                         <div class="text-center">
                             <h3 class="text-base font-bold text-gray-800">Nhập mã OTP</h3>
-                            <p class="text-xs text-gray-400 mt-1.5">Mã đã gửi qua <span class="font-bold text-blue-600">${authState.tempData.otpMethod || ''}</span></p>
-                            <input type="text" id="login-otp-code" placeholder="6 số OTP" class="auth-input text-center font-bold text-xl tracking-widest mt-3">
+                            <p class="text-sm text-gray-500 mt-1.5">${loginOtpDescription}</p>
+                            <input type="text" id="login-otp-code" placeholder="6 số OTP" maxlength="6" inputmode="numeric" onkeydown="allowOnlyNumbers(event)" class="auth-input text-center font-bold text-xl tracking-widest mt-3">
                         </div>
                         <button onclick="verifyLoginOTP()" class="auth-btn-primary">Xác minh & Đăng nhập</button>
                         <div class="flex justify-center gap-4 text-xs text-gray-400 pt-1">
@@ -1023,14 +1032,26 @@ const savedAccounts = getSavedLoginAccounts();
 //  FORGOT ACCOUNT / RESET PASSWORD FLOW
 // ================================================================
 function renderForgotAccountFlow(container) {
+    const account = authState.tempData.selectedRecoveryAccount || {};
+    const method = authState.tempData.otpMethod || 'SMS';
+    const recoveryDestination = method === 'Email'
+        ? (account.email || account.username || '')
+        : (account.phone || account.username || '');
+    const recoveryOtpMessage = method === 'Voice'
+        ? `Mã xác thực đã gửi qua cuộc gọi về Số điện thoại ${recoveryDestination}`
+        : method === 'Email'
+            ? `Mã xác thực đã gửi qua email về địa chỉ ${recoveryDestination}`
+            : method === 'OTP App'
+                ? 'Mã xác thực trên ứng dụng Authenticator đã thiết lập'
+                : `Mã xác thực đã gửi qua tin nhắn SMS về Số điện thoại ${recoveryDestination}`;
+
     if (authState.step === 1) {
         container.innerHTML = `
             <div class="space-y-6 w-full pt-1 slide-up">
                 <div>
-                    <h2 class="text-xl font-bold text-blue-600">Lấy lại tài khoản</h2>
+                    <h2 class="text-xl font-bold text-blue-600">Lấy lại mật khẩu</h2>
                     <div class="w-16 h-0.5 bg-blue-600 mt-3 rounded-full"></div>
                 </div>
-
                 <div class="pt-5">
                     <label class="auth-field-label">Tài khoản</label>
                     <div class="auth-input-wrap">
@@ -1038,198 +1059,97 @@ function renderForgotAccountFlow(container) {
                         <input type="text" id="forgot-keyword" placeholder="SĐT, Email hoặc tên đăng nhập" class="auth-input">
                     </div>
                 </div>
-
                 <button onclick="handleForgotLookup()" class="auth-btn-primary">Tiếp tục</button>
-
                 <button onclick="switchMode('login')" class="w-full text-center text-sm text-gray-400 hover:text-gray-600 py-1 font-semibold">Quay lại</button>
-            </div>
-        `;
+            </div>`;
     } else if (authState.step === 2) {
-        const accounts = authState.tempData.recoveryAccounts || [];
-
         container.innerHTML = `
             <div class="space-y-5 w-full pt-1 slide-up">
                 <div>
-                    <h2 class="text-xl font-bold text-blue-600">Lấy lại tài khoản</h2>
+                    <h2 class="text-xl font-bold text-blue-600">Xác thực OTP</h2>
                     <div class="w-16 h-0.5 bg-blue-600 mt-3 rounded-full"></div>
                 </div>
-
                 <div class="text-center pt-3">
-                    <h3 class="text-base font-bold text-gray-900">Chọn tài khoản của bạn</h3>
+                    <p class="text-sm text-gray-500 whitespace-nowrap">${recoveryOtpMessage}</p>
                 </div>
-
-                <div class="space-y-3">
-                    ${accounts.map(acc => `
-                        <button onclick="selectRecoveryAccount('${acc.id}')" class="w-full p-4 border border-gray-200 rounded-2xl hover:border-blue-500 hover:bg-blue-50/30 flex items-center justify-between transition-all shadow-sm group">
-                            <div class="flex items-center space-x-4">
-                                <div class="w-10 h-10 rounded-xl bg-blue-50 flex items-center justify-center text-blue-600">
-                                    <i class="fas ${acc.icon}"></i>
-                                </div>
-                                <div class="text-left">
-                                    <p class="text-sm font-bold text-gray-900">${acc.displayName}</p>
-                                    <p class="text-xs font-semibold text-gray-700 mt-1">Username: ${acc.username}</p>
-                                </div>
-                            </div>
-                            <i class="fas fa-chevron-right text-gray-300 group-hover:text-blue-500"></i>
-                        </button>
-                    `).join('')}
+                <input type="text" id="forgot-otp-code" placeholder="Nhập mã OTP" maxlength="6" onkeydown="allowOnlyNumbers(event)" class="auth-input text-center font-bold text-xl tracking-widest">
+                <button onclick="verifyRecoveryOTP()" class="auth-btn-primary">Xác nhận</button>
+                <div class="flex items-center justify-between text-sm">
+                    <button onclick="resendRecoveryOTP()" class="link-text">Nhận lại OTP</button>
+                    <button onclick="authState.step = 4; renderStep();" class="link-text">Tùy chọn khác</button>
                 </div>
-
-                <button onclick="authState.step = 1; renderStep();" class="w-full text-center text-sm text-gray-400 hover:text-gray-600 py-1 font-semibold">Quay lại</button>
-            </div>
-        `;
+            </div>`;
     } else if (authState.step === 3) {
         container.innerHTML = `
             <div class="space-y-5 w-full pt-1 slide-up">
                 <div>
-                    <h2 class="text-xl font-bold text-blue-600">Lấy lại tài khoản</h2>
+                    <h2 class="text-xl font-bold text-blue-600">Tạo mật khẩu mới</h2>
                     <div class="w-16 h-0.5 bg-blue-600 mt-3 rounded-full"></div>
                 </div>
-
-                <div class="text-center pt-3">
-                    <h3 class="text-base font-bold text-gray-900">Nhận mã OTP</h3>
-                    <p class="text-xs text-gray-400 mt-1">Chọn kênh nhận mã xác thực</p>
+                <div class="space-y-3 pt-3">
+                    <div><label class="auth-field-label">Mật khẩu mới</label><input type="password" id="forgot-new-password" maxlength="32" placeholder="6-32 ký tự, gồm hoa, thường, số" class="auth-input"></div>
+                    <div><label class="auth-field-label">Nhập lại mật khẩu mới</label><input type="password" id="forgot-new-password-confirm" maxlength="32" placeholder="Nhập lại mật khẩu mới" class="auth-input"></div>
                 </div>
-
-                <div class="space-y-3">
-                    ${['SMS','Voice','Email','OTP App'].map(m => `
-                        <button onclick="selectRecoveryOTPMethod('${m}')" class="w-full p-4 border border-gray-200 rounded-2xl hover:border-blue-500 hover:bg-blue-50/30 flex items-center justify-between transition-all shadow-sm group">
-                            <div class="flex items-center space-x-4">
-                                <div class="w-10 h-10 rounded-xl bg-gray-50 flex items-center justify-center text-gray-400 group-hover:bg-blue-50 group-hover:text-blue-600 transition-colors">
-                                    <i class="fas ${m==='SMS'?'fa-comment-alt':m==='Voice'?'fa-phone-volume':m==='Email'?'fa-envelope':'fa-mobile-alt'}"></i>
-                                </div>
-                                <p class="text-sm font-bold text-gray-800">${m}</p>
-                            </div>
-                            <i class="fas fa-chevron-right text-gray-300 group-hover:text-blue-500"></i>
-                        </button>
-                    `).join('')}
-                </div>
-
-                <button onclick="authState.step = 2; renderStep();" class="w-full text-center text-sm text-gray-400 hover:text-gray-600 py-1 font-semibold">Quay lại</button>
-            </div>
-        `;
+                <button onclick="submitRecoveryPassword()" class="auth-btn-primary">Cập nhật</button>
+            </div>`;
     } else if (authState.step === 4) {
+        const methods = authState.tempData.availableOtpMethods || ['SMS', 'Email', 'OTP App'];
         container.innerHTML = `
             <div class="space-y-5 w-full pt-1 slide-up">
                 <div>
-                    <h2 class="text-xl font-bold text-blue-600">Lấy lại tài khoản</h2>
+                    <h2 class="text-xl font-bold text-blue-600">Tùy chọn xác thực</h2>
                     <div class="w-16 h-0.5 bg-blue-600 mt-3 rounded-full"></div>
                 </div>
-
-                <div class="text-center pt-3">
-                    <h3 class="text-base font-bold text-gray-900">Nhập mã OTP</h3>
-                    <p class="text-xs text-gray-400 mt-1.5">Mã đã gửi qua <span class="font-bold text-blue-600">${authState.tempData.otpMethod || ''}</span></p>
+                <div class="space-y-3 pt-3">
+                    ${methods.map(m => `<button onclick="selectRecoveryOTPMethod('${m}')" class="w-full p-4 border border-gray-200 rounded-2xl hover:border-blue-500 hover:bg-blue-50/30 flex items-center justify-between transition-all shadow-sm group"><div class="flex items-center space-x-4"><div class="w-10 h-10 rounded-xl bg-gray-50 flex items-center justify-center text-gray-400"><i class="fas ${m==='SMS'?'fa-comment-alt':m==='Voice'?'fa-phone-volume':m==='Email'?'fa-envelope':'fa-mobile-alt'}"></i></div><p class="text-sm font-bold text-gray-800">${m === 'OTP App' ? 'Authenticator' : m}</p></div><i class="fas fa-chevron-right text-gray-300"></i></button>`).join('')}
                 </div>
-
-                <input type="text" id="forgot-otp-code" placeholder="6 số OTP" maxlength="6" onkeydown="allowOnlyNumbers(event)" class="auth-input text-center font-bold text-xl tracking-widest">
-
-                <button onclick="verifyRecoveryOTP()" class="auth-btn-primary">Xác minh</button>
-
-                <button onclick="authState.step = 3; renderStep();" class="w-full text-center text-sm text-gray-400 hover:text-gray-600 py-1 font-semibold">Đổi phương thức</button>
-            </div>
-        `;
-    } else if (authState.step === 5) {
-        container.innerHTML = `
-            <div class="space-y-5 w-full pt-1 slide-up">
-                <div>
-                    <h2 class="text-xl font-bold text-blue-600">Lấy lại tài khoản</h2>
-                    <div class="w-16 h-0.5 bg-blue-600 mt-3 rounded-full"></div>
-                </div>
-
-                <div class="text-center pt-3">
-                    <h3 class="text-base font-bold text-gray-900">Tạo mật khẩu mới</h3>
-                </div>
-
-                <div class="space-y-3">
-                    <div>
-                        <label class="auth-field-label">Mật khẩu</label>
-                        <input type="password" id="forgot-new-password" maxlength="32" placeholder="6-32 ký tự, gồm hoa, thường, số" class="auth-input">
-                    </div>
-
-                    <div>
-                        <label class="auth-field-label">Xác nhận</label>
-                        <input type="password" id="forgot-new-password-confirm" maxlength="32" placeholder="Nhập lại mật khẩu" class="auth-input">
-                    </div>
-                </div>
-
-                <button onclick="submitRecoveryPassword()" class="auth-btn-primary">Hoàn thành</button>
-
-                <button onclick="switchMode('login')" class="w-full text-center text-sm text-gray-400 hover:text-gray-600 py-1 font-semibold">Quay lại</button>
-            </div>
-        `;
+                <button onclick="authState.step = 2; renderStep();" class="w-full text-center text-sm text-gray-400 hover:text-gray-600 py-1 font-semibold">Quay lại</button>
+            </div>`;
     }
+}
+
+function getRecoveryOtpConfig(account) {
+    const username = String(account.username || '').toLowerCase();
+    if (username.includes('@')) return { defaultMethod: 'Email', methods: ['Email', 'OTP App'] };
+    if (/^0\d{9}$/.test(username)) return { defaultMethod: 'SMS', methods: ['SMS', 'Voice', 'OTP App'] };
+    return { defaultMethod: 'OTP App', methods: ['OTP App', 'Email', 'SMS'] };
 }
 
 function handleForgotLookup() {
     const keyword = document.getElementById('forgot-keyword').value.trim();
-
-    if (!keyword) {
-        showFeedback('Vui lòng nhập SĐT, Email hoặc tên tài khoản');
-        return;
-    }
-
+    if (!keyword) return showFeedback('Vui lòng nhập tài khoản');
     const accounts = findRecoveryAccounts(keyword);
-
-    if (!accounts.length) {
-        showFeedback('Thông tin tài khoản không tồn tại');
-        return;
-    }
-
-    authState.tempData.recoveryKeyword = keyword;
-    authState.tempData.recoveryAccounts = accounts;
+    const account = accounts.find(acc => [acc.username, acc.phone, acc.email].some(v => String(v || '').toLowerCase() === keyword.toLowerCase()));
+    if (!account) return showFeedback('Tài khoản không hợp lệ');
+    const config = getRecoveryOtpConfig(account);
+    authState.tempData.selectedRecoveryAccount = account;
+    authState.tempData.otpMethod = config.defaultMethod;
+    authState.tempData.availableOtpMethods = config.methods;
+    authState.otpWrongCount = 0;
     authState.step = 2;
     hideFeedback();
     renderStep();
 }
 
-function selectRecoveryAccount(accountId) {
-    const accounts = authState.tempData.recoveryAccounts || [];
-    const account = accounts.find(acc => acc.id === accountId);
-
-    if (!account) {
-        showFeedback('Không tìm thấy tài khoản đã chọn');
-        return;
-    }
-
-    authState.tempData.selectedRecoveryAccount = account;
-    authState.step = 3;
+function selectRecoveryOTPMethod(method) {
+    authState.tempData.otpMethod = method;
+    authState.step = 2;
     hideFeedback();
     renderStep();
 }
 
-function selectRecoveryOTPMethod(method) {
-    if (authState.otpRequestsCount >= 3) {
-        showFeedback('Quá số lần yêu cầu OTP.');
-        return;
-    }
-
+function resendRecoveryOTP() {
+    if (authState.otpRequestsCount >= 3) return showFeedback('Quá số lần yêu cầu OTP.');
     authState.otpRequestsCount++;
-    authState.tempData.otpMethod = method;
-    authState.step = 4;
-    hideFeedback();
-    renderStep();
+    showFeedback('Đã gửi lại mã OTP.');
 }
 
 function verifyRecoveryOTP() {
     const code = document.getElementById('forgot-otp-code').value.trim();
-
-    if (!code) {
-        showFeedback('Vui lòng nhập mã OTP');
-        return;
-    }
-
-    if (authState.otpWrongCount >= 2) {
-        showFeedback('Sai OTP quá nhiều. Khóa 15 phút.');
-        return;
-    }
-
-    if (code !== '123456') {
-        authState.otpWrongCount++;
-        showFeedback('Mã OTP không đúng.');
-        return;
-    }
-
-    authState.step = 5;
+    if (!code) return showFeedback('Vui lòng nhập mã OTP');
+    if (authState.otpWrongCount >= 2) return showFeedback('Sai OTP quá nhiều. Khóa 15 phút.');
+    if (code !== '123456') { authState.otpWrongCount++; return showFeedback('Mã OTP không đúng.'); }
+    authState.step = 3;
     hideFeedback();
     renderStep();
 }
@@ -1237,25 +1157,13 @@ function verifyRecoveryOTP() {
 function submitRecoveryPassword() {
     const password = document.getElementById('forgot-new-password').value;
     const passwordConfirm = document.getElementById('forgot-new-password-confirm').value;
-
-    if (!password) {
-        showFeedback('Vui lòng nhập mật khẩu mới');
-        return;
-    }
-
-    if (!validatePasswordFormat(password)) {
-        showFeedback('Mật khẩu 6-32 ký tự, gồm hoa, thường, số.');
-        return;
-    }
-
-    if (password !== passwordConfirm) {
-        showFeedback('Mật khẩu xác nhận không khớp');
-        return;
-    }
-
-    authState.tempData.newPassword = password;
-    performLogin();
+    if (!password) return showFeedback('Vui lòng nhập mật khẩu mới');
+    if (!validatePasswordFormat(password)) return showFeedback('Mật khẩu 6-32 ký tự, gồm hoa, thường, số.');
+    if (password !== passwordConfirm) return showFeedback('Mật khẩu nhập lại không khớp');
+    showFeedback('Cập nhật mật khẩu thành công');
+    setTimeout(() => switchMode('login'), 500);
 }
+
         // ================================================================
         //  REGISTER FLOW (CẢI TIẾN GIAO DIỆN)
         // ================================================================
