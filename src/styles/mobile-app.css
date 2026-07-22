@@ -535,6 +535,22 @@ button {
     padding: 0;
 }
 
+.header-icon-placeholder {
+    width: 36px;
+    height: 36px;
+    display: block;
+    flex: 0 0 36px;
+}
+
+.forgot-otp-actions {
+    margin: 14px 0 0;
+    min-height: 24px;
+}
+
+.forgot-otp-actions button {
+    line-height: 24px;
+}
+
 .divider-row {
     display: grid;
     grid-template-columns: 1fr auto 1fr;
