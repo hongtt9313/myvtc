@@ -64,7 +64,8 @@ return mockSavedLoginAccounts;
 
 }
 
-const mockExistingUsers = ['0912345678', '0988888888', '0389954275', 'vtc_test', 'test@gmail.com', 'hongtt@vtc.vn', 'hon123', 'embehp'];
+const mockExistingUsers = ['0912345678', '0988888888', '0389954275', 'vtc_test', 'test@gmail.com', 'hongtt@vtc.vn', 'hongtt', 'hon123', 'embehp'];
+const mockLoginPassword = 'Demo@123';
 let guestLinkState = {
     active: false,
     action: null,
@@ -432,12 +433,13 @@ showToast('Đã đăng xuất khỏi tất cả tài khoản trên thiết bị'
         //  AUTH LOGIC
         // ================================================================
         function switchMode(mode) {
+if (mode === 'forgot') mode = 'forgot_account';
 authState.mode = mode;
 
 if (mode === 'login') {
     authState.step = 0;
 } else if (mode === 'register') {
-    authState.step = 0;
+    authState.step = 1;
 } else if (mode === 'forgot_account') {
     authState.step = 1;
 }
@@ -476,6 +478,25 @@ renderStep();
         function selectRegisterMethod(type) {
             authState.subType = type;
             authState.step = 1;
+            hideFeedback();
+            renderStep();
+        }
+
+        function cycleRegisterMethod() {
+            if (authState.step !== 1) return;
+
+            const currentAccount = document.getElementById('reg-phone')?.value
+                || document.getElementById('reg-email')?.value
+                || document.getElementById('reg-username')?.value
+                || '';
+            authState.tempData.registerAccountDraft = currentAccount;
+            authState.tempData.registerPasswordDraft = document.getElementById('reg-pass')?.value || '';
+            authState.tempData.registerPasswordConfirmDraft = document.getElementById('reg-pass-confirm')?.value || '';
+            authState.tempData.registerPolicyDraft = document.getElementById('reg-policy')?.checked || false;
+
+            const methods = ['phone', 'email', 'username'];
+            const currentIndex = methods.indexOf(authState.subType);
+            authState.subType = methods[(currentIndex + 1) % methods.length];
             hideFeedback();
             renderStep();
         }
@@ -796,34 +817,35 @@ const savedAccounts = getSavedLoginAccounts();
                 container.innerHTML = `
     <div class="auth-login-box slide-up">
         <div>
-    <label class="auth-field-label">Tài khoản</label>
-    <div class="auth-input-wrap">
-        <i class="fas fa-user auth-input-icon"></i>
-        <input type="text" id="login-username" placeholder="SĐT, Email hoặc tên đăng nhập" class="auth-input">
-    </div>
+            <label class="auth-field-label">Tài khoản</label>
+            <div class="auth-input-wrap">
+                <i class="fas fa-user auth-input-icon"></i>
+                <input type="text" id="login-username" placeholder="SĐT, Email hoặc tên đăng nhập" class="auth-input">
+            </div>
+            <div id="login-username-error" class="auth-field-error hidden"></div>
+        </div>
 
-    <div class="flex justify-end mt-3">
-        <button onclick="switchMode('forgot_account')" class="link-text">Quên tài khoản?</button>
-    </div>
-</div>
+        <div>
+            <label class="auth-field-label">Mật khẩu</label>
+            <div class="auth-input-wrap">
+                <i class="fas fa-lock auth-input-icon"></i>
+                <input type="password" id="login-password" maxlength="32" placeholder="Nhập mật khẩu" class="auth-input">
+            </div>
+            <div id="login-password-error" class="auth-field-error hidden"></div>
+            <div class="auth-login-link-row">
+                <button onclick="switchMode('forgot_account');" class="link-text">Quên mật khẩu?</button>
+            </div>
+        </div>
 
-        <button onclick="handleLoginStep1()" class="auth-btn-primary">Tiếp tục</button>
+        <button onclick="handleLoginCombined()" class="auth-btn-primary">Đăng nhập</button>
+        <button onclick="goToOTPMethodScreen()" class="auth-btn-secondary auth-otp-login-btn"><i class="fas fa-shield-alt"></i> Đăng nhập bằng OTP</button>
 
         <div class="auth-divider">Hoặc</div>
 
         <div class="social-row">
-            <button onclick="initSocialLogin('Google')" class="social-btn">
-                <i class="fab fa-google text-red-500"></i>
-            </button>
-            <button onclick="initSocialLogin('Apple ID')" class="social-btn">
-                <i class="fab fa-apple text-black"></i>
-            </button>
-            <button onclick="initSocialLogin('Facebook')" class="social-btn">
-                <i class="fab fa-facebook-f text-blue-600"></i>
-            </button>
-        </div>
-
-        <div class="quick-login">
+            <button onclick="initSocialLogin('Google')" class="social-btn"><i class="fab fa-google text-red-500"></i></button>
+            <button onclick="initSocialLogin('Apple ID')" class="social-btn"><i class="fab fa-apple text-black"></i></button>
+            <button onclick="initSocialLogin('Facebook')" class="social-btn"><i class="fab fa-facebook-f text-blue-600"></i></button>
         </div>
     </div>
 `;
@@ -842,7 +864,7 @@ const savedAccounts = getSavedLoginAccounts();
 
                         <div class="flex justify-center gap-4 text-xs text-gray-400 pt-1">
                             <button onclick="authState.step = 3; renderStep();" class="link-text"><i class="fas fa-shield-alt mr-1"></i>Đăng nhập bằng OTP</button>
-                            <button onclick="authState.step = 1; renderStep();" class="link-text">Quay lại</button>
+                            <button onclick="switchMode('forgot_account');" class="link-text">Quên mật khẩu?</button>
                         </div>
                     </div>
                 `;
@@ -850,8 +872,8 @@ const savedAccounts = getSavedLoginAccounts();
                 container.innerHTML = `
                     <div class="space-y-4 w-full pt-1 slide-up">
                         <div class="text-center mb-1">
-                            <h3 class="text-base font-bold text-gray-800">Nhận mã OTP</h3>
-                            <p class="text-xs text-gray-400 mt-1">Chọn kênh nhận mã xác thực</p>
+                            <h3 class="text-base font-bold text-gray-800">Chọn hình thức đăng nhập</h3>
+                            <p class="text-xs text-gray-400 mt-1">Chọn kênh nhận mã OTP</p>
                         </div>
                         <div class="space-y-2.5">
                             ${['SMS','Voice','Email','OTP App'].map(m => `
@@ -866,16 +888,29 @@ const savedAccounts = getSavedLoginAccounts();
                                 </button>
                             `).join('')}
                         </div>
-                        <button onclick="authState.step = 2; renderStep();" class="w-full text-center text-sm text-gray-400 hover:text-gray-600 py-1 font-semibold">Quay lại</button>
+                        <button onclick="authState.step = 1; renderStep();" class="w-full text-center text-sm text-gray-400 hover:text-gray-600 py-1 font-semibold">Quay lại</button>
                     </div>
                 `;
             } else if (authState.step === 4) {
+                const loginOtpMethod = authState.tempData.otpMethod || 'SMS';
+                const loginOtpAccount = authState.tempData.username || 'tài khoản của bạn';
+                let loginOtpDescription = '';
+                if (loginOtpMethod === 'Voice') {
+                    loginOtpDescription = `Nhập mã xác thực đã gửi qua cuộc gọi về Số điện thoại ${loginOtpAccount}`;
+                } else if (loginOtpMethod === 'Email') {
+                    loginOtpDescription = `Nhập mã xác thực đã gửi qua email về địa chỉ ${loginOtpAccount}`;
+                } else if (loginOtpMethod === 'OTP App') {
+                    loginOtpDescription = 'Nhập mã xác thực trên ứng dụng Authenticator đã thiết lập';
+                } else {
+                    loginOtpDescription = `Nhập mã xác thực đã gửi qua tin nhắn SMS về Số điện thoại ${loginOtpAccount}`;
+                }
                 container.innerHTML = `
                     <div class="space-y-4 w-full pt-1 slide-up">
                         <div class="text-center">
                             <h3 class="text-base font-bold text-gray-800">Nhập mã OTP</h3>
-                            <p class="text-xs text-gray-400 mt-1.5">Mã đã gửi qua <span class="font-bold text-blue-600">${authState.tempData.otpMethod || ''}</span></p>
-                            <input type="text" id="login-otp-code" placeholder="6 số OTP" class="auth-input text-center font-bold text-xl tracking-widest mt-3">
+                            <p class="text-sm text-gray-500 mt-1.5">${loginOtpDescription}</p>
+                            <input type="text" id="login-otp-code" placeholder="6 số OTP" maxlength="6" inputmode="numeric" onkeydown="allowOnlyNumbers(event)" class="auth-input text-center font-bold text-xl tracking-widest mt-3">
+                            <div id="login-otp-code-error" class="auth-field-error hidden text-left"></div>
                         </div>
                         <button onclick="verifyLoginOTP()" class="auth-btn-primary">Xác minh & Đăng nhập</button>
                         <div class="flex justify-center gap-4 text-xs text-gray-400 pt-1">
@@ -977,6 +1012,74 @@ const savedAccounts = getSavedLoginAccounts();
 }
         }
 
+
+        function clearAuthFieldError(fieldId) {
+            const input = document.getElementById(fieldId);
+            const error = document.getElementById(fieldId + '-error');
+            if (input) input.classList.remove('auth-input-error');
+            if (error) {
+                error.textContent = '';
+                error.classList.add('hidden');
+            }
+        }
+
+        function showAuthFieldError(fieldId, message) {
+            const input = document.getElementById(fieldId);
+            const error = document.getElementById(fieldId + '-error');
+            if (input) input.classList.add('auth-input-error');
+            if (error) {
+                error.textContent = message;
+                error.classList.remove('hidden');
+            } else {
+                showFeedback(message);
+            }
+            if (input && typeof input.focus === 'function') input.focus();
+        }
+
+        function clearLoginFieldErrors() {
+            ['login-username', 'login-password'].forEach(function(id) {
+                const input = document.getElementById(id);
+                const error = document.getElementById(id + '-error');
+                if (input) input.classList.remove('auth-input-error');
+                if (error) {
+                    error.textContent = '';
+                    error.classList.add('hidden');
+                }
+            });
+        }
+
+        function showLoginFieldError(fieldId, message) {
+            const input = document.getElementById(fieldId);
+            const error = document.getElementById(fieldId + '-error');
+            if (input) input.classList.add('auth-input-error');
+            if (error) {
+                error.textContent = message;
+                error.classList.remove('hidden');
+            }
+        }
+
+        function validateLoginIdentifier(identifier) {
+            if (!identifier) return 'Vui lòng nhập tài khoản.';
+            if (!mockExistingUsers.includes(identifier)) return 'Tài khoản không tồn tại.';
+            return '';
+        }
+
+        function handleLoginCombined() {
+            const u = document.getElementById('login-username').value.trim();
+            const p = document.getElementById('login-password').value;
+            clearLoginFieldErrors();
+            hideFeedback();
+
+            const usernameError = validateLoginIdentifier(u);
+            if (usernameError) showLoginFieldError('login-username', usernameError);
+            if (!p) showLoginFieldError('login-password', 'Vui lòng nhập mật khẩu.');
+            else if (p !== mockLoginPassword) showLoginFieldError('login-password', 'Mật khẩu không đúng.');
+
+            if (usernameError || !p || p !== mockLoginPassword) return;
+            authState.tempData.username = u;
+            performLogin();
+        }
+
         function handleLoginStep1() {
             const u = document.getElementById('login-username').value.trim();
             if (!u) { showFeedback('Vui lòng nhập tài khoản'); return; }
@@ -996,9 +1099,19 @@ const savedAccounts = getSavedLoginAccounts();
             performLogin();
         }
 
-        function goToOTPMethodScreen() { authState.step = 3;
+        function goToOTPMethodScreen() {
+            const u = document.getElementById('login-username').value.trim();
+            clearLoginFieldErrors();
             hideFeedback();
-            renderStep(); }
+            const usernameError = validateLoginIdentifier(u);
+            if (usernameError) {
+                showLoginFieldError('login-username', usernameError);
+                return;
+            }
+            authState.tempData.username = u;
+            authState.step = 3;
+            renderStep();
+        }
 
         function selectLoginOTPMethod(method) {
             if (authState.otpRequestsCount >= 3) { showFeedback('Quá số lần yêu cầu OTP.'); return; }
@@ -1011,11 +1124,15 @@ const savedAccounts = getSavedLoginAccounts();
         }
 
         function verifyLoginOTP() {
+            clearAuthFieldError('login-otp-code');
+            hideFeedback();
             const code = document.getElementById('login-otp-code').value.trim();
-            if (!code) { showFeedback('Vui lòng nhập mã OTP'); return; }
-            if (authState.otpWrongCount >= 2) { showFeedback('Sai OTP quá nhiều. Khóa 15 phút.'); return; }
-            if (code !== '123456') { authState.otpWrongCount++;
-                showFeedback('Mã OTP không đúng.'); return; }
+            if (!code) return showAuthFieldError('login-otp-code', 'Vui lòng nhập mã OTP');
+            if (authState.otpWrongCount >= 2) return showAuthFieldError('login-otp-code', 'Sai OTP quá nhiều. Tài khoản bị khóa 15 phút');
+            if (code !== '123456') {
+                authState.otpWrongCount++;
+                return showAuthFieldError('login-otp-code', 'Mã OTP không đúng');
+            }
             performLogin();
         }
 
@@ -1038,306 +1155,244 @@ const savedAccounts = getSavedLoginAccounts();
 //  FORGOT ACCOUNT / RESET PASSWORD FLOW
 // ================================================================
 function renderForgotAccountFlow(container) {
+    const account = authState.tempData.selectedRecoveryAccount || {};
+    const method = authState.tempData.otpMethod || 'SMS';
+    const recoveryDestination = method === 'Email'
+        ? (account.email || account.username || '')
+        : (account.phone || account.username || '');
+    const recoveryOtpMessage = method === 'Voice'
+        ? `Mã xác thực đã gửi qua cuộc gọi về Số điện thoại ${recoveryDestination}`
+        : method === 'Email'
+            ? `Mã xác thực đã gửi qua email về địa chỉ ${recoveryDestination}`
+            : method === 'OTP App'
+                ? 'Mã xác thực trên ứng dụng Authenticator đã thiết lập'
+                : `Mã xác thực đã gửi qua tin nhắn SMS về Số điện thoại ${recoveryDestination}`;
+
     if (authState.step === 1) {
         container.innerHTML = `
             <div class="space-y-6 w-full pt-1 slide-up">
                 <div>
-                    <h2 class="text-xl font-bold text-blue-600">Lấy lại tài khoản</h2>
+                    <h2 class="text-xl font-bold text-blue-600">Lấy lại mật khẩu</h2>
                     <div class="w-16 h-0.5 bg-blue-600 mt-3 rounded-full"></div>
                 </div>
-
                 <div class="pt-5">
                     <label class="auth-field-label">Tài khoản</label>
                     <div class="auth-input-wrap">
                         <i class="fas fa-user auth-input-icon"></i>
                         <input type="text" id="forgot-keyword" placeholder="SĐT, Email hoặc tên đăng nhập" class="auth-input">
                     </div>
+                    <div id="forgot-keyword-error" class="auth-field-error hidden"></div>
                 </div>
-
                 <button onclick="handleForgotLookup()" class="auth-btn-primary">Tiếp tục</button>
-
                 <button onclick="switchMode('login')" class="w-full text-center text-sm text-gray-400 hover:text-gray-600 py-1 font-semibold">Quay lại</button>
-            </div>
-        `;
+            </div>`;
     } else if (authState.step === 2) {
-        const accounts = authState.tempData.recoveryAccounts || [];
-
         container.innerHTML = `
             <div class="space-y-5 w-full pt-1 slide-up">
                 <div>
-                    <h2 class="text-xl font-bold text-blue-600">Lấy lại tài khoản</h2>
+                    <h2 class="text-xl font-bold text-blue-600">Xác thực OTP</h2>
                     <div class="w-16 h-0.5 bg-blue-600 mt-3 rounded-full"></div>
                 </div>
-
                 <div class="text-center pt-3">
-                    <h3 class="text-base font-bold text-gray-900">Chọn tài khoản của bạn</h3>
+                    <p class="text-sm text-gray-500 whitespace-nowrap">${recoveryOtpMessage}</p>
                 </div>
-
-                <div class="space-y-3">
-                    ${accounts.map(acc => `
-                        <button onclick="selectRecoveryAccount('${acc.id}')" class="w-full p-4 border border-gray-200 rounded-2xl hover:border-blue-500 hover:bg-blue-50/30 flex items-center justify-between transition-all shadow-sm group">
-                            <div class="flex items-center space-x-4">
-                                <div class="w-10 h-10 rounded-xl bg-blue-50 flex items-center justify-center text-blue-600">
-                                    <i class="fas ${acc.icon}"></i>
-                                </div>
-                                <div class="text-left">
-                                    <p class="text-sm font-bold text-gray-900">${acc.displayName}</p>
-                                    <p class="text-xs font-semibold text-gray-700 mt-1">Username: ${acc.username}</p>
-                                </div>
-                            </div>
-                            <i class="fas fa-chevron-right text-gray-300 group-hover:text-blue-500"></i>
-                        </button>
-                    `).join('')}
+                <div>
+                    <input type="text" id="forgot-otp-code" placeholder="Nhập mã OTP" maxlength="6" onkeydown="allowOnlyNumbers(event)" class="auth-input text-center font-bold text-xl tracking-widest">
+                    <div id="forgot-otp-code-error" class="auth-field-error hidden"></div>
                 </div>
-
-                <button onclick="authState.step = 1; renderStep();" class="w-full text-center text-sm text-gray-400 hover:text-gray-600 py-1 font-semibold">Quay lại</button>
-            </div>
-        `;
+                <button onclick="verifyRecoveryOTP()" class="auth-btn-primary">Xác nhận</button>
+                <div class="flex items-center justify-between text-sm">
+                    <button onclick="resendRecoveryOTP()" class="link-text">Nhận lại OTP</button>
+                    <button onclick="authState.step = 4; renderStep();" class="link-text">Tùy chọn khác</button>
+                </div>
+            </div>`;
     } else if (authState.step === 3) {
         container.innerHTML = `
             <div class="space-y-5 w-full pt-1 slide-up">
                 <div>
-                    <h2 class="text-xl font-bold text-blue-600">Lấy lại tài khoản</h2>
+                    <h2 class="text-xl font-bold text-blue-600">Tạo mật khẩu mới</h2>
                     <div class="w-16 h-0.5 bg-blue-600 mt-3 rounded-full"></div>
                 </div>
-
-                <div class="text-center pt-3">
-                    <h3 class="text-base font-bold text-gray-900">Nhận mã OTP</h3>
-                    <p class="text-xs text-gray-400 mt-1">Chọn kênh nhận mã xác thực</p>
+                <div class="space-y-3 pt-3">
+                    <div><label class="auth-field-label">Mật khẩu mới</label><input type="password" id="forgot-new-password" maxlength="32" placeholder="6-32 ký tự, gồm hoa, thường, số" class="auth-input"><div id="forgot-new-password-error" class="auth-field-error hidden"></div></div>
+                    <div><label class="auth-field-label">Nhập lại mật khẩu mới</label><input type="password" id="forgot-new-password-confirm" maxlength="32" placeholder="Nhập lại mật khẩu mới" class="auth-input"><div id="forgot-new-password-confirm-error" class="auth-field-error hidden"></div></div>
                 </div>
-
-                <div class="space-y-3">
-                    ${['SMS','Voice','Email','OTP App'].map(m => `
-                        <button onclick="selectRecoveryOTPMethod('${m}')" class="w-full p-4 border border-gray-200 rounded-2xl hover:border-blue-500 hover:bg-blue-50/30 flex items-center justify-between transition-all shadow-sm group">
-                            <div class="flex items-center space-x-4">
-                                <div class="w-10 h-10 rounded-xl bg-gray-50 flex items-center justify-center text-gray-400 group-hover:bg-blue-50 group-hover:text-blue-600 transition-colors">
-                                    <i class="fas ${m==='SMS'?'fa-comment-alt':m==='Voice'?'fa-phone-volume':m==='Email'?'fa-envelope':'fa-mobile-alt'}"></i>
-                                </div>
-                                <p class="text-sm font-bold text-gray-800">${m}</p>
-                            </div>
-                            <i class="fas fa-chevron-right text-gray-300 group-hover:text-blue-500"></i>
-                        </button>
-                    `).join('')}
-                </div>
-
-                <button onclick="authState.step = 2; renderStep();" class="w-full text-center text-sm text-gray-400 hover:text-gray-600 py-1 font-semibold">Quay lại</button>
-            </div>
-        `;
+                <button onclick="submitRecoveryPassword()" class="auth-btn-primary">Cập nhật</button>
+            </div>`;
     } else if (authState.step === 4) {
+        const methods = authState.tempData.availableOtpMethods || ['SMS', 'Email', 'OTP App'];
         container.innerHTML = `
             <div class="space-y-5 w-full pt-1 slide-up">
                 <div>
-                    <h2 class="text-xl font-bold text-blue-600">Lấy lại tài khoản</h2>
+                    <h2 class="text-xl font-bold text-blue-600">Tùy chọn xác thực</h2>
                     <div class="w-16 h-0.5 bg-blue-600 mt-3 rounded-full"></div>
                 </div>
-
-                <div class="text-center pt-3">
-                    <h3 class="text-base font-bold text-gray-900">Nhập mã OTP</h3>
-                    <p class="text-xs text-gray-400 mt-1.5">Mã đã gửi qua <span class="font-bold text-blue-600">${authState.tempData.otpMethod || ''}</span></p>
+                <div class="space-y-3 pt-3">
+                    ${methods.map(m => `<button onclick="selectRecoveryOTPMethod('${m}')" class="w-full p-4 border border-gray-200 rounded-2xl hover:border-blue-500 hover:bg-blue-50/30 flex items-center justify-between transition-all shadow-sm group"><div class="flex items-center space-x-4"><div class="w-10 h-10 rounded-xl bg-gray-50 flex items-center justify-center text-gray-400"><i class="fas ${m==='SMS'?'fa-comment-alt':m==='Voice'?'fa-phone-volume':m==='Email'?'fa-envelope':'fa-mobile-alt'}"></i></div><p class="text-sm font-bold text-gray-800">${m === 'OTP App' ? 'Authenticator' : m}</p></div><i class="fas fa-chevron-right text-gray-300"></i></button>`).join('')}
                 </div>
-
-                <input type="text" id="forgot-otp-code" placeholder="6 số OTP" maxlength="6" onkeydown="allowOnlyNumbers(event)" class="auth-input text-center font-bold text-xl tracking-widest">
-
-                <button onclick="verifyRecoveryOTP()" class="auth-btn-primary">Xác minh</button>
-
-                <button onclick="authState.step = 3; renderStep();" class="w-full text-center text-sm text-gray-400 hover:text-gray-600 py-1 font-semibold">Đổi phương thức</button>
-            </div>
-        `;
-    } else if (authState.step === 5) {
-        container.innerHTML = `
-            <div class="space-y-5 w-full pt-1 slide-up">
-                <div>
-                    <h2 class="text-xl font-bold text-blue-600">Lấy lại tài khoản</h2>
-                    <div class="w-16 h-0.5 bg-blue-600 mt-3 rounded-full"></div>
-                </div>
-
-                <div class="text-center pt-3">
-                    <h3 class="text-base font-bold text-gray-900">Tạo mật khẩu mới</h3>
-                </div>
-
-                <div class="space-y-3">
-                    <div>
-                        <label class="auth-field-label">Mật khẩu</label>
-                        <input type="password" id="forgot-new-password" maxlength="32" placeholder="6-32 ký tự, gồm hoa, thường, số" class="auth-input">
-                    </div>
-
-                    <div>
-                        <label class="auth-field-label">Xác nhận</label>
-                        <input type="password" id="forgot-new-password-confirm" maxlength="32" placeholder="Nhập lại mật khẩu" class="auth-input">
-                    </div>
-                </div>
-
-                <button onclick="submitRecoveryPassword()" class="auth-btn-primary">Hoàn thành</button>
-
-                <button onclick="switchMode('login')" class="w-full text-center text-sm text-gray-400 hover:text-gray-600 py-1 font-semibold">Quay lại</button>
-            </div>
-        `;
+                <button onclick="authState.step = 2; renderStep();" class="w-full text-center text-sm text-gray-400 hover:text-gray-600 py-1 font-semibold">Quay lại</button>
+            </div>`;
     }
 }
 
+function getRecoveryOtpConfig(account) {
+    const methods = [];
+    if (account.phone) methods.push('SMS');
+    if (account.email) methods.push('Email');
+    methods.push('OTP App');
+
+    const uniqueMethods = [...new Set(methods)];
+    let defaultMethod = 'OTP App';
+
+    if (/^0\d{9}$/.test(String(account.username || '')) && account.phone) {
+        defaultMethod = 'SMS';
+    } else if (String(account.username || '').includes('@') && account.email) {
+        defaultMethod = 'Email';
+    } else if (account.phone) {
+        defaultMethod = 'SMS';
+    } else if (account.email) {
+        defaultMethod = 'Email';
+    }
+
+    return { defaultMethod, methods: uniqueMethods };
+}
+
 function handleForgotLookup() {
+    clearAuthFieldError('forgot-keyword');
+    hideFeedback();
     const keyword = document.getElementById('forgot-keyword').value.trim();
-
-    if (!keyword) {
-        showFeedback('Vui lòng nhập SĐT, Email hoặc tên tài khoản');
-        return;
-    }
-
+    if (!keyword) return showAuthFieldError('forgot-keyword', 'Vui lòng nhập tài khoản');
     const accounts = findRecoveryAccounts(keyword);
-
-    if (!accounts.length) {
-        showFeedback('Thông tin tài khoản không tồn tại');
-        return;
-    }
-
-    authState.tempData.recoveryKeyword = keyword;
-    authState.tempData.recoveryAccounts = accounts;
+    const account = accounts.find(acc => [acc.username, acc.phone, acc.email].some(v => String(v || '').toLowerCase() === keyword.toLowerCase()));
+    if (!account) return showAuthFieldError('forgot-keyword', 'Tài khoản không hợp lệ');
+    const config = getRecoveryOtpConfig(account);
+    authState.tempData.selectedRecoveryAccount = account;
+    authState.tempData.otpMethod = config.defaultMethod;
+    authState.tempData.availableOtpMethods = config.methods;
+    authState.otpWrongCount = 0;
     authState.step = 2;
     hideFeedback();
     renderStep();
 }
 
-function selectRecoveryAccount(accountId) {
-    const accounts = authState.tempData.recoveryAccounts || [];
-    const account = accounts.find(acc => acc.id === accountId);
+function selectRecoveryOTPMethod(method) {
+    authState.tempData.otpMethod = method;
+    authState.otpWrongCount = 0;
+    authState.step = 2;
+    hideFeedback();
+    renderStep();
+}
 
-    if (!account) {
-        showFeedback('Không tìm thấy tài khoản đã chọn');
-        return;
-    }
+function resendRecoveryOTP() {
+    if (authState.otpRequestsCount >= 3) return showFeedback('Quá số lần yêu cầu OTP.');
+    authState.otpRequestsCount++;
+    showFeedback('Đã gửi lại mã OTP.', true);
+}
 
-    authState.tempData.selectedRecoveryAccount = account;
+function verifyRecoveryOTP() {
+    clearAuthFieldError('forgot-otp-code');
+    hideFeedback();
+    const code = document.getElementById('forgot-otp-code').value.trim();
+    if (!code) return showAuthFieldError('forgot-otp-code', 'Vui lòng nhập mã OTP');
+    if (authState.otpWrongCount >= 2) return showAuthFieldError('forgot-otp-code', 'Sai OTP quá nhiều. Tài khoản bị khóa 15 phút');
+    if (code !== '123456') { authState.otpWrongCount++; return showAuthFieldError('forgot-otp-code', 'Mã OTP không đúng'); }
     authState.step = 3;
     hideFeedback();
     renderStep();
 }
 
-function selectRecoveryOTPMethod(method) {
-    if (authState.otpRequestsCount >= 3) {
-        showFeedback('Quá số lần yêu cầu OTP.');
-        return;
-    }
-
-    authState.otpRequestsCount++;
-    authState.tempData.otpMethod = method;
-    authState.step = 4;
-    hideFeedback();
-    renderStep();
-}
-
-function verifyRecoveryOTP() {
-    const code = document.getElementById('forgot-otp-code').value.trim();
-
-    if (!code) {
-        showFeedback('Vui lòng nhập mã OTP');
-        return;
-    }
-
-    if (authState.otpWrongCount >= 2) {
-        showFeedback('Sai OTP quá nhiều. Khóa 15 phút.');
-        return;
-    }
-
-    if (code !== '123456') {
-        authState.otpWrongCount++;
-        showFeedback('Mã OTP không đúng.');
-        return;
-    }
-
-    authState.step = 5;
-    hideFeedback();
-    renderStep();
-}
-
 function submitRecoveryPassword() {
+    clearAuthFieldError('forgot-new-password');
+    clearAuthFieldError('forgot-new-password-confirm');
+    hideFeedback();
     const password = document.getElementById('forgot-new-password').value;
     const passwordConfirm = document.getElementById('forgot-new-password-confirm').value;
-
-    if (!password) {
-        showFeedback('Vui lòng nhập mật khẩu mới');
-        return;
-    }
-
-    if (!validatePasswordFormat(password)) {
-        showFeedback('Mật khẩu 6-32 ký tự, gồm hoa, thường, số.');
-        return;
-    }
-
-    if (password !== passwordConfirm) {
-        showFeedback('Mật khẩu xác nhận không khớp');
-        return;
-    }
-
-    authState.tempData.newPassword = password;
-    performLogin();
+    if (!password) return showAuthFieldError('forgot-new-password', 'Vui lòng nhập mật khẩu mới');
+    if (!validatePasswordFormat(password)) return showAuthFieldError('forgot-new-password', 'Mật khẩu gồm 6-32 ký tự, có chữ hoa, chữ thường và số');
+    if (!passwordConfirm) return showAuthFieldError('forgot-new-password-confirm', 'Vui lòng nhập lại mật khẩu mới');
+    if (password !== passwordConfirm) return showAuthFieldError('forgot-new-password-confirm', 'Mật khẩu nhập lại không khớp');
+    showFeedback('Cập nhật mật khẩu thành công', true);
+    setTimeout(() => {
+        switchMode('login');
+        showToast('Cập nhật mật khẩu thành công. Vui lòng đăng nhập lại.', 'success');
+    }, 700);
 }
+
         // ================================================================
         //  REGISTER FLOW (CẢI TIẾN GIAO DIỆN)
         // ================================================================
         function renderRegisterFlow(container) {
-            if (authState.step === 0) {
-                container.innerHTML = `
-                    <div class="space-y-4 w-full pt-1 slide-up">
-                        <div class="text-center mb-2">
-                            <h3 class="text-lg font-bold text-gray-900">Chọn cách tạo tài khoản</h3>
-                        </div>
-                        <div class="space-y-2.5">
-                            <div onclick="selectRegisterMethod('phone')" class="method-card flex items-center gap-4">
-                                <div class="icon-wrap"><i class="fas fa-phone-alt"></i></div>
-                                <div class="flex-1"><div class="title">Số điện thoại</div></div>
-                                <i class="fas fa-chevron-right text-gray-300 text-sm"></i>
-                            </div>
-                            <div onclick="selectRegisterMethod('email')" class="method-card flex items-center gap-4">
-                                <div class="icon-wrap"><i class="fas fa-envelope"></i></div>
-                                <div class="flex-1"><div class="title">Email</div></div>
-                                <i class="fas fa-chevron-right text-gray-300 text-sm"></i>
-                            </div>
-                            <div onclick="selectRegisterMethod('username')" class="method-card flex items-center gap-4">
-                                <div class="icon-wrap"><i class="fas fa-user"></i></div>
-                                <div class="flex-1"><div class="title">Tên tài khoản</div></div>
-                                <i class="fas fa-chevron-right text-gray-300 text-sm"></i>
-                            </div>
-                        </div>
-                        <div class="divider-text">Hoặc</div>
-                        <div class="flex gap-3">
-                            <button onclick="initSocialLogin('Google')" class="social-btn"><i class="fab fa-google text-xl text-red-500"></i></button>
-                            <button onclick="initSocialLogin('Facebook')" class="social-btn"><i class="fab fa-facebook-f text-xl text-blue-600"></i></button>
-                            <button onclick="initSocialLogin('Apple ID')" class="social-btn"><i class="fab fa-apple text-2xl text-black"></i></button>
-                        </div>
-                        <button onclick="switchMode('login')" class="w-full text-center text-sm text-gray-400 hover:text-gray-600 py-2 font-semibold mt-2">
-                            <i class="fas fa-arrow-left mr-1"></i> Quay lại đăng nhập
-                        </button>
-                    </div>
-                `;
-                return;
-            }
+            if (authState.step === 0) authState.step = 1;
 
             const wrapper = document.createElement('div');
             wrapper.className = "space-y-4 w-full slide-up";
 
-            let title = '';
+            let title = 'Đăng ký';
             let buttonText = 'Tiếp tục';
             let showBack = true;
 
-            if (authState.subType === 'phone') {
-                if (authState.step === 1) {
-                    title = 'Đăng ký qua SĐT';
-                    wrapper.innerHTML = `
-                        <div class="space-y-3.5">
-                            <div><label class="block text-[11px] font-bold text-gray-400 uppercase tracking-wider mb-1.5">Số điện thoại</label>
-                                <input type="tel" id="reg-phone" placeholder="10 số, VD: 0912345678" onkeydown="allowOnlyNumbers(event)" class="auth-input">
+            const registerMethodConfig = {
+                phone: {
+                    label: 'Số điện thoại',
+                    inputId: 'reg-phone',
+                    inputType: 'tel',
+                    placeholder: '10 số, VD: 0912345678',
+                    icon: 'fa-phone-alt',
+                    inputAttrs: 'onkeydown="allowOnlyNumbers(event)" inputmode="numeric"'
+                },
+                email: {
+                    label: 'Email',
+                    inputId: 'reg-email',
+                    inputType: 'email',
+                    placeholder: 'name@example.com',
+                    icon: 'fa-envelope',
+                    inputAttrs: ''
+                },
+                username: {
+                    label: 'Username',
+                    inputId: 'reg-username',
+                    inputType: 'text',
+                    placeholder: '4-32 ký tự, chữ hoặc số',
+                    icon: 'fa-user',
+                    inputAttrs: ''
+                }
+            };
+
+            if (authState.step === 1) {
+                const method = registerMethodConfig[authState.subType] || registerMethodConfig.phone;
+                const accountDraft = authState.tempData.registerAccountDraft || '';
+                const passwordDraft = authState.tempData.registerPasswordDraft || '';
+                const passwordConfirmDraft = authState.tempData.registerPasswordConfirmDraft || '';
+                const policyChecked = authState.tempData.registerPolicyDraft ? 'checked' : '';
+
+                wrapper.innerHTML = `
+                    <div class="space-y-3.5">
+                        <div>
+                            <label class="block text-[11px] font-bold text-gray-400 uppercase tracking-wider mb-1.5">Tài khoản</label>
+                            <div class="register-account-row">
+                                <input type="${method.inputType}" id="${method.inputId}" value="${accountDraft}" placeholder="${method.placeholder}" ${method.inputAttrs} class="auth-input register-account-input" aria-label="${method.label}">
+                                <button type="button" class="register-method-switch" onclick="cycleRegisterMethod()" title="Chuyển sang phương thức đăng ký khác" aria-label="Chuyển phương thức đăng ký">
+                                    <i class="fas ${method.icon}"></i>
+                                </button>
                             </div>
-                            <div><label class="block text-[11px] font-bold text-gray-400 uppercase tracking-wider mb-1.5">Mật khẩu</label>
-                                <input type="password" id="reg-pass" maxlength="32" placeholder="6-32 ký tự, gồm hoa, thường, số" class="auth-input">
-                            </div>
-                            <div><label class="block text-[11px] font-bold text-gray-400 uppercase tracking-wider mb-1.5">Xác nhận</label>
-                                <input type="password" id="reg-pass-confirm" maxlength="32" placeholder="Nhập lại mật khẩu" class="auth-input">
-                            </div>
-                            <label class="flex items-start gap-2 text-xs text-gray-500"><input type="checkbox" id="reg-policy" class="mt-0.5"> <span>Tôi đồng ý với Điều khoản và Chính sách quyền riêng tư.</span></label>
+                            <div id="${method.inputId}-error" class="auth-field-error hidden"></div>
                         </div>
-                    `;
-                    buttonText = 'Tiếp tục';
-                } else if (authState.step === 2) {
+                        <div><label class="block text-[11px] font-bold text-gray-400 uppercase tracking-wider mb-1.5">Mật khẩu</label>
+                            <input type="password" id="reg-pass" value="${passwordDraft}" maxlength="32" placeholder="6-32 ký tự, gồm hoa, thường, số" class="auth-input">
+                            <div id="reg-pass-error" class="auth-field-error hidden"></div>
+                        </div>
+                        <div><label class="block text-[11px] font-bold text-gray-400 uppercase tracking-wider mb-1.5">Xác nhận</label>
+                            <input type="password" id="reg-pass-confirm" value="${passwordConfirmDraft}" maxlength="32" placeholder="Nhập lại mật khẩu" class="auth-input">
+                            <div id="reg-pass-confirm-error" class="auth-field-error hidden"></div>
+                        </div>
+                        <div>
+                            <label class="flex items-start gap-2 text-xs text-gray-500"><input type="checkbox" id="reg-policy" class="mt-0.5" ${policyChecked}> <span>Tôi đồng ý với Điều khoản và Chính sách quyền riêng tư.</span></label>
+                            <div id="reg-policy-error" class="auth-field-error hidden"></div>
+                        </div>
+                    </div>
+                `;
+            } else if (authState.subType === 'phone') {
+                if (authState.step === 2) {
                     title = 'Nhận mã';
                     wrapper.innerHTML = `
                         <div class="space-y-3">
@@ -1351,65 +1406,30 @@ function submitRecoveryPassword() {
                             </button>
                         </div>
                     `;
-                    buttonText = 'Tiếp tục';
                 } else if (authState.step === 3) {
-                    title = 'Xác thực';
-                    const placeholder = authState.otpMethod === 'sms' ? 'Nhập mã SMS' : 'Nhập mã Voice';
+                    title = 'Nhập mã OTP';
+                    const phone = authState.tempData.phone || 'Số điện thoại của bạn';
+                    const otpDescription = authState.otpMethod === 'sms'
+                        ? `Nhập mã xác thực đã gửi qua tin nhắn SMS về Số điện thoại ${phone}`
+                        : `Nhập mã xác thực đã gửi qua cuộc gọi về Số điện thoại ${phone}`;
                     wrapper.innerHTML = `
                         <div class="space-y-4 w-full">
-                            <p class="text-sm text-gray-500 text-center">Mã đã gửi đến SĐT của bạn</p>
-                            <input type="text" id="reg-otp-code" placeholder="${placeholder}" maxlength="6" inputmode="numeric" onkeydown="allowOnlyNumbers(event)" class="auth-input text-center font-bold text-lg mt-1">
-                        </div>
-                    `;
-                    buttonText = 'Tiếp tục';
-                }
-            } else if (authState.subType === 'email') {
-                if (authState.step === 1) {
-                    title = 'Đăng ký qua Email';
-                    wrapper.innerHTML = `
-                        <div class="space-y-3.5">
-                            <div><label class="block text-[11px] font-bold text-gray-400 uppercase tracking-wider mb-1.5">Email</label>
-                                <input type="email" id="reg-email" placeholder="name@example.com" class="auth-input">
-                            </div>
-                            <div><label class="block text-[11px] font-bold text-gray-400 uppercase tracking-wider mb-1.5">Mật khẩu</label>
-                                <input type="password" id="reg-pass" maxlength="32" placeholder="6-32 ký tự, gồm hoa, thường, số" class="auth-input">
-                            </div>
-                            <div><label class="block text-[11px] font-bold text-gray-400 uppercase tracking-wider mb-1.5">Xác nhận</label>
-                                <input type="password" id="reg-pass-confirm" maxlength="32" placeholder="Nhập lại mật khẩu" class="auth-input">
-                            </div>
-                            <label class="flex items-start gap-2 text-xs text-gray-500"><input type="checkbox" id="reg-policy" class="mt-0.5"> <span>Tôi đồng ý với Điều khoản và Chính sách quyền riêng tư.</span></label>
-                        </div>
-                    `;
-                    buttonText = 'Tiếp tục';
-                } else if (authState.step === 2) {
-                    title = 'Xác thực Email';
-                    wrapper.innerHTML = `
-                        <div class="space-y-4 w-full">
-                            <p class="text-sm text-gray-500 text-center">Mã xác thực đã gửi đến Email của bạn</p>
+                            <p class="text-sm text-gray-500 text-center">${otpDescription}</p>
                             <input type="text" id="reg-otp-code" placeholder="Nhập mã OTP" maxlength="6" inputmode="numeric" onkeydown="allowOnlyNumbers(event)" class="auth-input text-center font-bold text-lg mt-1">
+                            <div id="reg-otp-code-error" class="auth-field-error hidden text-left"></div>
                         </div>
                     `;
-                    buttonText = 'Tiếp tục';
                 }
-            } else if (authState.subType === 'username') {
-                if (authState.step === 1) {
-                    title = 'Đăng ký tên tài khoản';
-                    wrapper.innerHTML = `
-                        <div class="space-y-3.5">
-                            <div><label class="block text-[11px] font-bold text-gray-400 uppercase tracking-wider mb-1.5">Tên tài khoản</label>
-                                <input type="text" id="reg-username" placeholder="4-32 ký tự, chữ hoặc số" class="auth-input">
-                            </div>
-                            <div><label class="block text-[11px] font-bold text-gray-400 uppercase tracking-wider mb-1.5">Mật khẩu</label>
-                                <input type="password" id="reg-pass" maxlength="32" placeholder="6-32 ký tự, gồm hoa, thường, số" class="auth-input">
-                            </div>
-                            <div><label class="block text-[11px] font-bold text-gray-400 uppercase tracking-wider mb-1.5">Xác nhận</label>
-                                <input type="password" id="reg-pass-confirm" maxlength="32" placeholder="Nhập lại mật khẩu" class="auth-input">
-                            </div>
-                            <label class="flex items-start gap-2 text-xs text-gray-500"><input type="checkbox" id="reg-policy" class="mt-0.5"> <span>Tôi đồng ý với Điều khoản và Chính sách quyền riêng tư.</span></label>
-                        </div>
-                    `;
-                    buttonText = 'Tiếp tục';
-                }
+            } else if (authState.subType === 'email' && authState.step === 2) {
+                title = 'Nhập mã OTP';
+                const email = authState.tempData.email || 'Email của bạn';
+                wrapper.innerHTML = `
+                    <div class="space-y-4 w-full">
+                        <p class="text-sm text-gray-500 text-center">Nhập mã xác thực đã gửi qua email về địa chỉ ${email}</p>
+                        <input type="text" id="reg-otp-code" placeholder="Nhập mã OTP" maxlength="6" inputmode="numeric" onkeydown="allowOnlyNumbers(event)" class="auth-input text-center font-bold text-lg mt-1">
+                        <div id="reg-otp-code-error" class="auth-field-error hidden text-left"></div>
+                    </div>
+                `;
             }
 
             const headerDiv = document.createElement('div');
@@ -1417,25 +1437,26 @@ function submitRecoveryPassword() {
             headerDiv.innerHTML = `<h3 class="text-lg font-bold text-gray-900">${title}</h3>`;
             wrapper.prepend(headerDiv);
 
-            const actionBtn = document.createElement('button');
-            actionBtn.className = "auth-btn-primary mt-2";
-            actionBtn.textContent = buttonText;
-            actionBtn.onclick = function() {
-                if (authState.subType === 'phone') {
-                    if (authState.step === 1) handlePhoneRegStep1();
-                    else if (authState.step === 2) {} // chọn OTP đã có handler
-                    else if (authState.step === 3) handlePhoneRegStep3();
-                    else if (authState.step === 4) submitRegistrationFinal();
-                } else if (authState.subType === 'email') {
-                    if (authState.step === 1) handleEmailRegStep1();
-                    else if (authState.step === 2) handleEmailOTP();
-                    else if (authState.step === 3) submitRegistrationFinal();
-                } else if (authState.subType === 'username') {
-                    if (authState.step === 1) handleUsernameRegStep1();
-                    else if (authState.step === 2) submitRegistrationFinal();
-                }
-            };
-            wrapper.appendChild(actionBtn);
+            if (!(authState.subType === 'phone' && authState.step === 2)) {
+                const actionBtn = document.createElement('button');
+                actionBtn.className = "auth-btn-primary mt-2";
+                actionBtn.textContent = buttonText;
+                actionBtn.onclick = function() {
+                    if (authState.subType === 'phone') {
+                        if (authState.step === 1) handlePhoneRegStep1();
+                        else if (authState.step === 3) handlePhoneRegStep3();
+                        else if (authState.step === 4) submitRegistrationFinal();
+                    } else if (authState.subType === 'email') {
+                        if (authState.step === 1) handleEmailRegStep1();
+                        else if (authState.step === 2) handleEmailOTP();
+                        else if (authState.step === 3) submitRegistrationFinal();
+                    } else if (authState.subType === 'username') {
+                        if (authState.step === 1) handleUsernameRegStep1();
+                        else if (authState.step === 2) submitRegistrationFinal();
+                    }
+                };
+                wrapper.appendChild(actionBtn);
+            }
 
             if (showBack && authState.step > 1) {
                 const backBtn = document.createElement('button');
@@ -1478,70 +1499,100 @@ function submitRecoveryPassword() {
         }
 
         // ===== Xử lý step đăng ký (giữ nguyên logic) =====
+        function clearRegisterFieldErrors() {
+            document.querySelectorAll('#auth-content .auth-field-error').forEach(error => {
+                error.textContent = '';
+                error.classList.add('hidden');
+            });
+            document.querySelectorAll('#auth-content .auth-input-error').forEach(input => {
+                input.classList.remove('auth-input-error');
+            });
+            hideFeedback();
+        }
+
+        function showRegisterFieldError(fieldId, message) {
+            const input = document.getElementById(fieldId);
+            const error = document.getElementById(fieldId + '-error');
+            if (input) input.classList.add('auth-input-error');
+            if (error) {
+                error.textContent = message;
+                error.classList.remove('hidden');
+            } else {
+                showFeedback(message);
+            }
+            if (input && typeof input.focus === 'function') input.focus();
+        }
+
         function handlePhoneRegStep1() {
+            clearRegisterFieldErrors();
             const p = document.getElementById('reg-phone').value.trim(),
                 pwd = document.getElementById('reg-pass').value,
                 pwdC = document.getElementById('reg-pass-confirm').value;
-            if (!p) { showFeedback('Vui lòng nhập SĐT'); return; }
-            if (!validateVietnamesePhone(p)) { showFeedback('SĐT không đúng định dạng'); return; }
-            if (mockExistingUsers.includes(p)) { showFeedback('SĐT đã được đăng ký.'); return; }
-            if (!validatePasswordFormat(pwd)) { showFeedback('Mật khẩu 6-32 ký tự, gồm hoa, thường, số.'); return; }
-            if (pwd !== pwdC) { showFeedback('Mật khẩu xác nhận không khớp'); return; }
-            if (!document.getElementById('reg-policy').checked) { showFeedback('Bạn cần đồng ý với điều khoản'); return; }
+            if (!p) return showRegisterFieldError('reg-phone', 'Vui lòng nhập số điện thoại');
+            if (!validateVietnamesePhone(p)) return showRegisterFieldError('reg-phone', 'Số điện thoại không đúng định dạng');
+            if (mockExistingUsers.includes(p)) return showRegisterFieldError('reg-phone', 'Số điện thoại đã được đăng ký');
+            if (!validatePasswordFormat(pwd)) return showRegisterFieldError('reg-pass', 'Mật khẩu gồm 6-32 ký tự, có chữ hoa, chữ thường và số');
+            if (pwd !== pwdC) return showRegisterFieldError('reg-pass-confirm', 'Mật khẩu xác nhận không khớp');
+            if (!document.getElementById('reg-policy').checked) return showRegisterFieldError('reg-policy', 'Bạn cần đồng ý với điều khoản');
             authState.tempData.phone = p;
             authState.tempData.password = pwd;
             authState.step = 2;
-            hideFeedback();
             renderStep();
         }
 
         function handlePhoneRegStep3() {
+            clearRegisterFieldErrors();
             const otp = document.getElementById('reg-otp-code').value.trim();
-            if (!otp) { showFeedback('Vui lòng nhập mã OTP'); return; }
-            if (authState.otpWrongCount >= 2) { showFeedback('Sai OTP quá nhiều. Khóa 15 phút.'); return; }
-            if (otp !== '123456') { authState.otpWrongCount++;
-                showFeedback('Mã OTP không đúng.'); return; }
-            hideFeedback();
+            if (!otp) return showRegisterFieldError('reg-otp-code', 'Vui lòng nhập mã OTP');
+            if (authState.otpWrongCount >= 2) return showRegisterFieldError('reg-otp-code', 'Sai OTP quá nhiều. Tài khoản bị khóa 15 phút');
+            if (otp !== '123456') {
+                authState.otpWrongCount++;
+                return showRegisterFieldError('reg-otp-code', 'Mã OTP không đúng');
+            }
             finishSimpleRegistration();
         }
 
         function handleEmailRegStep1() {
+            clearRegisterFieldErrors();
             const e = document.getElementById('reg-email').value.trim(),
                 pwd = document.getElementById('reg-pass').value,
                 pwdC = document.getElementById('reg-pass-confirm').value;
-            if (!e) { showFeedback('Vui lòng nhập Email'); return; }
-            if (!validateEmailFormat(e)) { showFeedback('Email không hợp lệ'); return; }
-            if (mockExistingUsers.includes(e)) { showFeedback('Email đã được sử dụng.'); return; }
-            if (!validatePasswordFormat(pwd)) { showFeedback('Mật khẩu 6-32 ký tự, gồm hoa, thường, số.'); return; }
-            if (pwd !== pwdC) { showFeedback('Mật khẩu xác nhận không khớp'); return; }
-            if (!document.getElementById('reg-policy').checked) { showFeedback('Bạn cần đồng ý với điều khoản'); return; }
+            if (!e) return showRegisterFieldError('reg-email', 'Vui lòng nhập email');
+            if (!validateEmailFormat(e)) return showRegisterFieldError('reg-email', 'Email không đúng định dạng');
+            if (mockExistingUsers.includes(e)) return showRegisterFieldError('reg-email', 'Email đã được đăng ký');
+            if (!validatePasswordFormat(pwd)) return showRegisterFieldError('reg-pass', 'Mật khẩu gồm 6-32 ký tự, có chữ hoa, chữ thường và số');
+            if (pwd !== pwdC) return showRegisterFieldError('reg-pass-confirm', 'Mật khẩu xác nhận không khớp');
+            if (!document.getElementById('reg-policy').checked) return showRegisterFieldError('reg-policy', 'Bạn cần đồng ý với điều khoản');
             authState.tempData.email = e;
             authState.tempData.password = pwd;
             authState.step = 2;
-            hideFeedback();
             renderStep();
         }
 
         function handleEmailOTP() {
+            clearRegisterFieldErrors();
             const otp = document.getElementById('reg-otp-code').value.trim();
-            if (!otp) { showFeedback('Vui lòng nhập mã OTP'); return; }
-            if (authState.otpWrongCount >= 2) { showFeedback('Sai OTP quá nhiều. Khóa 15 phút.'); return; }
-            if (otp !== '123456') { authState.otpWrongCount++;
-                showFeedback('Mã OTP không đúng.'); return; }
-            hideFeedback();
+            if (!otp) return showRegisterFieldError('reg-otp-code', 'Vui lòng nhập mã OTP');
+            if (authState.otpWrongCount >= 2) return showRegisterFieldError('reg-otp-code', 'Sai OTP quá nhiều. Tài khoản bị khóa 15 phút');
+            if (otp !== '123456') {
+                authState.otpWrongCount++;
+                return showRegisterFieldError('reg-otp-code', 'Mã OTP không đúng');
+            }
             finishSimpleRegistration();
         }
 
         function handleUsernameRegStep1() {
+            clearRegisterFieldErrors();
             const u = document.getElementById('reg-username').value.trim(),
                 pwd = document.getElementById('reg-pass').value,
                 pwdC = document.getElementById('reg-pass-confirm').value;
-            if (!u) { showFeedback('Vui lòng nhập tên tài khoản'); return; }
-            if (u.length < 4 || u.length > 32) { showFeedback('Tên tài khoản 4-32 ký tự.'); return; }
-            if (mockExistingUsers.includes(u)) { showFeedback('Tên tài khoản đã tồn tại.'); return; }
-            if (!validatePasswordFormat(pwd)) { showFeedback('Mật khẩu 6-32 ký tự, gồm hoa, thường, số.'); return; }
-            if (pwd !== pwdC) { showFeedback('Mật khẩu xác nhận không khớp'); return; }
-            if (!document.getElementById('reg-policy').checked) { showFeedback('Bạn cần đồng ý với điều khoản'); return; }
+            if (!u) return showRegisterFieldError('reg-username', 'Vui lòng nhập username');
+            if (u.length < 4 || u.length > 32) return showRegisterFieldError('reg-username', 'Username gồm 4-32 ký tự');
+            if (!/^[A-Za-z0-9]+$/.test(u)) return showRegisterFieldError('reg-username', 'Username chỉ gồm chữ cái và số');
+            if (mockExistingUsers.includes(u)) return showRegisterFieldError('reg-username', 'Username đã tồn tại');
+            if (!validatePasswordFormat(pwd)) return showRegisterFieldError('reg-pass', 'Mật khẩu gồm 6-32 ký tự, có chữ hoa, chữ thường và số');
+            if (pwd !== pwdC) return showRegisterFieldError('reg-pass-confirm', 'Mật khẩu xác nhận không khớp');
+            if (!document.getElementById('reg-policy').checked) return showRegisterFieldError('reg-policy', 'Bạn cần đồng ý với điều khoản');
             authState.tempData.username = u;
             authState.tempData.password = pwd;
             finishSimpleRegistration();
