@@ -6312,3 +6312,64 @@ font-size: 16px;
 @keyframes checkinPop { 0%{transform:scale(.4) rotate(-25deg)} 70%{transform:scale(1.12) rotate(8deg)} 100%{transform:scale(1) rotate(0)} }
 @keyframes checkinRise { 0%{transform:translateY(24px);opacity:0} 100%{transform:translateY(0);opacity:1} }
 @media (max-width:640px){ .voucher-detail-layout{grid-template-columns:1fr}.voucher-qr{width:130px}.voucher-detail-list>div{grid-template-columns:1fr;gap:4px}.voucher-inventory-grid{grid-template-columns:1fr} }
+
+.auth-left-logo { display: none !important; }
+.auth-login-link-row { display:flex; justify-content:flex-end; margin-top:8px; }
+.auth-btn-secondary.auth-otp-login-btn { width:100%; min-height:46px; border:1px solid #0b66d4; border-radius:12px; color:#0b66d4; background:#fff; font-weight:700; display:flex; align-items:center; justify-content:center; gap:8px; }
+
+
+/* Login form layout fix */
+.auth-login-box { display: grid; gap: 16px; }
+.auth-login-box > div { min-width: 0; }
+.auth-login-link-row { margin-top: 8px; min-height: 20px; display: flex; justify-content: flex-end; }
+.auth-login-box .auth-btn-primary { margin-top: 4px !important; }
+.auth-login-box .auth-divider { margin-top: 16px; }
+#modal-feedback:not(.hidden) { margin-bottom: 18px; }
+
+.auth-field-error {
+  margin-top: 6px;
+  font-size: 12px;
+  line-height: 1.4;
+  color: #dc2626;
+}
+.auth-input-error {
+  border-color: #ef4444 !important;
+  box-shadow: 0 0 0 1px rgba(239, 68, 68, 0.08);
+}
+
+/* Website registration account method switch */
+.register-account-row {
+    display: flex;
+    align-items: stretch;
+    gap: 10px;
+}
+.register-account-input {
+    flex: 1;
+    min-width: 0;
+}
+.register-method-switch {
+    width: 48px;
+    min-width: 48px;
+    border: 1px solid #dbe3ee;
+    border-radius: 12px;
+    background: #f8fafc;
+    color: #0e56cc;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    transition: border-color .2s, background-color .2s, color .2s;
+}
+.register-method-switch:hover {
+    border-color: #0e56cc;
+    background: #eef4ff;
+}
+.register-method-switch:focus-visible {
+    outline: 2px solid rgba(14, 86, 204, .25);
+    outline-offset: 2px;
+}
+.register-method-label {
+    margin-top: 6px;
+    font-size: 11px;
+    color: #94a3b8;
+}
