@@ -20,7 +20,8 @@
         recoveryAccount: null,
         recoveryOtpMethod: "sms",
         successMessage: "Đăng nhập thành công",
-        isGuest: false
+        isGuest: false,
+        otpMethodOverlay: null
     };
 
     var currentUser = loadCurrentUser();
@@ -105,6 +106,7 @@
     }
 
     function goTo(screenName, resetHistory) {
+        sdkState.otpMethodOverlay = null;
         if (!resetHistory) screenHistory.push(currentScreen);
         if (resetHistory) screenHistory = [];
         currentScreen = screenName;
@@ -113,6 +115,7 @@
     }
 
     function goBack() {
+        if (sdkState.otpMethodOverlay) { sdkState.otpMethodOverlay = null; render(); return; }
         if (currentScreen === "login-otp-method") return goTo("login-identifier", true);
         if (currentScreen === "login-otp") return goTo("login-otp-method", true);
         var previous = screenHistory.pop();
@@ -172,17 +175,17 @@
             "login-select": "Chọn tài khoản",
             "login-identifier": "Đăng nhập",
             "login-password": "Nhập mật khẩu",
-            "login-otp-method": "Chọn hình thức đăng nhập",
+            "login-otp-method": "Chọn hình thức xác thực",
             "login-otp": "Nhập mã OTP",
             "register-select": "Đăng ký",
             "register-form": "Đăng ký",
-            "register-otp-method": "Chọn phương thức nhận OTP",
+            "register-otp-method": "Chọn hình thức xác thực",
             "register-otp": "Nhập mã OTP",
             "register-profile": "Thông tin tài khoản",
             "forgot-lookup": "Lấy lại mật khẩu",
             "forgot-account-select": "Lấy lại mật khẩu",
-            "forgot-otp-method": "Tùy chọn xác thực",
-            "forgot-otp": "Xác thực OTP",
+            "forgot-otp-method": "Chọn hình thức xác thực",
+            "forgot-otp": "Nhập mã OTP",
             "forgot-new-password": "Tạo mật khẩu mới",
             "account-management": "Quản lý tài khoản",
             "success": "Hoàn tất"
@@ -211,7 +214,7 @@
         if (currentScreen === "forgot-new-password") html = renderForgotNewPassword();
         if (currentScreen === "account-management") html = renderAccountManagement();
         if (currentScreen === "success") html = renderSuccess();
-        content.innerHTML = html + renderMessage();
+        content.innerHTML = html + renderMessage() + renderOtpMethodOverlay();
     }
 
     function renderMessage() {
@@ -224,7 +227,6 @@
         return [
             '<div class="sdk-stack">',
             logoHtml(),
-            '<p class="sdk-note">Chọn tài khoản đã lưu hoặc đăng nhập bằng tài khoản khác.</p>',
             savedAccounts.slice(0, 2).map(function (account) {
                 return cardHtml({ action: "login-saved", value: account.id, icon: account.icon || "fa-user", title: account.name || account.username, desc: account.username });
             }).join(""),
@@ -284,17 +286,54 @@
         ].join("");
     }
 
-    function renderLoginOtpMethod() {
+    function otpMethodCard(action, method) {
+        var configs = {
+            sms: { icon: "fa-comment-sms", title: "OTP SMS" },
+            voice: { icon: "fa-phone-volume", title: "OTP Voice" },
+            email: { icon: "fa-envelope", title: "OTP Email" },
+            app: { icon: "fa-mobile-screen-button", title: "OTP App" }
+        };
+        var config = configs[method] || configs.sms;
+        return cardHtml({ action: action, value: method, icon: config.icon, title: config.title });
+    }
+
+    function renderOtpMethodList(action, methods) {
+        return '<div class="sdk-stack sdk-otp-method-screen"><div class="sdk-channel-grid sdk-otp-method-list">' +
+            methods.map(function (method) { return otpMethodCard(action, method); }).join("") +
+            '</div></div>';
+    }
+
+    function openOtpMethodOverlay(context) {
+        sdkState.otpMethodOverlay = context;
+        render();
+    }
+
+    function renderOtpMethodOverlay() {
+        var context = sdkState.otpMethodOverlay;
+        if (!context) return "";
+        var action = "select-login-otp";
+        var methods = ["sms", "voice", "email", "app"];
+        if (context === "register") {
+            action = "select-register-otp";
+            methods = sdkState.registerType === "email" ? ["email"] : ["sms", "voice"];
+        }
+        if (context === "recovery") {
+            action = "forgot-select-otp";
+            methods = sdkState.recoveryOtpMethods || ["sms", "email", "app"];
+        }
         return [
-            '<div class="sdk-stack">',
-            '<p class="sdk-note">Chọn kênh nhận mã xác thực cho tài khoản đã nhập.</p>',
-            '<div class="sdk-channel-grid">',
-            cardHtml({ action: "select-login-otp", value: "sms", icon: "fa-comment-sms", title: "SMS", desc: "Nhận mã qua tin nhắn SMS." }),
-            cardHtml({ action: "select-login-otp", value: "voice", icon: "fa-phone-volume", title: "Voice", desc: "Nhận mã qua cuộc gọi thoại." }),
-            cardHtml({ action: "select-login-otp", value: "email", icon: "fa-envelope", title: "Email", desc: "Nhận mã qua email đã xác thực." }),
-            cardHtml({ action: "select-login-otp", value: "app", icon: "fa-mobile-screen-button", title: "OTP App", desc: "Lấy mã trong ứng dụng xác thực." }),
-            '</div></div>'
+            '<div class="sdk-otp-method-overlay" role="dialog" aria-modal="true" aria-label="Chọn hình thức xác thực">',
+            '<button class="sdk-otp-method-backdrop" type="button" data-action="close-otp-method" aria-label="Đóng"></button>',
+            '<section class="sdk-otp-method-sheet">',
+            '<div class="sdk-sheet-handle"></div>',
+            '<div class="sdk-sheet-header"><h3>Chọn hình thức xác thực</h3><button type="button" data-action="close-otp-method" aria-label="Đóng"><i class="fa fa-xmark"></i></button></div>',
+            renderOtpMethodList(action, methods),
+            '</section></div>'
         ].join("");
+    }
+
+    function renderLoginOtpMethod() {
+        return renderOtpMethodList("select-login-otp", ["sms", "voice", "email", "app"]);
     }
 
     function renderLoginOtp() {
@@ -336,14 +375,8 @@
     }
 
     function renderRegisterOtpMethod() {
-        return [
-            '<div class="sdk-stack">',
-            '<p class="sdk-note">Chọn phương thức nhận mã cho số điện thoại đã đăng ký.</p>',
-            '<div class="sdk-channel-grid">',
-            cardHtml({ action: "select-register-otp", value: "sms", icon: "fa-comment-sms", title: "SMS", desc: "Nhận mã xác thực qua tin nhắn SMS." }),
-            cardHtml({ action: "select-register-otp", value: "voice", icon: "fa-phone-volume", title: "Voice", desc: "Nhận mã xác thực qua cuộc gọi thoại." }),
-            '</div></div>'
-        ].join("");
+        var methods = sdkState.registerType === "email" ? ["email"] : ["sms", "voice"];
+        return renderOtpMethodList("select-register-otp", methods);
     }
 
     function renderRegisterOtp() {
@@ -420,12 +453,18 @@
 
     function renderOtpForm(options) {
         return [
-            '<form class="sdk-form" data-form="' + options.form + '">',
-            '<p class="sdk-note">' + escapeHtml(options.note) + '</p>',
-            fieldHtml({ id: "otpCode", label: options.label, inputClass: "otp", maxlength: "6", inputMode: "numeric", placeholder: "Nhập mã OTP" }),
-            '<button class="sdk-primary-btn" type="submit">' + escapeHtml(options.submit) + '</button>',
-            '<button class="sdk-inline-link" type="button" data-action="' + options.resendAction + '">Nhận lại OTP</button>',
-            (options.hideBack ? '' : '<button class="sdk-inline-link" type="button" data-action="' + escapeAttr(options.backAction || 'back') + '">' + escapeHtml(options.backText || "Đổi phương thức") + '</button>'),
+            '<form class="sdk-form sdk-otp-form" data-form="' + options.form + '">',
+            '<p class="sdk-note sdk-otp-note">' + escapeHtml(options.note) + '</p>',
+            '<div class="sdk-field sdk-otp-field" data-field="otpCode">',
+            '<label class="sdk-visually-hidden">' + escapeHtml(options.label || "Mã OTP") + '</label>',
+            '<div class="sdk-otp-input-wrap">',
+            '<input class="sdk-input otp" id="otpCode" type="text" maxlength="6" inputmode="numeric" autocomplete="one-time-code" placeholder="Nhập mã OTP">',
+            '<button class="sdk-otp-resend" type="button" data-action="' + escapeAttr(options.resendAction) + '">Nhận lại</button>',
+            '</div>',
+            fieldErrorHtml("otpCode"),
+            '</div>',
+            '<button class="sdk-primary-btn sdk-otp-submit" type="submit">' + escapeHtml(options.submit) + '</button>',
+            (options.hideBack ? '' : '<button class="sdk-otp-other-btn" type="button" data-action="' + escapeAttr(options.backAction || 'back') + '">' + escapeHtml(options.backText || "Đổi phương thức") + '</button>'),
             '</form>'
         ].join("");
     }
@@ -531,7 +570,7 @@
 
     function renderForgotLookup() { return '<form class="sdk-form" data-form="forgot-lookup">' + fieldHtml({id:"forgotIdentifier",label:"Tài khoản",placeholder:"SĐT, Email hoặc tên đăng nhập"}) + '<button class="sdk-primary-btn" type="submit">Tiếp tục</button></form>'; }
     function renderForgotAccountSelect() { return renderForgotLookup(); }
-    function renderForgotOtpMethod() { var methods=sdkState.recoveryOtpMethods||["sms","email","app"]; return '<div class="sdk-stack">'+methods.map(function(m){return cardHtml({action:"forgot-select-otp",value:m,icon:m==="voice"?"fa-phone-volume":m==="email"?"fa-envelope":m==="app"?"fa-mobile-screen-button":"fa-comment-sms",title:otpChannelLabels[m]});}).join("")+'</div>'; }
+    function renderForgotOtpMethod() { var methods=sdkState.recoveryOtpMethods||["sms","email","app"]; return renderOtpMethodList("forgot-select-otp", methods); }
     function renderForgotOtp() { return renderOtpForm({form:"forgot-otp",label:"Mã xác thực OTP",note:buildOtpInstruction("recovery", sdkState.recoveryOtpMethod),submit:"Xác nhận",resendAction:"resend-login-otp",backText:"Tùy chọn khác",backAction:"forgot-options"}); }
     function renderForgotNewPassword() { return '<form class="sdk-form" data-form="forgot-new-password">'+passwordFieldHtml({id:"forgotNewPassword",label:"Mật khẩu mới",placeholder:"Nhập mật khẩu mới"})+passwordFieldHtml({id:"forgotNewPasswordConfirm",label:"Nhập lại mật khẩu mới",placeholder:"Nhập lại mật khẩu mới"})+'<button class="sdk-primary-btn" type="submit">Cập nhật</button></form>'; }
     function submitForgotLookup(){ var v=getValue("forgotIdentifier").trim(); if(!v)return showFieldError("forgotIdentifier","Vui lòng nhập tài khoản."); var user=findDemoUser(v); if(!user)return showFieldError("forgotIdentifier","Tài khoản không hợp lệ."); sdkState.loginIdentifier=v; sdkState.recoveryAccount=user; if(v.indexOf("@")>-1){sdkState.recoveryOtpMethod="email";sdkState.recoveryOtpMethods=["email","app"];}else if(/^0\d{9}$/.test(v)){sdkState.recoveryOtpMethod="sms";sdkState.recoveryOtpMethods=["sms","voice","app"];}else{sdkState.recoveryOtpMethod="app";sdkState.recoveryOtpMethods=["app","email","sms"];} goTo("forgot-otp"); }
@@ -615,6 +654,7 @@
         var action = button.dataset.action;
         var value = button.dataset.value || "";
         if (action === "back") return goBack();
+        if (action === "close-otp-method") { sdkState.otpMethodOverlay = null; return render(); }
         if (action === "close") return goTo("login-select", true);
         if (action === "login-saved") return loginWithSavedAccount(value);
         if (action === "login-other") return goTo("login-identifier");
@@ -631,9 +671,9 @@
         if (action === "resend-register-otp") return resendOtp();
         if (action === "toggle-password") return togglePassword(value, button);
         if (action === "forgot-password") return goTo("forgot-lookup");
-        if (action === "forgot-options") return goTo("forgot-otp-method");
+        if (action === "forgot-options") return openOtpMethodOverlay("recovery");
         if (action === "forgot-select-account") return goTo("forgot-lookup");
-        if (action === "forgot-select-otp") { sdkState.recoveryOtpMethod = value; return goTo("forgot-otp"); }
+        if (action === "forgot-select-otp") { sdkState.recoveryOtpMethod = value; sdkState.otpMethodOverlay = null; showToast(value === "app" ? "Mở ứng dụng xác thực OTP" : "Đã gửi OTP qua " + otpChannelLabels[value], "info"); return render(); }
         if (action === "open-notifications") return showToast("Bạn có 3 thông báo mới", "info");
         if (action === "guest-link") return value === "myvtc" ? goTo("login-identifier") : loginWithSocial(value);
         if (action === "toggle-linked-account") return toggleLinkedAccount(value);
@@ -710,7 +750,9 @@
         if (!identifier) return showFieldError("loginIdentifier", "Vui lòng nhập tài khoản trước khi nhận OTP.");
         if (!identifierExists(identifier)) return showFieldError("loginIdentifier", "Không tìm thấy tài khoản.");
         sdkState.loginIdentifier = identifier;
-        goTo("login-otp-method");
+        sdkState.loginOtpMethod = sdkState.loginOtpMethod || "sms";
+        goTo("login-otp");
+        openOtpMethodOverlay("login");
     }
 
     function loginWithSocial(provider) {
@@ -728,7 +770,8 @@
         sdkState.otpRequestsCount = 1;
         sdkState.otpWrongCount = 0;
         showToast(method === "app" ? "Mở ứng dụng xác thực OTP" : "Đã gửi OTP qua " + otpChannelLabels[method], "info");
-        goTo("login-otp");
+        sdkState.otpMethodOverlay = null;
+        render();
     }
 
     function submitLoginOtp() {
@@ -775,12 +818,10 @@
         sdkState.registerPassword = password;
         sdkState.otpRequestsCount = 0;
         sdkState.otpWrongCount = 0;
-        if (sdkState.registerType === "phone") return goTo("register-otp-method");
-        if (sdkState.registerType === "email") {
-            sdkState.registerOtpMethod = "email";
-            sdkState.otpRequestsCount = 1;
-            showToast("Đã gửi OTP qua Email", "info");
-            return goTo("register-otp");
+        if (sdkState.registerType === "phone" || sdkState.registerType === "email") {
+            sdkState.registerOtpMethod = sdkState.registerType === "email" ? "email" : "sms";
+            goTo("register-otp");
+            return openOtpMethodOverlay("register");
         }
         finishSdkRegistration();
     }
@@ -790,7 +831,8 @@
         sdkState.otpRequestsCount = 1;
         sdkState.otpWrongCount = 0;
         showToast("Đã gửi OTP qua " + otpChannelLabels[method], "info");
-        goTo("register-otp");
+        sdkState.otpMethodOverlay = null;
+        render();
     }
 
     function submitRegisterOtp() {
