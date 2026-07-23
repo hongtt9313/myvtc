@@ -3530,3 +3530,886 @@ color:#333;
 .voucher-event-info{display:flex;flex-direction:column;gap:3px}.voucher-event-info>b{font-size:13px}.voucher-event-info>span{font-weight:500;color:#475467}
 @media(max-width:1250px){#screen-loyalty-voucher-manage .voucher-manage-filter-grid{grid-template-columns:repeat(2,minmax(0,1fr))!important}}
 @media(max-width:720px){#screen-loyalty-voucher-manage .voucher-manage-filter-grid{grid-template-columns:1fr!important}#screen-loyalty-voucher-manage .voucher-manage-filter-grid>label{align-items:flex-start!important;flex-direction:column!important}#screen-loyalty-voucher-manage .voucher-manage-quick-search{width:100%}}
+
+/* FIX 24: Đồng bộ Quản lý Voucher theo mẫu Thiết lập tỉ lệ T-EXP */
+#screen-loyalty-voucher-manage .cms-content{
+  padding:14px!important;
+}
+#screen-loyalty-voucher-manage .voucher-manage-shell{
+  width:100%!important;
+  max-width:none!important;
+  margin:0!important;
+}
+#screen-loyalty-voucher-manage .voucher-manage-filter-grid{
+  grid-template-columns:repeat(4,minmax(0,1fr))!important;
+  column-gap:28px!important;
+  row-gap:14px!important;
+  padding:18px 20px 12px!important;
+  align-items:center!important;
+}
+#screen-loyalty-voucher-manage .voucher-manage-filter-grid>label{
+  display:grid!important;
+  grid-template-columns:auto minmax(0,1fr)!important;
+  align-items:center!important;
+  gap:10px!important;
+  min-width:0!important;
+}
+#screen-loyalty-voucher-manage .voucher-manage-filter-grid>label>span{
+  min-width:max-content!important;
+  line-height:36px!important;
+}
+#screen-loyalty-voucher-manage .voucher-manage-filter-grid input,
+#screen-loyalty-voucher-manage .voucher-manage-filter-grid select{
+  width:100%!important;
+  min-width:0!important;
+  height:36px!important;
+  padding:0 10px!important;
+  border:1px solid #cfd8e3!important;
+  border-radius:4px!important;
+  background:#fff!important;
+  box-sizing:border-box!important;
+}
+#screen-loyalty-voucher-manage .voucher-manage-filter-grid input[type="datetime-local"]{
+  min-width:190px!important;
+  font-size:13px!important;
+  line-height:34px!important;
+}
+#screen-loyalty-voucher-manage .cms-actions-center{
+  padding:12px 20px 14px!important;
+  margin:0 0 22px!important;
+}
+#screen-loyalty-voucher-manage .voucher-manage-toolbar{
+  display:flex!important;
+  justify-content:space-between!important;
+  align-items:center!important;
+  width:100%!important;
+  min-height:38px!important;
+  margin:0 0 12px!important;
+}
+#screen-loyalty-voucher-manage .voucher-manage-toolbar .toolbar-right{
+  margin-left:auto!important;
+}
+#screen-loyalty-voucher-manage .voucher-manage-quick-search{
+  width:240px!important;
+  height:36px!important;
+}
+#screen-loyalty-voucher-manage .voucher-manage-table-wrap{
+  width:100%!important;
+  border-radius:4px!important;
+  overflow-x:hidden!important;
+}
+#screen-loyalty-voucher-manage #voucherManageTable{
+  width:100%!important;
+  min-width:0!important;
+  table-layout:fixed!important;
+}
+#screen-loyalty-voucher-manage #voucherManageTable th,
+#screen-loyalty-voucher-manage #voucherManageTable td{
+  padding:10px 7px!important;
+  vertical-align:middle!important;
+  line-height:1.3!important;
+}
+#screen-loyalty-voucher-manage #voucherManageTable th:nth-child(1){width:44px!important}
+#screen-loyalty-voucher-manage #voucherManageTable th:nth-child(2){width:10%!important}
+#screen-loyalty-voucher-manage #voucherManageTable th:nth-child(3){width:12%!important}
+#screen-loyalty-voucher-manage #voucherManageTable th:nth-child(4){width:9%!important}
+#screen-loyalty-voucher-manage #voucherManageTable th:nth-child(5){width:9%!important}
+#screen-loyalty-voucher-manage #voucherManageTable th:nth-child(6){width:11%!important}
+#screen-loyalty-voucher-manage #voucherManageTable th:nth-child(7){width:10%!important}
+#screen-loyalty-voucher-manage #voucherManageTable th:nth-child(8){width:9%!important}
+#screen-loyalty-voucher-manage #voucherManageTable th:nth-child(9){width:8%!important}
+#screen-loyalty-voucher-manage #voucherManageTable th:nth-child(10){width:11%!important}
+#screen-loyalty-voucher-manage #voucherManageTable th:nth-child(11){width:9%!important}
+#screen-loyalty-voucher-manage #voucherManageTable th:nth-child(12){width:96px!important}
+#screen-loyalty-voucher-manage #voucherManageTable .action-cell{
+  white-space:nowrap!important;
+  word-break:normal!important;
+  text-align:center!important;
+  padding:6px 4px!important;
+}
+#screen-loyalty-voucher-manage #voucherManageTable .voucher-action-buttons{
+  display:inline-flex!important;
+  align-items:center!important;
+  justify-content:center!important;
+  flex-wrap:nowrap!important;
+  gap:5px!important;
+  white-space:nowrap!important;
+}
+#screen-loyalty-voucher-manage #voucherManageTable .voucher-action-buttons .icon-square{
+  width:28px!important;
+  height:28px!important;
+  min-width:28px!important;
+  margin:0!important;
+  padding:0!important;
+}
+@media(max-width:1250px){
+  #screen-loyalty-voucher-manage .voucher-manage-filter-grid{
+    grid-template-columns:repeat(2,minmax(0,1fr))!important;
+  }
+}
+@media(max-width:720px){
+  #screen-loyalty-voucher-manage .voucher-manage-filter-grid{
+    grid-template-columns:1fr!important;
+  }
+  #screen-loyalty-voucher-manage .voucher-manage-filter-grid>label{
+    grid-template-columns:1fr!important;
+    gap:6px!important;
+  }
+  #screen-loyalty-voucher-manage .voucher-manage-filter-grid>label>span{
+    line-height:18px!important;
+  }
+  #screen-loyalty-voucher-manage .voucher-manage-filter-grid input[type="datetime-local"]{
+    min-width:0!important;
+  }
+}
+
+/* FIX 24B: Quản lý Voucher, chống tràn ngang và chuẩn hóa bộ lọc */
+#screen-loyalty-voucher-manage,
+#screen-loyalty-voucher-manage .cms-content,
+#screen-loyalty-voucher-manage .loyalty-admin-shell,
+#screen-loyalty-voucher-manage .voucher-manage-filter-box{
+  width:100%!important;
+  max-width:100%!important;
+  min-width:0!important;
+  box-sizing:border-box!important;
+}
+#screen-loyalty-voucher-manage{
+  overflow-x:hidden!important;
+}
+#screen-loyalty-voucher-manage .cms-content{
+  overflow-x:hidden!important;
+}
+#screen-loyalty-voucher-manage .voucher-manage-filter-grid{
+  width:100%!important;
+  box-sizing:border-box!important;
+  grid-template-columns:repeat(4,minmax(0,1fr))!important;
+  gap:14px 24px!important;
+}
+#screen-loyalty-voucher-manage .voucher-manage-filter-grid>label{
+  width:100%!important;
+  min-width:0!important;
+  display:grid!important;
+  grid-template-columns:92px minmax(0,1fr)!important;
+  gap:10px!important;
+  overflow:visible!important;
+}
+#screen-loyalty-voucher-manage .voucher-manage-filter-grid>label>span{
+  width:92px!important;
+  min-width:92px!important;
+  line-height:36px!important;
+  overflow:visible!important;
+  white-space:nowrap!important;
+}
+#screen-loyalty-voucher-manage .voucher-manage-filter-grid input,
+#screen-loyalty-voucher-manage .voucher-manage-filter-grid select,
+#screen-loyalty-voucher-manage .voucher-manage-filter-grid input[type="datetime-local"]{
+  display:block!important;
+  width:100%!important;
+  min-width:0!important;
+  max-width:100%!important;
+  height:36px!important;
+  margin:0!important;
+  padding:0 10px!important;
+  box-sizing:border-box!important;
+  font-size:14px!important;
+}
+#screen-loyalty-voucher-manage .voucher-manage-toolbar{
+  width:100%!important;
+  min-width:0!important;
+  box-sizing:border-box!important;
+  display:grid!important;
+  grid-template-columns:auto minmax(220px,250px)!important;
+  gap:12px!important;
+}
+#screen-loyalty-voucher-manage .voucher-manage-toolbar .toolbar-left,
+#screen-loyalty-voucher-manage .voucher-manage-toolbar .toolbar-right{
+  min-width:0!important;
+  margin:0!important;
+}
+#screen-loyalty-voucher-manage .voucher-manage-toolbar .toolbar-right{
+  justify-self:end!important;
+  width:250px!important;
+}
+#screen-loyalty-voucher-manage .voucher-manage-quick-search{
+  width:100%!important;
+  max-width:250px!important;
+}
+#screen-loyalty-voucher-manage #voucherManageTable th:nth-child(12){
+  width:74px!important;
+  min-width:74px!important;
+}
+#screen-loyalty-voucher-manage #voucherManageTable .voucher-action-buttons{
+  width:100%!important;
+  display:flex!important;
+  flex-direction:row!important;
+  flex-wrap:nowrap!important;
+  gap:4px!important;
+}
+#screen-loyalty-voucher-manage #voucherManageTable .voucher-action-buttons .icon-square{
+  width:27px!important;
+  min-width:27px!important;
+  height:27px!important;
+}
+@media(max-width:1450px){
+  #screen-loyalty-voucher-manage .voucher-manage-filter-grid{
+    grid-template-columns:repeat(2,minmax(0,1fr))!important;
+  }
+}
+@media(max-width:760px){
+  #screen-loyalty-voucher-manage .voucher-manage-filter-grid{
+    grid-template-columns:1fr!important;
+  }
+  #screen-loyalty-voucher-manage .voucher-manage-filter-grid>label{
+    grid-template-columns:92px minmax(0,1fr)!important;
+  }
+  #screen-loyalty-voucher-manage .voucher-manage-toolbar{
+    grid-template-columns:1fr!important;
+  }
+  #screen-loyalty-voucher-manage .voucher-manage-toolbar .toolbar-right{
+    justify-self:stretch!important;
+    width:100%!important;
+  }
+  #screen-loyalty-voucher-manage .voucher-manage-quick-search{
+    max-width:none!important;
+  }
+}
+
+/* FIX 25: Đồng bộ Quản lý Voucher theo mẫu Loyalty > Thiết lập tỉ lệ T-EXP */
+#screen-loyalty-voucher-manage .cms-content{
+  padding:14px!important;
+}
+#screen-loyalty-voucher-manage .voucher-manage-shell{
+  width:100%!important;
+  max-width:none!important;
+  margin:0!important;
+}
+#screen-loyalty-voucher-manage .voucher-manage-filter-box{
+  width:100%!important;
+  margin:0 0 20px!important;
+  padding:18px 20px 16px!important;
+  border:1px solid #b9d8f2!important;
+  border-radius:8px!important;
+  background:#f4f9ff!important;
+  box-sizing:border-box!important;
+}
+#screen-loyalty-voucher-manage .voucher-manage-filter-grid{
+  display:grid!important;
+  grid-template-columns:repeat(4,minmax(0,1fr))!important;
+  gap:14px 28px!important;
+  width:100%!important;
+  margin:0!important;
+  padding:0!important;
+  border:0!important;
+  border-radius:0!important;
+  background:transparent!important;
+  box-sizing:border-box!important;
+}
+#screen-loyalty-voucher-manage .voucher-manage-filter-grid>label{
+  display:grid!important;
+  grid-template-columns:112px minmax(0,1fr)!important;
+  align-items:center!important;
+  gap:10px!important;
+  width:100%!important;
+  min-width:0!important;
+  margin:0!important;
+}
+#screen-loyalty-voucher-manage .voucher-manage-filter-grid>label>span{
+  width:112px!important;
+  min-width:112px!important;
+  color:#111!important;
+  font-weight:700!important;
+  line-height:36px!important;
+  white-space:nowrap!important;
+}
+#screen-loyalty-voucher-manage .voucher-manage-filter-grid input,
+#screen-loyalty-voucher-manage .voucher-manage-filter-grid select,
+#screen-loyalty-voucher-manage .voucher-manage-filter-grid input[type="datetime-local"]{
+  display:block!important;
+  width:100%!important;
+  min-width:0!important;
+  max-width:none!important;
+  height:36px!important;
+  margin:0!important;
+  padding:0 12px!important;
+  border:1px solid #cfd8e3!important;
+  border-radius:4px!important;
+  background:#fff!important;
+  box-sizing:border-box!important;
+  font-size:14px!important;
+  line-height:34px!important;
+}
+#screen-loyalty-voucher-manage .cms-actions-center{
+  display:flex!important;
+  justify-content:center!important;
+  gap:8px!important;
+  margin:18px 0 0!important;
+  padding:0!important;
+  border:0!important;
+  background:transparent!important;
+}
+#screen-loyalty-voucher-manage .voucher-manage-toolbar{
+  display:flex!important;
+  align-items:center!important;
+  justify-content:space-between!important;
+  gap:12px!important;
+  width:100%!important;
+  min-height:38px!important;
+  margin:0 0 12px!important;
+}
+#screen-loyalty-voucher-manage .voucher-manage-toolbar .toolbar-left,
+#screen-loyalty-voucher-manage .voucher-manage-toolbar .toolbar-right{
+  width:auto!important;
+  min-width:0!important;
+  margin:0!important;
+}
+#screen-loyalty-voucher-manage .voucher-manage-toolbar .toolbar-right{
+  margin-left:auto!important;
+}
+#screen-loyalty-voucher-manage .voucher-manage-quick-search{
+  width:320px!important;
+  max-width:320px!important;
+  height:38px!important;
+}
+#screen-loyalty-voucher-manage .voucher-manage-quick-search>i{
+  display:none!important;
+}
+#screen-loyalty-voucher-manage .voucher-manage-quick-search .toolbar-search{
+  width:100%!important;
+  height:38px!important;
+  padding:0 12px!important;
+  border:1px solid #d0d5dd!important;
+  border-radius:4px!important;
+  background:#fff!important;
+  box-sizing:border-box!important;
+}
+#screen-loyalty-voucher-manage .voucher-manage-table-wrap{
+  width:100%!important;
+  border:1px solid #9bc8e8!important;
+  border-radius:8px!important;
+  overflow:hidden!important;
+  box-sizing:border-box!important;
+}
+#screen-loyalty-voucher-manage #voucherManageTable{
+  width:100%!important;
+  min-width:100%!important;
+  margin:0!important;
+  table-layout:fixed!important;
+}
+#screen-loyalty-voucher-manage #voucherManageTable thead th{
+  height:42px!important;
+  padding:8px 6px!important;
+  background:#d9edf7!important;
+  color:#123!important;
+  font-size:14px!important;
+  line-height:1.2!important;
+  vertical-align:middle!important;
+  white-space:nowrap!important;
+}
+#screen-loyalty-voucher-manage #voucherManageTable tbody td{
+  padding:9px 6px!important;
+  font-size:14px!important;
+  line-height:1.25!important;
+  vertical-align:middle!important;
+  word-break:normal!important;
+}
+#screen-loyalty-voucher-manage #voucherManageTable th:nth-child(1){width:44px!important}
+#screen-loyalty-voucher-manage #voucherManageTable th:nth-child(2){width:9.5%!important}
+#screen-loyalty-voucher-manage #voucherManageTable th:nth-child(3){width:11%!important}
+#screen-loyalty-voucher-manage #voucherManageTable th:nth-child(4){width:8.5%!important}
+#screen-loyalty-voucher-manage #voucherManageTable th:nth-child(5){width:8.5%!important}
+#screen-loyalty-voucher-manage #voucherManageTable th:nth-child(6){width:10.5%!important}
+#screen-loyalty-voucher-manage #voucherManageTable th:nth-child(7){width:9.5%!important}
+#screen-loyalty-voucher-manage #voucherManageTable th:nth-child(8){width:8.5%!important}
+#screen-loyalty-voucher-manage #voucherManageTable th:nth-child(9){width:8%!important}
+#screen-loyalty-voucher-manage #voucherManageTable th:nth-child(10){width:10.5%!important}
+#screen-loyalty-voucher-manage #voucherManageTable th:nth-child(11){width:8.5%!important}
+#screen-loyalty-voucher-manage #voucherManageTable th:nth-child(12){width:86px!important;min-width:86px!important}
+#screen-loyalty-voucher-manage #voucherManageTable .action-cell{
+  padding:6px 4px!important;
+  text-align:center!important;
+  white-space:nowrap!important;
+}
+#screen-loyalty-voucher-manage #voucherManageTable .voucher-action-buttons{
+  display:inline-flex!important;
+  flex-flow:row nowrap!important;
+  align-items:center!important;
+  justify-content:center!important;
+  width:auto!important;
+  gap:5px!important;
+  white-space:nowrap!important;
+}
+#screen-loyalty-voucher-manage #voucherManageTable .voucher-action-buttons .icon-square{
+  width:28px!important;
+  min-width:28px!important;
+  height:28px!important;
+  margin:0!important;
+  padding:0!important;
+}
+#screen-loyalty-voucher-manage .page-foot{
+  margin-top:12px!important;
+  align-items:center!important;
+}
+@media(max-width:1450px){
+  #screen-loyalty-voucher-manage .voucher-manage-filter-grid{
+    grid-template-columns:repeat(2,minmax(0,1fr))!important;
+  }
+}
+@media(max-width:760px){
+  #screen-loyalty-voucher-manage .voucher-manage-filter-grid{
+    grid-template-columns:1fr!important;
+  }
+  #screen-loyalty-voucher-manage .voucher-manage-filter-grid>label{
+    grid-template-columns:104px minmax(0,1fr)!important;
+  }
+  #screen-loyalty-voucher-manage .voucher-manage-filter-grid>label>span{
+    width:104px!important;
+    min-width:104px!important;
+  }
+  #screen-loyalty-voucher-manage .voucher-manage-toolbar{
+    align-items:stretch!important;
+    flex-direction:column!important;
+  }
+  #screen-loyalty-voucher-manage .voucher-manage-toolbar .toolbar-right,
+  #screen-loyalty-voucher-manage .voucher-manage-quick-search{
+    width:100%!important;
+    max-width:none!important;
+  }
+}
+
+/* FIX 26: Đồng bộ tuyệt đối khung Quản lý Voucher theo T-EXP */
+#screen-loyalty-voucher-manage .cms-screen-title{
+  height:36px!important;
+  margin:15px 14px 0!important;
+  padding:0 14px!important;
+  border:1px solid #2b78b0!important;
+  border-bottom:0!important;
+  background:#2e7db6!important;
+}
+#screen-loyalty-voucher-manage .cms-content{
+  width:auto!important;
+  margin:0 14px 20px!important;
+  padding:14px!important;
+  min-height:520px!important;
+  border:1px solid #2b94e6!important;
+  background:#fff!important;
+}
+#screen-loyalty-voucher-manage .voucher-manage-shell{
+  width:100%!important;
+  max-width:none!important;
+}
+#screen-loyalty-voucher-manage .voucher-manage-filter-box{
+  width:100%!important;
+  min-height:146px!important;
+  padding:18px 20px!important;
+  margin:0 0 20px!important;
+}
+#screen-loyalty-voucher-manage .voucher-manage-filter-grid{
+  grid-template-columns:repeat(4,minmax(0,1fr))!important;
+  column-gap:28px!important;
+  row-gap:14px!important;
+}
+#screen-loyalty-voucher-manage .voucher-manage-filter-grid>label{
+  grid-template-columns:88px minmax(0,1fr)!important;
+  gap:8px!important;
+}
+#screen-loyalty-voucher-manage .voucher-manage-filter-grid>label>span{
+  width:88px!important;
+  min-width:88px!important;
+  line-height:36px!important;
+}
+#screen-loyalty-voucher-manage .voucher-manage-filter-grid input,
+#screen-loyalty-voucher-manage .voucher-manage-filter-grid select,
+#screen-loyalty-voucher-manage .voucher-manage-filter-grid input[type="datetime-local"]{
+  height:36px!important;
+  min-height:36px!important;
+  font-size:14px!important;
+}
+#screen-loyalty-voucher-manage .voucher-manage-toolbar{
+  width:100%!important;
+  margin:8px 0 12px!important;
+  min-height:36px!important;
+}
+#screen-loyalty-voucher-manage .voucher-manage-quick-search,
+#screen-loyalty-voucher-manage .voucher-manage-quick-search .toolbar-search{
+  width:320px!important;
+  max-width:320px!important;
+  height:36px!important;
+  min-height:36px!important;
+}
+#screen-loyalty-voucher-manage .voucher-manage-table-wrap{
+  width:100%!important;
+  min-height:252px!important;
+  border:1px solid #9bc8e8!important;
+  border-radius:8px!important;
+  overflow:hidden!important;
+}
+#screen-loyalty-voucher-manage #voucherManageTable{
+  width:100%!important;
+  min-width:100%!important;
+}
+#screen-loyalty-voucher-manage #voucherManageTable thead th{
+  height:37px!important;
+  padding:9px 7px!important;
+}
+#screen-loyalty-voucher-manage #voucherManageTable tbody td{
+  height:50px!important;
+  padding:9px 7px!important;
+}
+#screen-loyalty-voucher-manage .page-foot{
+  width:100%!important;
+  padding:12px 0!important;
+  margin:0!important;
+}
+@media(max-width:1450px){
+  #screen-loyalty-voucher-manage .voucher-manage-filter-grid{
+    grid-template-columns:repeat(4,minmax(0,1fr))!important;
+  }
+}
+@media(max-width:1180px){
+  #screen-loyalty-voucher-manage .voucher-manage-filter-grid{
+    grid-template-columns:repeat(2,minmax(0,1fr))!important;
+  }
+}
+@media(max-width:760px){
+  #screen-loyalty-voucher-manage .voucher-manage-filter-grid{
+    grid-template-columns:1fr!important;
+  }
+}
+
+
+/* FIX 27: Hoàn thiện Loyalty > Quản lý Voucher theo khung T-EXP */
+#screen-loyalty-voucher-manage .cms-screen-title{
+  width:auto!important;
+  margin:15px 8px 0!important;
+  box-sizing:border-box!important;
+}
+#screen-loyalty-voucher-manage .cms-content{
+  width:auto!important;
+  margin:0 8px 20px!important;
+  padding:14px!important;
+  box-sizing:border-box!important;
+}
+#screen-loyalty-voucher-manage .voucher-manage-filter-box,
+#screen-loyalty-voucher-manage .voucher-manage-table-wrap,
+#screen-loyalty-voucher-manage .voucher-manage-toolbar,
+#screen-loyalty-voucher-manage .page-foot{
+  width:100%!important;
+  max-width:none!important;
+  box-sizing:border-box!important;
+}
+#screen-loyalty-voucher-manage .voucher-manage-table-wrap{
+  min-height:0!important;
+  overflow-x:auto!important;
+  overflow-y:hidden!important;
+  background:#fff!important;
+}
+#screen-loyalty-voucher-manage #voucherManageTable{
+  table-layout:fixed!important;
+  border-collapse:collapse!important;
+}
+#screen-loyalty-voucher-manage #voucherManageTable tbody:empty::after{
+  content:"";
+  display:block;
+  height:48px;
+}
+#voucherManageDetailModal .voucher-detail-dialog{
+  width:min(980px,96vw)!important;
+  max-height:90vh!important;
+  background:#fff!important;
+  border:1px solid #9fb9d1!important;
+  box-shadow:0 18px 48px rgba(15,23,42,.28)!important;
+}
+#voucherManageDetailModal .cms-modal-header{
+  min-height:44px!important;
+  height:44px!important;
+  padding:0 16px!important;
+  display:flex!important;
+  align-items:center!important;
+  justify-content:space-between!important;
+  background:#2e7db6!important;
+  border-bottom:1px solid #246b9e!important;
+  box-sizing:border-box!important;
+}
+#voucherManageDetailModal .cms-modal-header h3{
+  margin:0!important;
+  font-size:16px!important;
+  line-height:1!important;
+  color:#fff!important;
+}
+#voucherManageDetailModal .cms-modal-header>button{
+  width:32px!important;
+  height:32px!important;
+  padding:0!important;
+  margin:0!important;
+  line-height:30px!important;
+  color:#fff!important;
+}
+#voucherManageDetailModal .cms-modal-body{
+  padding:18px!important;
+  background:#f3f6f9!important;
+  overflow:auto!important;
+}
+#voucherManageDetailContent{
+  display:flex!important;
+  flex-direction:column!important;
+  gap:18px!important;
+}
+#voucherManageDetailContent .voucher-detail-section{
+  flex:0 0 auto!important;
+  margin:0!important;
+  border:1px solid #aebfd0!important;
+  border-radius:8px!important;
+  background:#fff!important;
+  overflow:hidden!important;
+  box-shadow:0 2px 8px rgba(15,23,42,.08)!important;
+}
+#voucherManageDetailContent .voucher-detail-section h4{
+  margin:0!important;
+  padding:11px 16px!important;
+  background:#dceeff!important;
+  border-bottom:1px solid #9fb9d1!important;
+  color:#12385b!important;
+}
+#voucherManageDetailContent .voucher-detail-grid{
+  border:0!important;
+  border-radius:0!important;
+}
+
+/* Loyalty > Tra cứu giao dịch EXP */
+.exp-transaction-shell{width:100%;max-width:none}
+.exp-transaction-filter{padding:18px 20px 14px}
+.exp-transaction-filter-grid{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:14px 18px}
+.exp-transaction-filter-grid label{display:flex;align-items:center;gap:10px;min-width:0}
+.exp-transaction-filter-grid label>span{width:112px;flex:0 0 112px;font-size:13px;font-weight:600;color:#26344a;white-space:nowrap}
+.exp-transaction-filter-grid .input,.exp-transaction-filter-grid .select{width:100%;height:36px;min-width:0;border:1px solid #d8dee8;border-radius:4px;background:#fff;padding:0 10px;font-size:13px}
+.exp-transaction-toolbar{margin-top:14px}
+.exp-transaction-quick-search{position:relative;display:flex;align-items:center}
+.exp-transaction-quick-search>i{position:absolute;left:11px;color:#8d98aa;font-size:12px}
+.exp-transaction-quick-search .toolbar-search{width:260px;padding-left:32px;border-color:#dfe4ec}
+.exp-transaction-table-wrap{overflow:auto;max-height:520px}
+#expTxTable{min-width:1900px}
+#expTxTable th,#expTxTable td{white-space:nowrap;font-size:12px;padding:9px 10px}
+#expTxTable th:nth-child(1),#expTxTable td:nth-child(1){width:52px;text-align:center}
+#expTxTable th:nth-child(16),#expTxTable td:nth-child(16){width:72px;text-align:center;position:sticky;right:0;background:#fff;box-shadow:-3px 0 7px rgba(25,42,70,.08)}
+#expTxTable thead th:nth-child(16){background:#f4f7fb}
+.exp-value-positive{color:#168447;font-weight:700}.exp-value-negative{color:#cf3535;font-weight:700}
+.exp-type-badge{display:inline-flex;align-items:center;justify-content:center;min-width:54px;padding:3px 8px;border-radius:12px;background:#eef4ff;color:#2463a8;font-weight:700}
+.exp-tx-detail-dialog{width:min(960px,94vw);max-width:960px}
+.exp-tx-detail-grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:14px 18px}
+.exp-tx-detail-item{border:1px solid #e1e6ee;border-radius:6px;padding:11px 13px;background:#fff;min-height:68px}
+.exp-tx-detail-item span{display:block;color:#6c7788;font-size:12px;margin-bottom:6px}.exp-tx-detail-item strong{display:block;color:#1d2a3b;font-size:13px;word-break:break-word}
+.exp-tx-add-dialog{width:min(760px,94vw)}.exp-tx-add-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:14px 18px}.exp-tx-add-grid label span{display:block;font-weight:600;font-size:13px;margin-bottom:6px}.exp-tx-add-grid input,.exp-tx-add-grid select{width:100%;height:38px;border:1px solid #d8dee8;border-radius:4px;padding:0 10px}
+@media(max-width:1200px){.exp-transaction-filter-grid{grid-template-columns:repeat(2,minmax(0,1fr))}.exp-tx-detail-grid{grid-template-columns:repeat(2,minmax(0,1fr))}}
+@media(max-width:700px){.exp-transaction-filter-grid,.exp-tx-detail-grid,.exp-tx-add-grid{grid-template-columns:1fr}.exp-transaction-filter-grid label{align-items:flex-start;flex-direction:column;gap:6px}.exp-transaction-filter-grid label>span{width:auto;flex:auto}}
+
+
+/* Fix Loyalty > Tra cứu giao dịch EXP theo mẫu T-EXP */
+#screen-loyalty-exp-transaction .cms-content{
+  padding:14px!important;
+}
+#screen-loyalty-exp-transaction .exp-transaction-shell{
+  width:100%!important;
+  max-width:none!important;
+  margin:0!important;
+}
+#screen-loyalty-exp-transaction .exp-transaction-filter{
+  width:100%!important;
+  box-sizing:border-box!important;
+  padding:18px 20px!important;
+  margin:0 0 20px!important;
+}
+#screen-loyalty-exp-transaction .exp-transaction-toolbar{
+  width:100%!important;
+  box-sizing:border-box!important;
+  display:flex!important;
+  justify-content:space-between!important;
+  align-items:center!important;
+  gap:12px!important;
+  margin:0 0 12px!important;
+  min-height:38px!important;
+}
+#screen-loyalty-exp-transaction .exp-transaction-quick-search{
+  width:320px!important;
+  height:38px!important;
+  box-sizing:border-box!important;
+  border:1px solid #ccc!important;
+  border-radius:3px!important;
+  padding:0 10px!important;
+  background:#fff!important;
+  outline:none!important;
+  font-size:13px!important;
+}
+#screen-loyalty-exp-transaction .exp-transaction-quick-search:focus{
+  border-color:#b8b8b8!important;
+  box-shadow:none!important;
+}
+#screen-loyalty-exp-transaction .exp-transaction-table-wrap{
+  width:100%!important;
+  box-sizing:border-box!important;
+  border:1px solid #9bc8e8!important;
+  border-radius:8px!important;
+  overflow:auto!important;
+  max-height:520px!important;
+}
+#screen-loyalty-exp-transaction .page-foot{
+  width:100%!important;
+  box-sizing:border-box!important;
+  margin-top:12px!important;
+}
+#screen-loyalty-exp-transaction .exp-tx-detail-dialog{
+  width:min(760px,94vw)!important;
+  max-width:760px!important;
+}
+#screen-loyalty-exp-transaction .exp-tx-detail-modal .cms-modal-header{
+  min-height:44px!important;
+  padding:8px 14px!important;
+}
+#screen-loyalty-exp-transaction .exp-tx-detail-modal .cms-modal-header h3{
+  margin:0!important;
+  font-size:15px!important;
+  line-height:28px!important;
+}
+#screen-loyalty-exp-transaction .exp-tx-detail-modal .cms-modal-header button{
+  width:28px!important;
+  height:28px!important;
+  line-height:26px!important;
+}
+#screen-loyalty-exp-transaction .exp-tx-detail-modal .cms-modal-body{
+  padding:12px 16px 16px!important;
+}
+#screen-loyalty-exp-transaction .exp-tx-detail-grid{
+  display:block!important;
+}
+#screen-loyalty-exp-transaction .exp-tx-detail-item{
+  display:grid!important;
+  grid-template-columns:minmax(180px,42%) minmax(0,1fr)!important;
+  align-items:center!important;
+  gap:20px!important;
+  min-height:40px!important;
+  padding:8px 12px!important;
+  border:0!important;
+  border-bottom:1px solid #e5eaf1!important;
+  border-radius:0!important;
+  background:#fff!important;
+}
+#screen-loyalty-exp-transaction .exp-tx-detail-item:last-child{
+  border-bottom:0!important;
+}
+#screen-loyalty-exp-transaction .exp-tx-detail-item span{
+  display:block!important;
+  margin:0!important;
+  color:#4c596b!important;
+  font-size:13px!important;
+  font-weight:600!important;
+  text-align:left!important;
+}
+#screen-loyalty-exp-transaction .exp-tx-detail-item strong{
+  display:block!important;
+  color:#172235!important;
+  font-size:13px!important;
+  font-weight:500!important;
+  text-align:right!important;
+  word-break:break-word!important;
+}
+@media(max-width:700px){
+  #screen-loyalty-exp-transaction .exp-transaction-quick-search{width:100%!important}
+  #screen-loyalty-exp-transaction .exp-tx-detail-item{grid-template-columns:1fr!important;gap:4px!important}
+  #screen-loyalty-exp-transaction .exp-tx-detail-item strong{text-align:left!important}
+}
+
+/* Final fix: Loyalty > Tra cứu giao dịch EXP */
+#screen-loyalty-exp-transaction .cms-content{
+  padding:14px!important;
+}
+#screen-loyalty-exp-transaction .exp-transaction-shell,
+#screen-loyalty-exp-transaction .exp-transaction-filter,
+#screen-loyalty-exp-transaction .exp-transaction-toolbar,
+#screen-loyalty-exp-transaction .exp-transaction-table-wrap,
+#screen-loyalty-exp-transaction .page-foot{
+  width:100%!important;
+  max-width:none!important;
+  box-sizing:border-box!important;
+}
+#screen-loyalty-exp-transaction .exp-transaction-filter{
+  margin-left:0!important;
+  margin-right:0!important;
+}
+#screen-loyalty-exp-transaction .exp-transaction-table-wrap{
+  margin-left:0!important;
+  margin-right:0!important;
+}
+#screen-loyalty-exp-transaction #expTxTable thead th{
+  background:#d9edf7!important;
+  color:#123!important;
+  border-color:#c9dfe9!important;
+}
+#screen-loyalty-exp-transaction #expTxTable tbody tr:nth-child(odd) td{
+  background:#fff!important;
+  color:#111!important;
+}
+#screen-loyalty-exp-transaction #expTxTable tbody tr:nth-child(even) td{
+  background:#f8f8f8!important;
+  color:#111!important;
+}
+#screen-loyalty-exp-transaction #expTxTable tbody tr:nth-child(odd) td:nth-child(16){
+  background:#fff!important;
+}
+#screen-loyalty-exp-transaction #expTxTable tbody tr:nth-child(even) td:nth-child(16){
+  background:#f8f8f8!important;
+}
+#screen-loyalty-exp-transaction #expTxTable td.exp-value-positive{
+  color:#008a3b!important;
+}
+#screen-loyalty-exp-transaction #expTxTable td.exp-value-negative{
+  color:#d82323!important;
+}
+#screen-loyalty-exp-transaction .exp-type-badge{
+  background:#eef4ff!important;
+  color:#2463a8!important;
+}
+#screen-loyalty-exp-transaction .exp-tx-detail-item{
+  grid-template-columns:50% 50%!important;
+  gap:0!important;
+}
+#screen-loyalty-exp-transaction .exp-tx-detail-item strong{
+  padding-left:16px!important;
+  text-align:left!important;
+}
+@media(max-width:700px){
+  #screen-loyalty-exp-transaction .exp-tx-detail-item{
+    grid-template-columns:1fr!important;
+    gap:4px!important;
+  }
+  #screen-loyalty-exp-transaction .exp-tx-detail-item strong{
+    padding-left:0!important;
+  }
+}
+
+
+/* Loyalty > Tra cứu hạng thành viên */
+#screen-loyalty-member-rank-lookup .cms-content{padding:14px}
+#screen-loyalty-member-rank-lookup .loyalty-rank-lookup-shell{width:100%;max-width:1040px;margin:0 auto;box-sizing:border-box}
+#screen-loyalty-member-rank-lookup .loyalty-rank-search-box{width:100%;max-width:1040px;box-sizing:border-box;justify-content:flex-start}
+#screen-loyalty-member-rank-lookup .loyalty-rank-search-box label{flex:1;max-width:none;min-width:0}
+#screen-loyalty-member-rank-lookup .loyalty-rank-search-box label input{width:100%!important;min-width:560px;box-sizing:border-box}
+#screen-loyalty-member-rank-lookup .loyalty-rank-result{margin-top:14px}
+#screen-loyalty-member-rank-lookup .loyalty-rank-profile-head{margin-bottom:14px;padding:14px 18px}
+#screen-loyalty-member-rank-lookup .loyalty-rank-profile-info{flex:1}
+#screen-loyalty-member-rank-lookup .loyalty-rank-account-meta{display:grid;grid-template-columns:repeat(3,minmax(180px,1fr));gap:12px;margin-top:10px}
+#screen-loyalty-member-rank-lookup .loyalty-rank-account-meta>div{display:flex;align-items:center;gap:8px;min-height:34px}
+#screen-loyalty-member-rank-lookup .loyalty-rank-account-meta span{color:#667085;font-size:13px}
+#screen-loyalty-member-rank-lookup .loyalty-rank-account-meta b{color:#172235;font-size:14px;background:transparent!important;border:0!important;padding:0!important}
+#screen-loyalty-member-rank-lookup .loyalty-rank-card{width:100%;max-width:1040px;margin:0 auto}
+#screen-loyalty-member-rank-lookup .loyalty-rank-card-title{padding:11px 16px;background:#f4f9fd;border-bottom:1px solid #d7e5ef;color:#075985;font-weight:700;text-align:center}
+#screen-loyalty-member-rank-lookup .loyalty-rank-card-body{padding:0}
+#screen-loyalty-member-rank-lookup .loyalty-rank-card .account-info-row{grid-template-columns:230px minmax(0,1fr);padding:10px 16px}
+#screen-loyalty-member-rank-lookup .loyalty-rank-history-wrap{margin-top:8px}
+#screen-loyalty-member-rank-lookup .loyalty-rank-history-table{width:100%}
+#screen-loyalty-member-rank-lookup .loyalty-rank-history-table th,#screen-loyalty-member-rank-lookup .loyalty-rank-history-table td{text-align:left}
+#screen-loyalty-member-rank-lookup .loyalty-rank-history-title th{text-align:center;background:#f4f9fd;color:#075985;font-size:14px}
+#screen-loyalty-member-rank-lookup .loyalty-rank-page-foot{padding:10px 16px 14px}
+@media(max-width:900px){
+  #screen-loyalty-member-rank-lookup .loyalty-rank-account-meta{grid-template-columns:1fr}
+  #screen-loyalty-member-rank-lookup .loyalty-rank-search-box label input{min-width:0}
+  #screen-loyalty-member-rank-lookup .loyalty-rank-card .account-info-row{grid-template-columns:1fr;gap:6px}
+}
