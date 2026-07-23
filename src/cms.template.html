@@ -57,8 +57,8 @@
 <button onclick="showScreen('loyalty-event-benefit',this)" type="button"><i class="fa fa-bolt"></i> Thiết lập ưu đãi sự kiện</button>
 <button onclick="showScreen('loyalty-voucher-setting',this)" type="button"><i class="fa fa-ticket"></i> Thiết lập Voucher</button>
 <button onclick="showScreen('loyalty-voucher-manage',this)" type="button"><i class="fa fa-tags"></i> Quản lý Voucher</button>
-<button onclick="showScreen('loyalty-exp-transaction',this)" type="button"><i class="fa fa-list"></i> Tra cứu giao dịch EXP</button>
-<button onclick="showScreen('loyalty-member-rank',this)" type="button"><i class="fa fa-user-check"></i> Tra cứu hạng thành viên</button>
+<button onclick="showScreen('loyalty-exp-transaction',this)" type="button"><i class="fa fa-history"></i> Tra cứu giao dịch EXP</button>
+<button onclick="showScreen('loyalty-member-rank-lookup',this)" type="button"><i class="fa fa-user-tag"></i> Tra cứu hạng thành viên</button>
 </div>
 </div>
 <div class="cms-menu-item">
@@ -1166,42 +1166,80 @@
 <div class="cms-modal" id="voucherManageRevokeModal" onclick="if(event.target===this)cmsVoucherManageCloseRevoke()"><div class="cms-modal-dialog voucher-manage-confirm-dialog"><div class="cms-modal-header"><h3><i class="fa fa-undo"></i> Xác nhận thu hồi Voucher</h3><button onclick="cmsVoucherManageCloseRevoke()" type="button">×</button></div><div class="cms-modal-body"><p id="voucherManageRevokeText"></p><label class="voucher-manage-reason"><span>Lý do thu hồi <b class="required">*</b></span><textarea id="voucherManageRevokeReason" placeholder="Nhập lý do thu hồi"></textarea><small id="voucherManageRevokeError"></small></label></div><div class="cms-modal-footer"><button class="btn gray" onclick="cmsVoucherManageCloseRevoke()" type="button">Hủy</button><button class="btn red" onclick="cmsVoucherManageConfirmRevoke()" type="button"><i class="fa fa-undo"></i> Xác nhận thu hồi</button></div></div></div>
 <div class="cms-modal" id="voucherManageIssueModal" onclick="if(event.target===this)cmsVoucherManageCloseIssue()"><div class="cms-modal-dialog voucher-manage-confirm-dialog"><div class="cms-modal-header"><h3><i class="fa fa-plus"></i> Phát hành Voucher</h3><button onclick="cmsVoucherManageCloseIssue()" type="button">×</button></div><div class="cms-modal-body voucher-manage-issue-form"><label><span>Tài khoản nhận <b class="required">*</b></span><input id="voucherManageIssueAccount" placeholder="Nhập Username/SĐT/Email"/></label><label><span>Tên Voucher <b class="required">*</b></span><select id="voucherManageIssueName"><option value="">Chọn Voucher</option><option>Voucher giảm 10%</option><option>Voucher sinh nhật</option><option>Voucher giảm 50.000 VNĐ</option></select></label><small id="voucherManageIssueError"></small></div><div class="cms-modal-footer"><button class="btn gray" onclick="cmsVoucherManageCloseIssue()" type="button">Hủy</button><button class="btn blue" onclick="cmsVoucherManageConfirmIssue()" type="button"><i class="fa fa-save"></i> Lưu lại</button></div></div></div>
 </section>
+
+
 <section class="screen hidden" id="screen-loyalty-exp-transaction">
-<div class="cms-screen-title"><i class="fa fa-list"></i> Loyalty &gt; Tra cứu giao dịch EXP</div>
+<div class="cms-screen-title"><i class="fa fa-history"></i> Loyalty &gt; Tra cứu giao dịch EXP</div>
+<div class="cms-content"><div class="loyalty-admin-shell exp-transaction-shell">
+<div class="loyalty-reference-filter exp-transaction-filter">
+<div class="exp-transaction-filter-grid">
+<label><span>Từ ngày</span><input class="input" id="expTxFrom" type="datetime-local" step="1"/></label>
+<label><span>Đến ngày</span><input class="input" id="expTxTo" type="datetime-local" step="1"/></label>
+<label><span>Tên tài khoản</span><input class="input" id="expTxAccount" placeholder="Nhập tên tài khoản" type="text"/></label>
+<label><span>Nguồn phát</span><select class="select" id="expTxSource"><option value="">Tất cả</option><option>Tích lũy</option><option>Thưởng sự kiện</option><option>Thu hồi</option><option>Cộng bù</option></select></label>
+<label><span>Loại giao dịch</span><select class="select" id="expTxType"><option value="">Tất cả</option><option>Nạp Point</option><option>Mua hàng</option></select></label>
+<label><span>Sản phẩm</span><select class="select" id="expTxProduct"><option value="">Tất cả</option></select></label>
+<label><span>Mã giao dịch EXP</span><input class="input" id="expTxCode" placeholder="Nhập mã giao dịch EXP" type="text"/></label>
+</div>
+<div class="cms-actions-center"><button class="btn info" onclick="cmsExpTxSearch()" type="button"><i class="fa fa-search"></i> Tra cứu</button></div>
+</div>
+<div class="module-toolbar exp-transaction-toolbar"><div class="toolbar-left"><button class="btn gray" onclick="cmsExpTxToggleColumns(this)" type="button"><i class="fa fa-columns"></i> Ẩn hiện cột</button></div><div class="toolbar-right"><input class="toolbar-search exp-transaction-quick-search" id="expTxQuick" oninput="cmsExpTxSearch()" placeholder="Tìm kiếm nhanh"/></div></div>
+<div class="table-wrap exp-transaction-table-wrap"><table class="data-table" id="expTxTable"><thead><tr><th>STT</th><th>Thời gian</th><th>Tài khoản</th><th>Họ và tên</th><th>Loại EXP</th><th>Số EXP</th><th>Nguồn phát</th><th>Mã giao dịch EXP</th><th>Loại giao dịch</th><th>Sản phẩm</th><th>Life EXP trước GD</th><th>Life EXP sau GD</th><th>Hạng thành viên trước GD</th><th>Hạng thành viên sau GD</th><th>Người cập nhật</th><th>Thao tác</th></tr></thead><tbody id="expTxTableBody"></tbody></table></div>
+<div class="page-foot"><span id="expTxPageInfo"></span><div class="pager" id="expTxPager"></div></div>
+</div></div>
+<div class="cms-modal exp-tx-detail-modal" id="expTxDetailModal" onclick="if(event.target===this)cmsExpTxCloseDetail()"><div class="cms-modal-dialog exp-tx-detail-dialog"><div class="cms-modal-header"><h3><i class="fa fa-info-circle"></i> Chi tiết giao dịch EXP</h3><button onclick="cmsExpTxCloseDetail()" type="button">×</button></div><div class="cms-modal-body"><div class="exp-tx-detail-grid" id="expTxDetailContent"></div></div></div></div>
+</section>
+
+
+<section class="screen hidden" id="screen-loyalty-member-rank-lookup">
+<div class="cms-screen-title"><i class="fa fa-user-tag"></i> Loyalty &gt; Tra cứu hạng thành viên</div>
 <div class="cms-content">
-<div class="loyalty-admin-shell">
-<div class="loyalty-reference-filter">
-<div class="loyalty-filter-grid aexp-filter-grid">
-<label>Từ khóa <input class="input" placeholder="Nhập từ khóa tra cứu"/></label>
-<label>Trạng thái <select class="select"><option>Tất cả</option><option>Hoạt động</option><option>Tạm dừng</option></select></label>
-<label>Đối tác / nhóm áp dụng <select class="select"><option>Tất cả</option><option>VTC Game</option><option>VTC Pay</option><option>VTC Edu</option></select></label>
+<div class="account-edit-shell loyalty-rank-lookup-shell">
+<div class="account-search-box account-search-reference loyalty-rank-search-box">
+<label><span>Tài khoản</span>
+<input class="input" id="loyaltyRankLookupAccount" placeholder="Nhập Username, Số điện thoại hoặc Email" onkeydown="if(event.key==='Enter')cmsLookupMemberRank()"/>
+</label>
+<button class="btn info" onclick="cmsLookupMemberRank()" type="button"><i class="fa fa-search"></i> Tra cứu</button>
 </div>
-<div class="cms-actions-center"><button class="btn info"><i class="fa fa-search"></i> Tra cứu</button><button class="btn green"><i class="fa fa-plus"></i> Thêm mới</button></div>
+<div class="account-alert" id="loyaltyRankLookupAlert"></div>
+<div class="hidden loyalty-rank-result" id="loyaltyRankLookupResult">
+<div class="account-profile-head loyalty-rank-profile-head">
+<div class="loyalty-rank-profile-info">
+<div class="account-name" id="loyaltyRankFullName"></div>
+<div class="loyalty-rank-account-meta">
+<div><span>Username</span><b id="loyaltyRankUsername"></b></div>
+<div><span>Account ID</span><b id="loyaltyRankAccountId"></b></div>
+<div><span>Trạng thái hoạt động</span><b id="loyaltyRankStatus"></b></div>
 </div>
-<div class="module-toolbar aexp-toolbar"><div class="toolbar-left"><button class="btn green"><i class="fa fa-download"></i> Xuất dữ liệu</button></div><div class="toolbar-right"><input class="toolbar-search" placeholder="Tìm kiếm nhanh"/></div></div>
-<div class="table-wrap"><table class="data-table"><thead><tr><th>Thời gian</th><th>Username</th><th>Loại EXP</th><th>Số EXP</th><th>Nguồn phát sinh</th><th>Chức năng</th></tr></thead><tbody><tr><td>29/06/2026 09:00</td><td>hongtt</td><td>T-EXP</td><td>25</td><td>Thanh toán Au Mobile</td></tr><tr><td>28/06/2026 08:00</td><td>toanth</td><td>A-EXP</td><td>1</td><td>Điểm danh ngày</td></tr><tr><td colspan="5">Dữ liệu cấu hình demo, phục vụ mô phỏng thao tác CMS.</td><td><button class="icon-square orange"><i class="fa fa-edit"></i></button><button class="icon-square red"><i class="fa fa-ban"></i></button></td></tr></tbody></table></div>
-<div class="page-foot"><span>Hiển thị từ 1 tới 3 của 3 bản ghi</span><div class="pager"><button>Trước</button><button class="active">1</button><button>Tiếp</button></div></div>
+</div>
+</div>
+<div class="account-card loyalty-rank-card">
+<div class="account-card-title loyalty-rank-card-title">Hạng hiện tại</div>
+<div class="account-card-body loyalty-rank-card-body">
+<div class="account-info-row"><b>Tên hạng</b><span class="account-rank"><span class="account-rank-icon"><i class="fa fa-medal"></i></span><span id="loyaltyRankCurrent"></span></span></div>
+<div class="account-info-row"><b>Lifetime EXP</b><span id="loyaltyRankLifetimeExp"></span></div>
+<div class="account-info-row"><b>Cycle EXP</b><span id="loyaltyRankCycleExp"></span></div>
+<div class="account-info-row"><b>Cycle T-EXP</b><span id="loyaltyRankCycleTExp"></span></div>
+<div class="account-info-row"><b>Hạng tiếp theo</b><span id="loyaltyRankNext"></span></div>
+<div class="account-info-row"><b>Ngày bắt đầu chu kỳ</b><span id="loyaltyRankCycleStart"></span></div>
+<div class="account-info-row"><b>Ngày kết thúc chu kỳ</b><span id="loyaltyRankCycleEnd"></span></div>
+<div class="table-wrap loyalty-rank-history-wrap">
+<table class="account-table loyalty-rank-history-table">
+<thead>
+<tr class="loyalty-rank-history-title"><th colspan="4">Lịch sử thay đổi hạng</th></tr>
+<tr><th>STT</th><th>Thời điểm</th><th>Loại thay đổi</th><th>Lý do</th></tr>
+</thead>
+<tbody id="loyaltyRankHistoryBody"></tbody>
+</table>
+</div>
+<div class="page-foot loyalty-rank-page-foot"><span id="loyaltyRankPageInfo"></span><div class="pager" id="loyaltyRankPager"></div></div>
+</div>
+</div>
+</div>
 </div>
 </div>
 </section>
-<section class="screen hidden" id="screen-loyalty-member-rank">
-<div class="cms-screen-title"><i class="fa fa-user-check"></i> Loyalty &gt; Tra cứu hạng thành viên</div>
-<div class="cms-content">
-<div class="loyalty-admin-shell">
-<div class="loyalty-reference-filter">
-<div class="loyalty-filter-grid aexp-filter-grid">
-<label>Từ khóa <input class="input" placeholder="Nhập từ khóa tra cứu"/></label>
-<label>Trạng thái <select class="select"><option>Tất cả</option><option>Hoạt động</option><option>Tạm dừng</option></select></label>
-<label>Đối tác / nhóm áp dụng <select class="select"><option>Tất cả</option><option>VTC Game</option><option>VTC Pay</option><option>VTC Edu</option></select></label>
-</div>
-<div class="cms-actions-center"><button class="btn info"><i class="fa fa-search"></i> Tra cứu</button><button class="btn green"><i class="fa fa-plus"></i> Thêm mới</button></div>
-</div>
-<div class="module-toolbar aexp-toolbar"><div class="toolbar-left"><button class="btn green"><i class="fa fa-download"></i> Xuất dữ liệu</button></div><div class="toolbar-right"><input class="toolbar-search" placeholder="Tìm kiếm nhanh"/></div></div>
-<div class="table-wrap"><table class="data-table"><thead><tr><th>Username</th><th>Hạng hiện tại</th><th>Lifetime EXP</th><th>Cycle EXP</th><th>Chu kỳ</th><th>Chức năng</th></tr></thead><tbody><tr><td>hongtt</td><td>Vàng</td><td>3.480</td><td>1.480</td><td>01/01/2026 - 31/12/2026</td></tr><tr><td>toanth</td><td>Đồng</td><td>260</td><td>260</td><td>10/06/2026 - 10/06/2027</td></tr><tr><td colspan="5">Dữ liệu cấu hình demo, phục vụ mô phỏng thao tác CMS.</td><td><button class="icon-square orange"><i class="fa fa-edit"></i></button><button class="icon-square red"><i class="fa fa-ban"></i></button></td></tr></tbody></table></div>
-<div class="page-foot"><span>Hiển thị từ 1 tới 3 của 3 bản ghi</span><div class="pager"><button>Trước</button><button class="active">1</button><button>Tiếp</button></div></div>
-</div>
-</div>
-</section>
+
 <section class="screen hidden" id="screen-loyalty-config-form">
 <div class="cms-screen-title"><i class="fa fa-edit"></i> Loyalty &gt; Cập nhật cấu hình</div>
 <div class="cms-content">
