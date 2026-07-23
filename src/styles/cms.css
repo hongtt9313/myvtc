@@ -2262,3 +2262,40 @@ color:#333;
   box-sizing:border-box!important;
   overflow:hidden!important;
 }
+
+
+/* Loyalty > Thiết lập hạng thành viên: đồng bộ thanh công cụ theo T-EXP */
+#screen-loyalty-rank-setting .module-toolbar{
+  display:flex!important;
+  justify-content:space-between!important;
+  align-items:center!important;
+  gap:12px!important;
+  margin:0 0 12px!important;
+  min-height:38px!important;
+}
+#screen-loyalty-rank-setting .toolbar-left,
+#screen-loyalty-rank-setting .toolbar-right{
+  display:flex!important;
+  align-items:center!important;
+}
+#screen-loyalty-rank-setting .toolbar-right{margin-left:auto!important}
+#screen-loyalty-rank-setting .toolbar-search{
+  width:320px!important;
+  height:38px!important;
+  box-sizing:border-box!important;
+  border:1px solid #ccc!important;
+  border-radius:3px!important;
+  padding:0 10px!important;
+  background:#fff!important;
+  outline:none!important;
+  box-shadow:none!important;
+}
+#screen-loyalty-rank-setting .toolbar-search:focus{
+  border-color:#b8b8b8!important;
+  box-shadow:none!important;
+}
+@media(max-width:800px){
+  #screen-loyalty-rank-setting .module-toolbar{flex-wrap:wrap!important}
+  #screen-loyalty-rank-setting .toolbar-right{width:100%!important}
+  #screen-loyalty-rank-setting .toolbar-search{width:100%!important}
+}
