@@ -53,7 +53,7 @@
 <button onclick="showScreen('loyalty-aexp-rate',this)" type="button"><i class="fa fa-star"></i> Thiết lập tỉ lệ A-EXP</button>
 <button onclick="showScreen('loyalty-rank-setting',this)" type="button"><i class="fa fa-medal"></i> Thiết lập hạng thành viên</button>
 <button onclick="showScreen('loyalty-cycle-setting',this)" type="button"><i class="fa fa-calendar"></i> Thiết lập chu kỳ xét hạng</button>
-<button onclick="showScreen('loyalty-rank-benefit',this)" type="button"><i class="fa fa-award"></i> Thiết lập ưu đãi nâng hạng</button>
+<button onclick="showScreen('loyalty-rank-benefit',this)" type="button"><i class="fa fa-award"></i> Thiết lập ưu đãi hạng thành viên</button>
 <button onclick="showScreen('loyalty-event-benefit',this)" type="button"><i class="fa fa-bolt"></i> Thiết lập ưu đãi sự kiện</button>
 <button onclick="showScreen('loyalty-voucher-setting',this)" type="button"><i class="fa fa-ticket"></i> Thiết lập Voucher</button>
 <button onclick="showScreen('loyalty-voucher-manage',this)" type="button"><i class="fa fa-tags"></i> Quản lý Voucher</button>
@@ -971,7 +971,7 @@
 <div class="texp-entry-row"><label class="form-label-text" for="rankMinExp">EXP tối thiểu <span class="required">*</span></label><input id="rankMinExp" min="1" placeholder="Nhập số EXP tối thiểu để đạt hạng" step="1" type="number"/><span class="field-error" id="err-rankMinExp"></span></div>
 <div class="texp-entry-row"><label class="form-label-text" for="rankTexpRate">Tỉ lệ T-EXP tối thiểu <span class="required">*</span></label><div class="rank-percent-input"><input id="rankTexpRate" max="100" min="0" placeholder="Nhập tỉ lệ T-EXP tối thiểu để đạt hạng" step="0.01" type="number"/><span>%</span></div><span class="field-error" id="err-rankTexpRate"></span></div>
 <div class="texp-entry-row"><label class="form-label-text" for="rankMaintainExp">EXP duy trì <span class="required">*</span></label><input id="rankMaintainExp" min="1" placeholder="Nhập số EXP tối thiểu trong chu kỳ xét hạng để không bị giáng hạng" step="1" type="number"/><span class="field-error" id="err-rankMaintainExp"></span></div>
-<div class="texp-entry-row rank-benefit-row"><label class="form-label-text">Quyền lợi</label><div class="rank-benefit-box"><label class="rank-benefit-check"><input id="rankBalanceEnabled" onchange="cmsRankToggleBenefitFields()" type="checkbox"/> Thưởng số dư MyVTC</label><div class="rank-benefit-detail" id="rankBalanceDetail"><label>Tỉ lệ thưởng trên giao dịch Nạp Point</label><div class="rank-percent-input"><input id="rankBalanceRate" max="100" min="0" placeholder="Nhập tỉ lệ" step="0.01" type="number"/><span>%</span></div></div><label class="rank-benefit-check"><input id="rankVoucherEnabled" onchange="cmsRankToggleBenefitFields()" type="checkbox"/> Thưởng voucher</label><div class="rank-benefit-detail" id="rankVoucherDetail"><label for="rankVoucher">Voucher</label><select id="rankVoucher"><option value="">Chọn voucher</option><option>Voucher giảm 10.000 VNĐ</option><option>Voucher giảm 20%</option><option>Voucher hoàn 50 Point</option><option>Voucher miễn phí giao dịch</option></select></div></div><span class="field-error" id="err-rankBenefits"></span></div>
+
 <div class="texp-entry-row"><label class="form-label-text" for="rankDescription">Mô tả</label><textarea id="rankDescription" placeholder="Nhập mô tả" rows="4"></textarea><span class="field-error" id="err-rankDescription"></span></div>
 <div class="texp-entry-row"><label class="form-label-text" for="rankStart">Ngày áp dụng <span class="required">*</span></label><input id="rankStart" step="1" type="datetime-local"/><span class="field-error" id="err-rankStart"></span></div>
 <div class="texp-entry-row"><label class="form-label-text" for="rankEnd">Ngày kết thúc <span class="required">*</span></label><input id="rankEnd" step="1" type="datetime-local"/><span class="field-error" id="err-rankEnd"></span></div>
@@ -981,81 +981,190 @@
 </section>
 <section class="screen hidden" id="screen-loyalty-cycle-setting">
 <div class="cms-screen-title"><i class="fa fa-calendar"></i> Loyalty &gt; Thiết lập chu kỳ xét hạng</div>
-<div class="cms-content">
-<div class="loyalty-admin-shell">
+<div class="cms-content"><div class="loyalty-admin-shell cycle-shell">
 <div class="loyalty-reference-filter">
-<div class="loyalty-filter-grid aexp-filter-grid">
-<label>Từ khóa <input class="input" placeholder="Nhập từ khóa tra cứu"/></label>
-<label>Trạng thái <select class="select"><option>Tất cả</option><option>Hoạt động</option><option>Tạm dừng</option></select></label>
-<label>Đối tác / nhóm áp dụng <select class="select"><option>Tất cả</option><option>VTC Game</option><option>VTC Pay</option><option>VTC Edu</option></select></label>
+<div class="cycle-filter-grid"><div id="cycleObjectFilter"></div><div id="cycleUnitFilter"></div><div id="cycleProductFilter"></div></div>
+<div class="cms-actions-center"><button class="btn info" onclick="cmsCycleSearch()" type="button"><i class="fa fa-search"></i> Tra cứu</button><button class="btn green" onclick="cmsCycleOpenForm()" type="button"><i class="fa fa-plus"></i> Thêm mới</button></div>
 </div>
-<div class="cms-actions-center"><button class="btn info"><i class="fa fa-search"></i> Tra cứu</button><button class="btn green"><i class="fa fa-plus"></i> Thêm mới</button></div>
+<div class="module-toolbar texp-toolbar"><div class="toolbar-left"><button class="btn gray" onclick="cmsCycleToggleColumns(this)" type="button"><i class="fa fa-columns"></i> Ẩn/hiện cột</button></div><div class="toolbar-right"><input class="toolbar-search" id="cycleQuickSearch" oninput="cmsCycleSearch()" placeholder="Tìm kiếm nhanh"/></div></div>
+<div class="table-wrap"><table class="data-table" id="cycleTable"><thead><tr><th>Đối tượng</th><th>Đơn vị</th><th>Sản phẩm</th><th>Độ dài chu kỳ</th><th>Thời điểm xét hạng</th><th>Thời gian áp dụng</th><th>Thời gian kết thúc</th><th>Trạng thái</th><th>Chức năng</th></tr></thead><tbody id="cycleTableBody"></tbody></table></div>
+<div class="page-foot"><span id="cyclePageInfo"></span><div class="pager" id="cyclePager"></div></div>
+</div></div>
+</section>
+<section class="screen hidden" id="screen-loyalty-cycle-form">
+<div class="cms-screen-title"><i class="fa fa-calendar"></i> Loyalty &gt; Thiết lập chu kỳ xét hạng</div>
+<div class="cms-content"><div class="loyalty-admin-shell"><div class="payment-panel texp-form-panel">
+<div class="payment-panel-title"><i class="fa fa-edit"></i> <span id="cycleFormTitle">Thêm mới cấu hình</span></div>
+<div class="account-alert" id="cycleFormAlert"></div>
+<div class="texp-entry-form cycle-entry-form">
+<div class="texp-entry-row"><label class="form-label-text">Đối tượng <span class="required">*</span></label><div class="texp-multi-control" id="cycleObjectControl"></div><span class="field-error" id="err-cycleObjectForm"></span></div>
+<div class="texp-entry-row"><label class="form-label-text">Đơn vị <span class="required">*</span></label><div class="texp-multi-control" id="cycleUnitControl"></div><span class="field-error" id="err-cycleUnitForm"></span></div>
+<div class="texp-entry-row"><label class="form-label-text">Sản phẩm <span class="required">*</span></label><div class="texp-multi-control" id="cycleProductControl"></div><span class="field-error" id="err-cycleProductForm"></span></div>
+<div class="texp-entry-row"><label class="form-label-text" for="cycleLength">Độ dài chu kỳ <span class="required">*</span></label><div class="cycle-length-fields"><select id="cycleLengthUnit"><option>Ngày</option><option>Tháng</option><option>Năm</option></select><input id="cycleLength" min="1" placeholder="Nhập số" step="1" type="number"/></div><span class="field-error" id="err-cycleLength"></span></div>
+<div class="texp-entry-row"><label class="form-label-text" for="cycleReviewTime">Thời điểm xét hạng <span class="required">*</span></label><input id="cycleReviewTime" step="1" type="datetime-local"/><span class="field-error" id="err-cycleReviewTime"></span></div>
+<div class="texp-entry-row"><label class="form-label-text" for="cycleStart">Thời gian áp dụng <span class="required">*</span></label><input id="cycleStart" step="1" type="datetime-local"/><span class="field-error" id="err-cycleStart"></span></div>
+<div class="texp-entry-row"><label class="form-label-text" for="cycleEnd">Thời gian kết thúc <span class="required">*</span></label><input id="cycleEnd" step="1" type="datetime-local"/><span class="field-error" id="err-cycleEnd"></span></div>
 </div>
-<div class="module-toolbar aexp-toolbar"><div class="toolbar-left"><button class="btn green"><i class="fa fa-download"></i> Xuất dữ liệu</button></div><div class="toolbar-right"><input class="toolbar-search" placeholder="Tìm kiếm nhanh"/></div></div>
-<div class="table-wrap"><table class="data-table"><thead><tr><th>Tên chu kỳ</th><th>Thời lượng</th><th>Ngày áp dụng</th><th>Cơ chế reset</th><th>Trạng thái</th><th>Chức năng</th></tr></thead><tbody><tr><td>Chu kỳ mặc định</td><td>365 ngày</td><td>01/01/2026</td><td>Reset sau nâng hạng</td><td>Hoạt động</td></tr><tr><td colspan="5">Dữ liệu cấu hình demo, phục vụ mô phỏng thao tác CMS.</td><td><button class="icon-square orange"><i class="fa fa-edit"></i></button><button class="icon-square red"><i class="fa fa-ban"></i></button></td></tr></tbody></table></div>
-<div class="page-foot"><span>Hiển thị từ 1 tới 3 của 3 bản ghi</span><div class="pager"><button>Trước</button><button class="active">1</button><button>Tiếp</button></div></div>
-</div>
-</div>
+<div class="form-bottom payment-form-actions"><button class="btn blue" onclick="cmsCycleSave()" type="button"><i class="fa fa-save"></i> Lưu lại</button><button class="btn green" onclick="cmsCycleResetForm()" type="button"><i class="fa fa-refresh"></i> Làm mới</button><button class="btn gray" onclick="showScreen('loyalty-cycle-setting')" type="button"><i class="fa fa-arrow-left"></i> Quay lại</button></div>
+</div></div></div>
 </section>
 <section class="screen hidden" id="screen-loyalty-rank-benefit">
-<div class="cms-screen-title"><i class="fa fa-award"></i> Loyalty &gt; Thiết lập ưu đãi nâng hạng</div>
-<div class="cms-content">
-<div class="loyalty-admin-shell">
-<div class="loyalty-filter-grid">
-<label>Từ khóa <input class="input" placeholder="Nhập từ khóa tra cứu"/></label>
-<label>Trạng thái <select class="select"><option>Tất cả</option><option>Hoạt động</option><option>Tạm dừng</option></select></label>
-<label>Đối tác / nhóm áp dụng <select class="select"><option>Tất cả</option><option>VTC Game</option><option>VTC Pay</option><option>VTC Edu</option></select></label>
+<div class="cms-screen-title"><i class="fa fa-award"></i> Loyalty &gt; Thiết lập ưu đãi hạng thành viên</div>
+<div class="cms-content"><div class="loyalty-admin-shell">
+<div class="loyalty-reference-filter">
+<div class="rank-benefit-filter-grid">
+<label>Từ ngày <input class="input" id="rankBenefitFromFilter" type="datetime-local"/></label>
+<label>Đến ngày <input class="input" id="rankBenefitToFilter" type="datetime-local"/></label>
+<label>Loại thưởng <select class="select" id="rankBenefitRewardFilter"><option value="">Tất cả</option><option>Voucher</option><option>Point</option><option>EXP</option></select></label>
 </div>
-<div class="cms-actions-center"><button class="btn info"><i class="fa fa-search"></i> Tra cứu</button><button class="btn green"><i class="fa fa-plus"></i> Thêm mới</button><button class="btn gray"><i class="fa fa-download"></i> Xuất dữ liệu</button></div>
-<div class="table-wrap"><table class="data-table"><thead><tr><th>Hạng đạt</th><th>Loại thưởng</th><th>Giá trị</th><th>Giới hạn</th><th>Trạng thái</th><th>Chức năng</th></tr></thead><tbody><tr><td>Bạc</td><td>Voucher</td><td>Giảm 5%</td><td>1 lần/hạng</td><td>Hoạt động</td></tr><tr><td>Vàng</td><td>Points</td><td>20.000 Point</td><td>1 lần/hạng</td><td>Hoạt động</td></tr><tr><td colspan="5">Dữ liệu cấu hình demo, phục vụ mô phỏng thao tác CMS.</td><td><button class="icon-square orange"><i class="fa fa-edit"></i></button><button class="icon-square red"><i class="fa fa-ban"></i></button></td></tr></tbody></table></div>
-<div class="page-foot"><span>Hiển thị từ 1 tới 3 của 3 bản ghi</span><div class="pager"><button>Trước</button><button class="active">1</button><button>Tiếp</button></div></div>
+<div class="cms-actions-center"><button class="btn info" onclick="cmsRankBenefitSearch()" type="button"><i class="fa fa-search"></i> Tra cứu</button><button class="btn green" onclick="cmsRankBenefitOpenForm()" type="button"><i class="fa fa-plus"></i> Thêm mới</button></div>
 </div>
+<div class="module-toolbar aexp-toolbar"><div class="toolbar-left"><button class="btn gray" onclick="cmsRankBenefitToggleColumns(this)" type="button"><i class="fa fa-columns"></i> Ẩn/hiện cột</button></div><div class="toolbar-right"><input class="toolbar-search" id="rankBenefitQuickSearch" oninput="cmsRankBenefitSearch()" placeholder="Tìm kiếm nhanh"/></div></div>
+<div class="table-wrap"><table class="data-table" id="rankBenefitTable"><thead><tr><th>STT</th><th>Hạng thành viên</th><th>Loại thưởng</th><th>Giá trị thưởng</th><th>Chính sách trao thưởng</th><th>Ngày áp dụng</th><th>Ngày kết thúc</th><th>Trạng thái</th><th>Thao tác</th></tr></thead><tbody id="rankBenefitTableBody"></tbody></table></div>
+<div class="page-foot"><span id="rankBenefitPageInfo"></span><div class="pager" id="rankBenefitPager"></div></div>
+</div></div>
+</section>
+<section class="screen hidden" id="screen-loyalty-rank-benefit-form">
+<div class="cms-screen-title"><i class="fa fa-award"></i> Loyalty &gt; Thiết lập ưu đãi hạng thành viên</div>
+<div class="cms-content"><div class="loyalty-admin-shell"><div class="payment-panel texp-form-panel rank-benefit-form-panel">
+<div class="payment-panel-title"><i class="fa fa-edit"></i> <span id="rankBenefitFormTitle">Thêm mới thiết lập</span></div>
+<div class="account-alert" id="rankBenefitFormAlert"></div>
+<div class="texp-entry-form rank-benefit-entry-form">
+<div class="texp-entry-row"><label class="form-label-text" for="rankBenefitRank">Hạng thành viên <span class="required">*</span></label><select id="rankBenefitRank"><option>Đồng</option><option>Bạc</option><option>Vàng</option><option>Bạch Kim</option><option>Kim Cương</option></select><span class="field-error" id="err-rankBenefitRank"></span></div>
+<div class="texp-entry-row rank-benefit-rewards-row"><label class="form-label-text">Loại thưởng <span class="required">*</span></label><div><div id="rankBenefitRewardList"></div><button class="btn gray rank-benefit-add-reward" onclick="cmsRankBenefitAddReward()" type="button"><i class="fa fa-plus"></i> Thêm loại thưởng</button><span class="field-error" id="err-rankBenefitRewards"></span></div></div>
+<div class="texp-entry-row"><label class="form-label-text" for="rankBenefitPolicy">Chính sách trả thưởng <span class="required">*</span></label><select id="rankBenefitPolicy"><option>Mỗi lần đạt hạng</option><option>Chỉ lần đầu</option></select><span class="field-error" id="err-rankBenefitPolicy"></span></div>
+<div class="texp-entry-row"><label class="form-label-text" for="rankBenefitStart">Ngày áp dụng <span class="required">*</span></label><input id="rankBenefitStart" step="1" type="datetime-local"/><span class="field-error" id="err-rankBenefitStart"></span></div>
+<div class="texp-entry-row"><label class="form-label-text" for="rankBenefitEnd">Ngày kết thúc <span class="required">*</span></label><input id="rankBenefitEnd" step="1" type="datetime-local"/><span class="field-error" id="err-rankBenefitEnd"></span></div>
 </div>
+<div class="form-bottom payment-form-actions"><button class="btn blue" onclick="cmsRankBenefitSave()" type="button"><i class="fa fa-save"></i> Lưu lại</button><button class="btn green" onclick="cmsRankBenefitResetForm()" type="button"><i class="fa fa-refresh"></i> Làm mới</button><button class="btn gray" onclick="showScreen('loyalty-rank-benefit')" type="button"><i class="fa fa-arrow-left"></i> Quay lại</button></div>
+</div></div></div>
 </section>
 <section class="screen hidden" id="screen-loyalty-event-benefit">
 <div class="cms-screen-title"><i class="fa fa-bolt"></i> Loyalty &gt; Thiết lập ưu đãi sự kiện</div>
-<div class="cms-content">
-<div class="loyalty-admin-shell">
-<div class="loyalty-filter-grid">
-<label>Từ khóa <input class="input" placeholder="Nhập từ khóa tra cứu"/></label>
-<label>Trạng thái <select class="select"><option>Tất cả</option><option>Hoạt động</option><option>Tạm dừng</option></select></label>
-<label>Đối tác / nhóm áp dụng <select class="select"><option>Tất cả</option><option>VTC Game</option><option>VTC Pay</option><option>VTC Edu</option></select></label>
+<div class="cms-content"><div class="loyalty-admin-shell">
+<div class="loyalty-reference-filter">
+<div class="event-benefit-filter-grid">
+<label>Từ ngày <input class="input" id="eventBenefitFromFilter" type="datetime-local"/></label>
+<label>Đến ngày <input class="input" id="eventBenefitToFilter" type="datetime-local"/></label>
+<label>Loại thưởng <select class="select" id="eventBenefitRewardFilter"><option value="">Tất cả</option><option>Voucher</option><option>Point</option><option>EXP</option></select></label>
+<label>Trạng thái <select class="select" id="eventBenefitStatusFilter"><option value="">Tất cả</option><option>Hiệu lực</option><option>Chờ áp dụng</option><option>Hết hiệu lực</option><option>Tạm dừng</option></select></label>
 </div>
-<div class="cms-actions-center"><button class="btn info"><i class="fa fa-search"></i> Tra cứu</button><button class="btn green"><i class="fa fa-plus"></i> Thêm mới</button><button class="btn gray"><i class="fa fa-download"></i> Xuất dữ liệu</button></div>
-<div class="table-wrap"><table class="data-table"><thead><tr><th>Sự kiện</th><th>Loại thưởng</th><th>Giá trị</th><th>Thời gian hiệu lực</th><th>Trạng thái</th><th>Chức năng</th></tr></thead><tbody><tr><td>Sinh nhật</td><td>Voucher</td><td>BDAY-2026</td><td>30 ngày</td><td>Hoạt động</td></tr><tr><td>Nạp lần đầu</td><td>Point</td><td>10.000 Point</td><td>Không giới hạn</td><td>Hoạt động</td></tr><tr><td colspan="5">Dữ liệu cấu hình demo, phục vụ mô phỏng thao tác CMS.</td><td><button class="icon-square orange"><i class="fa fa-edit"></i></button><button class="icon-square red"><i class="fa fa-ban"></i></button></td></tr></tbody></table></div>
-<div class="page-foot"><span>Hiển thị từ 1 tới 3 của 3 bản ghi</span><div class="pager"><button>Trước</button><button class="active">1</button><button>Tiếp</button></div></div>
+<div class="cms-actions-center"><button class="btn info" onclick="cmsEventBenefitSearch()" type="button"><i class="fa fa-search"></i> Tra cứu</button><button class="btn green" onclick="cmsEventBenefitOpenForm()" type="button"><i class="fa fa-plus"></i> Thêm mới</button></div>
 </div>
+<div class="module-toolbar aexp-toolbar"><div class="toolbar-left"><button class="btn gray" onclick="cmsEventBenefitToggleColumns(this)" type="button"><i class="fa fa-columns"></i> Ẩn/hiện cột</button></div><div class="toolbar-right"><input class="toolbar-search" id="eventBenefitQuickSearch" oninput="cmsEventBenefitSearch()" placeholder="Tìm kiếm nhanh"/></div></div>
+<div class="table-wrap"><table class="data-table" id="eventBenefitTable"><thead><tr><th>STT</th><th>Mã sự kiện</th><th>Tên sự kiện</th><th>Loại thưởng</th><th>Giá trị thưởng</th><th>Lượt nhận tối đa</th><th>Giới hạn khác</th><th>Ngày áp dụng</th><th>Ngày kết thúc</th><th>Trạng thái</th><th>Thao tác</th></tr></thead><tbody id="eventBenefitTableBody"></tbody></table></div>
+<div class="page-foot"><span id="eventBenefitPageInfo"></span><div class="pager" id="eventBenefitPager"></div></div>
+</div></div>
+</section>
+<section class="screen hidden" id="screen-loyalty-event-benefit-form">
+<div class="cms-screen-title"><i class="fa fa-bolt"></i> Loyalty &gt; Thiết lập ưu đãi sự kiện</div>
+<div class="cms-content"><div class="loyalty-admin-shell"><div class="payment-panel texp-form-panel event-benefit-form-panel">
+<div class="payment-panel-title"><i class="fa fa-edit"></i> <span id="eventBenefitFormTitle">Thêm mới thiết lập</span></div>
+<div class="account-alert" id="eventBenefitFormAlert"></div>
+<div class="texp-entry-form event-benefit-entry-form">
+<div class="texp-entry-row"><label class="form-label-text" for="eventBenefitEvent">Tên sự kiện <span class="required">*</span></label><select id="eventBenefitEvent"></select><span class="field-error" id="err-eventBenefitEvent"></span></div>
+<div class="texp-entry-row"><label class="form-label-text" for="eventBenefitCondition">Điều kiện <span class="required">*</span></label><select id="eventBenefitCondition" onchange="cmsEventBenefitToggleTransaction()"><option>Đã xác thực SĐT</option><option>Đã xác thực Email</option><option>Đã liên kết Google</option><option>Đã liên kết Facebook</option><option>Đã liên kết Apple</option><option>Đã xác thực CCCD</option><option>Phát sinh giao dịch</option></select><span class="field-error" id="err-eventBenefitCondition"></span></div>
+<div class="texp-entry-row hidden" id="eventBenefitTransactionRow"><label class="form-label-text">Chi tiết giao dịch <span class="required">*</span></label><div class="event-benefit-inline-fields"><select id="eventBenefitTransactionType"><option>Nạp Point</option><option>Thanh toán</option></select><input id="eventBenefitTransactionValue" min="1" placeholder="Nhập giá trị giao dịch" step="1" type="number"/></div><span class="field-error" id="err-eventBenefitTransactionValue"></span></div>
+<div class="texp-entry-row"><label class="form-label-text" for="eventBenefitRewardType">Loại thưởng <span class="required">*</span></label><select id="eventBenefitRewardType" onchange="cmsEventBenefitRewardChanged()"><option>Voucher</option><option>Point</option><option>EXP</option></select><span class="field-error" id="err-eventBenefitRewardType"></span></div>
+<div class="texp-entry-row"><label class="form-label-text" for="eventBenefitRewardValue">Giá trị thưởng <span class="required">*</span></label><input id="eventBenefitRewardValue" placeholder="Nhập mã Voucher" type="text"/><span class="field-error" id="err-eventBenefitRewardValue"></span></div>
+<div class="texp-entry-row"><label class="form-label-text">Lượt nhận tối đa <span class="required">*</span></label><div class="event-benefit-inline-fields"><select id="eventBenefitReceivePeriod"><option>Ngày</option><option>Tháng</option><option>Năm</option><option>Trọn đời</option></select><input id="eventBenefitReceiveLimit" min="1" placeholder="Nhập số lượt" step="1" type="number"/></div><span class="field-error" id="err-eventBenefitReceiveLimit"></span></div>
+<div class="texp-entry-row"><label class="form-label-text">Giới hạn khác <span class="required">*</span></label><div class="event-benefit-inline-fields"><select id="eventBenefitOtherLimitType"><option>Tài khoản</option><option>Thiết bị</option><option>IP</option></select><input id="eventBenefitOtherLimitValue" min="1" placeholder="Nhập giá trị giới hạn" step="1" type="number"/></div><span class="field-error" id="err-eventBenefitOtherLimitValue"></span></div>
+<div class="texp-entry-row"><label class="form-label-text" for="eventBenefitStart">Ngày áp dụng <span class="required">*</span></label><input id="eventBenefitStart" step="1" type="datetime-local"/><span class="field-error" id="err-eventBenefitStart"></span></div>
+<div class="texp-entry-row"><label class="form-label-text" for="eventBenefitEnd">Ngày kết thúc <span class="required">*</span></label><input id="eventBenefitEnd" step="1" type="datetime-local"/><span class="field-error" id="err-eventBenefitEnd"></span></div>
 </div>
+<div class="form-bottom payment-form-actions"><button class="btn blue" onclick="cmsEventBenefitSave()" type="button"><i class="fa fa-save"></i> Lưu lại</button><button class="btn green" onclick="cmsEventBenefitResetForm()" type="button"><i class="fa fa-refresh"></i> Làm mới</button><button class="btn gray" onclick="showScreen('loyalty-event-benefit')" type="button"><i class="fa fa-arrow-left"></i> Quay lại</button></div>
+</div></div></div>
 </section>
 <section class="screen hidden" id="screen-loyalty-voucher-setting">
 <div class="cms-screen-title"><i class="fa fa-ticket"></i> Loyalty &gt; Thiết lập Voucher</div>
-<div class="cms-content">
-<div class="loyalty-admin-shell">
-<div class="loyalty-filter-grid">
-<label>Từ khóa <input class="input" placeholder="Nhập từ khóa tra cứu"/></label>
-<label>Trạng thái <select class="select"><option>Tất cả</option><option>Hoạt động</option><option>Tạm dừng</option></select></label>
-<label>Đối tác / nhóm áp dụng <select class="select"><option>Tất cả</option><option>VTC Game</option><option>VTC Pay</option><option>VTC Edu</option></select></label>
+<div class="cms-content"><div class="loyalty-admin-shell voucher-setting-shell">
+<div class="loyalty-reference-filter">
+<div class="voucher-filter-grid">
+<div id="voucherObjectFilter"></div>
+<div id="voucherUnitFilter"></div>
+<div id="voucherProductFilter"></div>
+<label>Tên Voucher
+<input class="input voucher-filter-input" id="voucherNameFilter" list="voucherNameOptions" oninput="cmsVoucherSearch()" placeholder="Tìm kiếm hoặc chọn Voucher" type="text"/>
+<datalist id="voucherNameOptions"></datalist>
+</label>
+<label>Prefix code
+<input class="input voucher-filter-input" id="voucherPrefixFilter" list="voucherPrefixOptions" oninput="cmsVoucherSearch()" placeholder="Tìm kiếm hoặc chọn Prefix code" type="text"/>
+<datalist id="voucherPrefixOptions"></datalist>
+</label>
+<label>Loại giao dịch
+<select class="select" id="voucherTransactionFilter" onchange="cmsVoucherSearch()"><option value="">Tất cả</option></select>
+</label>
+<label>Hình thức thanh toán
+<select class="select" id="voucherPaymentFilter" onchange="cmsVoucherSearch()"><option value="">Tất cả</option></select>
+</label>
+<label>Trạng thái
+<select class="select" id="voucherStatusFilter" onchange="cmsVoucherSearch()"><option value="">Tất cả</option><option>Hiệu lực</option><option>Chờ áp dụng</option><option>Hết hiệu lực</option><option>Tạm dừng</option></select>
+</label>
 </div>
-<div class="cms-actions-center"><button class="btn info"><i class="fa fa-search"></i> Tra cứu</button><button class="btn green"><i class="fa fa-plus"></i> Thêm mới</button><button class="btn gray"><i class="fa fa-download"></i> Xuất dữ liệu</button></div>
-<div class="table-wrap"><table class="data-table"><thead><tr><th>Mã cấu hình</th><th>Tên voucher</th><th>Loại giảm</th><th>Giá trị</th><th>Trạng thái</th><th>Chức năng</th></tr></thead><tbody><tr><td>VC_PAY_10</td><td>Giảm 10% nạp Points</td><td>Phần trăm</td><td>10%</td><td>Hoạt động</td></tr><tr><td>VC_NEW_USER</td><td>Ưu đãi người dùng mới</td><td>Số tiền</td><td>20.000đ</td><td>Hoạt động</td></tr><tr><td colspan="5">Dữ liệu cấu hình demo, phục vụ mô phỏng thao tác CMS.</td><td><button class="icon-square orange"><i class="fa fa-edit"></i></button><button class="icon-square red"><i class="fa fa-ban"></i></button></td></tr></tbody></table></div>
-<div class="page-foot"><span>Hiển thị từ 1 tới 3 của 3 bản ghi</span><div class="pager"><button>Trước</button><button class="active">1</button><button>Tiếp</button></div></div>
+<div class="cms-actions-center"><button class="btn info" onclick="cmsVoucherSearch()" type="button"><i class="fa fa-search"></i> Tra cứu</button><button class="btn green" onclick="cmsVoucherOpenForm()" type="button"><i class="fa fa-plus"></i> Thêm mới</button></div>
+</div>
+<div class="module-toolbar voucher-toolbar"><div class="toolbar-left"><button class="btn gray" onclick="cmsVoucherToggleColumns(this)" type="button"><i class="fa fa-columns"></i> Ẩn/hiện cột</button></div><div class="toolbar-right"><input class="toolbar-search" id="voucherQuickSearch" oninput="cmsVoucherSearch()" placeholder="Tìm kiếm nhanh"/></div></div>
+<div class="table-wrap voucher-table-wrap"><table class="data-table" id="voucherSettingTable"><thead><tr><th>STT</th><th>Tên voucher</th><th>Prefix code</th><th>Loại giao dịch</th><th>Hình thức thanh toán</th><th>Loại giảm giá</th><th>Giá trị giảm</th><th>Thời hạn sử dụng</th><th>Ngày áp dụng</th><th>Ngày kết thúc</th><th>Trạng thái</th><th>Thao tác</th></tr></thead><tbody id="voucherSettingTableBody"></tbody></table></div>
+<div class="page-foot"><span id="voucherPageInfo"></span><div class="pager" id="voucherPager"></div></div>
+</div></div>
+</section>
+<div class="cms-modal voucher-detail-modal" id="voucherDetailModal" onclick="if(event.target===this)cmsVoucherCloseDetail()">
+<div class="cms-modal-dialog voucher-detail-dialog">
+<div class="cms-modal-header"><span><i class="fa fa-ticket"></i> Chi tiết Voucher</span><button onclick="cmsVoucherCloseDetail()" type="button">&times;</button></div>
+<div class="cms-modal-body"><div class="voucher-detail-grid" id="voucherDetailContent"></div></div>
+<div class="cms-modal-footer"><button class="btn gray" onclick="cmsVoucherCloseDetail()" type="button"><i class="fa fa-times"></i> Đóng</button></div>
 </div>
 </div>
+<section class="screen hidden" id="screen-loyalty-voucher-form">
+<div class="cms-screen-title"><i class="fa fa-ticket"></i> Loyalty &gt; Thiết lập Voucher</div>
+<div class="cms-content"><div class="loyalty-admin-shell"><div class="payment-panel voucher-form-panel">
+<div class="payment-panel-title"><i class="fa fa-edit"></i> <span id="voucherFormTitle">Thêm mới thiết lập</span></div>
+<div class="account-alert" id="voucherFormAlert"></div>
+<div class="voucher-entry-form">
+<div class="voucher-entry-row"><label class="form-label-text">Đối tượng <span class="required">*</span></label><div class="texp-multi-control" id="voucherObjectControl"></div><span class="field-error" id="err-voucherObjectForm"></span></div>
+<div class="voucher-entry-row"><label class="form-label-text">Đơn vị <span class="required">*</span></label><div class="texp-multi-control" id="voucherUnitControl"></div><span class="field-error" id="err-voucherUnitForm"></span></div>
+<div class="voucher-entry-row"><label class="form-label-text">Sản phẩm <span class="required">*</span></label><div class="texp-multi-control" id="voucherProductControl"></div><span class="field-error" id="err-voucherProductForm"></span></div>
+<div class="voucher-entry-row"><label class="form-label-text" for="voucherName">Tên voucher <span class="required">*</span></label><input id="voucherName" placeholder="Nhập tên voucher" type="text"/><span class="field-error" id="err-voucherName"></span></div>
+<div class="voucher-entry-row"><label class="form-label-text" for="voucherPrefix">Prefix code <span class="required">*</span></label><input id="voucherPrefix" maxlength="20" placeholder="Nhập prefix code" type="text"/><span class="field-error" id="err-voucherPrefix"></span></div>
+<div class="voucher-entry-row"><label class="form-label-text" for="voucherDescription">Mô tả</label><textarea id="voucherDescription" placeholder="Nhập mô tả Voucher" rows="4"></textarea><span class="field-error" id="err-voucherDescription"></span></div>
+<div class="voucher-entry-row"><label class="form-label-text" for="voucherImage">Ảnh đại diện</label><div class="voucher-image-upload"><input accept="image/*" id="voucherImage" onchange="cmsVoucherPreviewImage(this)" type="file"/><div class="voucher-image-preview" id="voucherImagePreview"><i class="fa fa-image"></i><span>Chưa chọn ảnh</span></div></div><span class="field-error" id="err-voucherImage"></span></div>
+<div class="voucher-entry-row"><label class="form-label-text">Loại giao dịch <span class="required">*</span></label><div class="texp-multi-control" id="voucherTransactionControl"></div><span class="field-error" id="err-voucherTransactionForm"></span></div>
+<div class="voucher-entry-row"><label class="form-label-text">Hình thức thanh toán <span class="required">*</span></label><div class="texp-multi-control" id="voucherPaymentControl"></div><span class="field-error" id="err-voucherPaymentForm"></span></div>
+<div class="voucher-entry-row"><label class="form-label-text" for="voucherDiscountType">Loại giảm giá <span class="required">*</span></label><select id="voucherDiscountType" onchange="cmsVoucherDiscountChanged()"><option>Theo số tiền</option><option>Theo tỉ lệ</option></select><span class="field-error" id="err-voucherDiscountType"></span></div>
+<div class="voucher-entry-row"><label class="form-label-text" for="voucherDiscountValue">Giá trị giảm <span class="required">*</span></label><div class="voucher-money-field"><input id="voucherDiscountValue" min="1" placeholder="Nhập giá trị giảm" type="number"/><span id="voucherDiscountUnit">VNĐ</span></div><span class="field-error" id="err-voucherDiscountValue"></span></div>
+<div class="voucher-entry-row hidden" id="voucherMaxDiscountRow"><label class="form-label-text" for="voucherMaxDiscount">Giá trị tối đa <span class="required">*</span></label><div class="voucher-money-field"><input id="voucherMaxDiscount" min="1" placeholder="Nhập giá trị tối đa" type="number"/><span>VNĐ</span></div><span class="field-error" id="err-voucherMaxDiscount"></span></div>
+<div class="voucher-entry-row"><label class="form-label-text" for="voucherMinTransaction">Giá trị giao dịch tối thiểu <span class="required">*</span></label><div class="voucher-money-field"><input id="voucherMinTransaction" min="0" placeholder="Nhập giá trị giao dịch tối thiểu" type="number"/><span>VNĐ</span></div><span class="field-error" id="err-voucherMinTransaction"></span></div>
+<div class="voucher-entry-row"><label class="form-label-text" for="voucherValidityType">Thời hạn sử dụng <span class="required">*</span></label><select id="voucherValidityType" onchange="cmsVoucherValidityChanged()"><option>Theo thiết lập voucher</option><option>Kể từ ngày nhận</option></select><span class="field-error" id="err-voucherValidityType"></span></div>
+<div class="voucher-entry-row hidden" id="voucherReceiveValidityRow"><label class="form-label-text">Thời gian sau khi nhận <span class="required">*</span></label><div class="voucher-validity-options"><label><input checked name="voucherReceiveMode" onchange="cmsVoucherReceiveModeChanged()" type="radio" value="Trọn đời"/> Trọn đời</label><label><input name="voucherReceiveMode" onchange="cmsVoucherReceiveModeChanged()" type="radio" value="Trong vòng"/> Trong vòng</label><div class="voucher-days-field hidden" id="voucherDaysField"><span>Trong vòng</span><input id="voucherValidityDays" min="1" placeholder="Số ngày" type="number"/><span>ngày</span></div></div><span class="field-error" id="err-voucherValidityDays"></span></div>
+<div class="voucher-entry-row voucher-limit-row"><label class="form-label-text">Số lượt sử dụng tối đa <span class="required">*</span></label><div class="voucher-limit-grid"><label>Trong 1 Ngày <input id="voucherDailyLimit" min="1" placeholder="Nhập số lượt" type="number"/></label><label>Cả chương trình <input id="voucherTotalLimit" min="1" placeholder="Nhập số lượt" type="number"/></label></div><span class="field-error" id="err-voucherLimits"></span></div>
+<div class="voucher-entry-row"><label class="form-label-text" for="voucherStart">Ngày áp dụng <span class="required">*</span></label><input id="voucherStart" step="1" type="datetime-local"/><span class="field-error" id="err-voucherStart"></span></div>
+<div class="voucher-entry-row"><label class="form-label-text" for="voucherEnd">Ngày kết thúc <span class="required">*</span></label><input id="voucherEnd" step="1" type="datetime-local"/><span class="field-error" id="err-voucherEnd"></span></div>
+</div>
+<div class="form-bottom payment-form-actions"><button class="btn blue" onclick="cmsVoucherSave()" type="button"><i class="fa fa-save"></i> Lưu lại</button><button class="btn green" onclick="cmsVoucherResetForm()" type="button"><i class="fa fa-refresh"></i> Làm mới</button><button class="btn gray" onclick="showScreen('loyalty-voucher-setting')" type="button"><i class="fa fa-arrow-left"></i> Quay lại</button></div>
+</div></div></div>
 </section>
 <section class="screen hidden" id="screen-loyalty-voucher-manage">
 <div class="cms-screen-title"><i class="fa fa-tags"></i> Loyalty &gt; Quản lý Voucher</div>
-<div class="cms-content">
-<div class="loyalty-admin-shell">
-<div class="loyalty-filter-grid">
-<label>Từ khóa <input class="input" placeholder="Nhập từ khóa tra cứu"/></label>
-<label>Trạng thái <select class="select"><option>Tất cả</option><option>Hoạt động</option><option>Tạm dừng</option></select></label>
-<label>Đối tác / nhóm áp dụng <select class="select"><option>Tất cả</option><option>VTC Game</option><option>VTC Pay</option><option>VTC Edu</option></select></label>
+<div class="cms-content"><div class="loyalty-admin-shell voucher-manage-shell">
+<div class="voucher-manage-filter-box">
+<div class="voucher-manage-filter-grid">
+<label><span>Tên tài khoản</span><input class="input" id="voucherManageAccountFilter" oninput="cmsVoucherManageSearch()" placeholder="Nhập tên tài khoản" type="text"/></label>
+<label><span>Mã Voucher</span><input class="input" id="voucherManageCodeFilter" oninput="cmsVoucherManageSearch()" placeholder="Nhập mã Voucher" type="text"/></label>
+<label><span>Tên Voucher</span><input class="input" id="voucherManageNameFilter" oninput="cmsVoucherManageSearch()" placeholder="Nhập tên Voucher" type="text"/></label>
+<label><span>Trạng thái</span><select class="select" id="voucherManageStatusFilter" onchange="cmsVoucherManageSearch()"><option value="">Tất cả</option><option>Còn hiệu lực</option><option>Hết hiệu lực</option><option>Đã sử dụng</option></select></label>
+<label><span>Loại giao dịch</span><select class="select" id="voucherManageTransactionFilter" onchange="cmsVoucherManageSearch()"><option value="">Tất cả</option><option>Nạp Point</option><option>Thanh toán</option><option>Mua hàng</option></select></label>
+<label><span>Từ ngày</span><input class="input" id="voucherManageFromDate" onchange="cmsVoucherManageSearch()" step="1" type="datetime-local"/></label>
+<label><span>Đến ngày</span><input class="input" id="voucherManageToDate" onchange="cmsVoucherManageSearch()" step="1" type="datetime-local"/></label>
 </div>
-<div class="cms-actions-center"><button class="btn info"><i class="fa fa-search"></i> Tra cứu</button><button class="btn green"><i class="fa fa-plus"></i> Thêm mới</button><button class="btn gray"><i class="fa fa-download"></i> Xuất dữ liệu</button></div>
-<div class="table-wrap"><table class="data-table"><thead><tr><th>Mã voucher</th><th>Username</th><th>Ngày phát hành</th><th>Ngày sử dụng</th><th>Trạng thái</th><th>Chức năng</th></tr></thead><tbody><tr><td>MYVTC10-HONG</td><td>hongtt</td><td>01/06/2026</td><td>-</td><td>Khả dụng</td></tr><tr><td>BDAY-2026</td><td>hongtt</td><td>10/06/2026</td><td>20/06/2026</td><td>Đã dùng</td></tr><tr><td colspan="5">Dữ liệu cấu hình demo, phục vụ mô phỏng thao tác CMS.</td><td><button class="icon-square orange"><i class="fa fa-edit"></i></button><button class="icon-square red"><i class="fa fa-ban"></i></button></td></tr></tbody></table></div>
-<div class="page-foot"><span>Hiển thị từ 1 tới 3 của 3 bản ghi</span><div class="pager"><button>Trước</button><button class="active">1</button><button>Tiếp</button></div></div>
+<div class="cms-actions-center"><button class="btn info" onclick="cmsVoucherManageSearch()" type="button"><i class="fa fa-search"></i> Tra cứu</button><button class="btn green" onclick="cmsVoucherManageOpenIssue()" type="button"><i class="fa fa-plus"></i> Thêm mới</button></div>
 </div>
-</div>
+<div class="module-toolbar voucher-manage-toolbar"><div class="toolbar-left"><button class="btn gray" onclick="cmsVoucherManageToggleColumns(this)" type="button"><i class="fa fa-columns"></i> Ẩn hiện cột</button></div><div class="toolbar-right"><div class="voucher-manage-quick-search"><i class="fa fa-search"></i><input class="toolbar-search" id="voucherManageQuickSearch" oninput="cmsVoucherManageSearch()" placeholder="Tìm kiếm nhanh"/></div></div></div>
+<div class="table-wrap voucher-manage-table-wrap"><table class="data-table" id="voucherManageTable"><thead><tr><th>STT</th><th>Mã Voucher</th><th>Tên Voucher</th><th>Tài khoản nhận</th><th>Loại giao dịch</th><th>Hình thức thanh toán</th><th>Mã giao dịch</th><th>Số tiền giảm giá</th><th>Người cập nhật</th><th>Ngày cập nhật</th><th>Trạng thái</th><th>Thao tác</th></tr></thead><tbody id="voucherManageTableBody"></tbody></table></div>
+<div class="page-foot"><span id="voucherManagePageInfo"></span><div class="pager" id="voucherManagePager"></div></div>
+</div></div>
+<div class="cms-modal voucher-detail-modal" id="voucherManageDetailModal" onclick="if(event.target===this)cmsVoucherManageCloseDetail()"><div class="cms-modal-dialog voucher-detail-dialog"><div class="cms-modal-header"><h3><i class="fa fa-ticket"></i> Chi tiết Voucher</h3><button onclick="cmsVoucherManageCloseDetail()" type="button">×</button></div><div class="cms-modal-body"><div id="voucherManageDetailContent"></div></div></div></div>
+<div class="cms-modal" id="voucherManageRevokeModal" onclick="if(event.target===this)cmsVoucherManageCloseRevoke()"><div class="cms-modal-dialog voucher-manage-confirm-dialog"><div class="cms-modal-header"><h3><i class="fa fa-undo"></i> Xác nhận thu hồi Voucher</h3><button onclick="cmsVoucherManageCloseRevoke()" type="button">×</button></div><div class="cms-modal-body"><p id="voucherManageRevokeText"></p><label class="voucher-manage-reason"><span>Lý do thu hồi <b class="required">*</b></span><textarea id="voucherManageRevokeReason" placeholder="Nhập lý do thu hồi"></textarea><small id="voucherManageRevokeError"></small></label></div><div class="cms-modal-footer"><button class="btn gray" onclick="cmsVoucherManageCloseRevoke()" type="button">Hủy</button><button class="btn red" onclick="cmsVoucherManageConfirmRevoke()" type="button"><i class="fa fa-undo"></i> Xác nhận thu hồi</button></div></div></div>
+<div class="cms-modal" id="voucherManageIssueModal" onclick="if(event.target===this)cmsVoucherManageCloseIssue()"><div class="cms-modal-dialog voucher-manage-confirm-dialog"><div class="cms-modal-header"><h3><i class="fa fa-plus"></i> Phát hành Voucher</h3><button onclick="cmsVoucherManageCloseIssue()" type="button">×</button></div><div class="cms-modal-body voucher-manage-issue-form"><label><span>Tài khoản nhận <b class="required">*</b></span><input id="voucherManageIssueAccount" placeholder="Nhập Username/SĐT/Email"/></label><label><span>Tên Voucher <b class="required">*</b></span><select id="voucherManageIssueName"><option value="">Chọn Voucher</option><option>Voucher giảm 10%</option><option>Voucher sinh nhật</option><option>Voucher giảm 50.000 VNĐ</option></select></label><small id="voucherManageIssueError"></small></div><div class="cms-modal-footer"><button class="btn gray" onclick="cmsVoucherManageCloseIssue()" type="button">Hủy</button><button class="btn blue" onclick="cmsVoucherManageConfirmIssue()" type="button"><i class="fa fa-save"></i> Lưu lại</button></div></div></div>
 </section>
 <section class="screen hidden" id="screen-loyalty-exp-transaction">
 <div class="cms-screen-title"><i class="fa fa-list"></i> Loyalty &gt; Tra cứu giao dịch EXP</div>
