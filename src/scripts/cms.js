@@ -42,6 +42,8 @@ var cmsAccountData = [
       targetExp:2000,
       cycleTExp:74,
       targetTExp:80,
+      maintainExp:500,
+      maintainTExp:0,
       nextRank:'Bạch Kim',
       cycleStart:'01/01/2026',
       cycleEnd:'31/12/2026',
@@ -97,6 +99,8 @@ var cmsAccountData = [
       targetExp:500,
       cycleTExp:28,
       targetTExp:40,
+      maintainExp:100,
+      maintainTExp:0,
       nextRank:'Bạc',
       cycleStart:'10/06/2026',
       cycleEnd:'10/06/2027',
@@ -499,7 +503,6 @@ if(lookupStatusSelect) lookupStatusSelect.value = acc.status;
   var voucherHead = document.querySelector('#lookupVouchers').closest('table').querySelector('thead tr');
   voucherHead.innerHTML = '<th>STT</th><th>Tên voucher</th><th>Mã code</th><th>Trạng thái</th><th>Ngày phát hành</th><th>Ngày sử dụng</th><th>Ngày hết hạn</th>';
 
-  cmsRenderPagedTable('lookupSessions','Danh sách phiên đăng nhập',acc.sessions,['__stt','platform','device','os','version','ip','loginAt'],1,10,function(col,value){return cmsSafeText(value);});
   cmsRenderPagedTable('lookupPartners','Danh sách đối tác / dịch vụ đã cấp quyền',acc.partners,['__stt','name','scope','grantedAt','partnerUser','status','cancelAt','action'],1,5,function(col,value,item){
     if(col === 'action'){
       return item.status === 'Đang hoạt động' ? '<button class="account-mini-btn danger" type="button" onclick="cmsCancelPartner(\'' + cmsSafeText(item.name) + '\')">Hủy</button>' : '-';
@@ -507,7 +510,6 @@ if(lookupStatusSelect) lookupStatusSelect.value = acc.status;
     return cmsSafeText(value || '-');
   });
   cmsRenderPagedTable('lookupPointLots','Danh sách lô Points',acc.pointLots,['__stt','amount','receivedAt','expiredAt','status'],1,10,function(col,value){return col === 'amount' ? cmsMoney(value) : cmsSafeText(value);});
-  cmsRenderPagedTable('lookupRankHistory','Lịch sử thay đổi hạng',acc.loyalty.rankHistory,['__stt','time','type','reason'],1,10,function(col,value){return cmsSafeText(value);});
   cmsRenderPagedTable('lookupVouchers','Danh sách voucher trong kho đồ',acc.vouchers,['__stt','name','code','status','issuedAt','usedAt','expiredAt'],1,10,function(col,value){return cmsSafeText(value || '-');});
 
   var progressBar=document.getElementById('lookupProgressBar'); if(progressBar) progressBar.style.width = acc.loyalty.progress + '%';
@@ -1316,13 +1318,16 @@ function cmsInitLoyaltyAdmin(){
   cmsBindLoyaltyEventEnter();
 }
 document.addEventListener('DOMContentLoaded',function(){
+  setTimeout(cmsPaymentRateInitMulti,0);
   cmsInitLoyaltyAdmin();
 });
 document.addEventListener('DOMContentLoaded',function(){
+  setTimeout(cmsPaymentRateInitMulti,0);
   cmsInitLoyaltyAdmin();
 });
 
 document.addEventListener('DOMContentLoaded',function(){
+  setTimeout(cmsPaymentRateInitMulti,0);
   cmsNormalizeAccountDemoData();
   cmsEnhanceAccountUpdateUi();
   cmsBindAccountEnterSearch();
@@ -1332,9 +1337,10 @@ document.addEventListener('DOMContentLoaded',function(){
 
 
 var cmsPaymentRates = [
-  {id:'RATE-0001',currency:'VNĐ',value:100,start:'2026-06-01T00:00',end:'2026-12-31T23:59',status:'Hiệu lực',note:'100 Point cho mỗi 1.000 VNĐ',createdBy:'hongtt',createdAt:'01/06/2026 00:00',used:true},
-  {id:'RATE-0002',currency:'Vcoin',value:10,start:'2026-06-01T00:00',end:'2026-12-31T23:59',status:'Hiệu lực',note:'10 Point cho mỗi 1 Vcoin',createdBy:'hongtt',createdAt:'01/06/2026 00:00',used:false},
-  {id:'RATE-0003',currency:'VNĐ',value:80,start:'2026-01-01T00:00',end:'2026-05-31T23:59',status:'Hết hiệu lực',note:'Cấu hình cũ',createdBy:'hanhpd',createdAt:'01/01/2026 00:00',used:true}
+  {id:'RATE-0001',target:'Tài khoản',partner:'VTC Intecom',product:'MyVTC',currency:'VNĐ',value:100,start:'2026-06-01T00:00',end:'2026-12-31T23:59',status:'Hiệu lực',createdBy:'hongtt',createdAt:'01/06/2026 00:00',used:true},
+  {id:'RATE-0002',target:'Tài khoản',partner:'VTC Mobile',product:'Audition',currency:'Vcoin',value:10,start:'2026-08-01T00:00',end:'2026-12-31T23:59',status:'Chờ áp dụng',createdBy:'hongtt',createdAt:'01/06/2026 00:00',used:false},
+  {id:'RATE-0003',target:'Hệ thống',partner:'VTC Pay',product:'VTC Pay',currency:'VNĐ',value:80,start:'2026-01-01T00:00',end:'2026-05-31T23:59',status:'Hết hiệu lực',createdBy:'hanhpd',createdAt:'01/01/2026 00:00',used:true},
+  {id:'RATE-0004',target:'Tài khoản',partner:'VTC Intecom',product:'CrossFire',currency:'VNĐ',value:120,start:'2026-07-01T00:00',end:'2026-11-30T23:59',status:'Tạm dừng',createdBy:'admin',createdAt:'20/06/2026 09:30',used:false}
 ];
 
 var cmsPaymentRateLogs = [
@@ -1422,7 +1428,7 @@ function cmsPushPaymentRateLog(content){
 function cmsUpdatePaymentRateRuntimeStatus(){
   var now = new Date();
   cmsPaymentRates.forEach(function(rate){
-    if(rate.status === 'Hết hiệu lực') return;
+    if(rate.status === 'Hết hiệu lực' || rate.status === 'Tạm dừng') return;
     var start = new Date(rate.start);
     var end = new Date(rate.end);
     if(now < start) rate.status = 'Chờ áp dụng';
@@ -1437,31 +1443,93 @@ function cmsUpdatePaymentRateRuntimeStatus(){
   });
 }
 
+function cmsPaymentRateInitMulti(){
+  var controls = [
+    ['rateFilterTargetControl','Đối tượng','rateFilterTarget',['Tất cả','Hệ thống','Tài khoản']],
+    ['rateFilterPartnerControl','Đối tác','rateFilterPartner',['Tất cả','VTC Intecom','VTC Mobile','VTC Pay']],
+    ['rateFilterProductControl','Sản phẩm','rateFilterProduct',['Tất cả','MyVTC','Audition','CrossFire','VTC Pay']],
+    ['rateFilterStatusControl','Trạng thái','rateFilterStatus',['Tất cả','Chờ áp dụng','Hiệu lực','Hết hiệu lực','Tạm dừng']],
+    ['rateTargetControl','', 'rateTarget',['Tất cả','Hệ thống','Tài khoản']],
+    ['ratePartnerControl','', 'ratePartner',['Tất cả','VTC Intecom','VTC Mobile','VTC Pay']],
+    ['rateProductControl','', 'rateProduct',['Tất cả','MyVTC','Audition','CrossFire','VTC Pay']]
+  ];
+  controls.forEach(function(cfg){
+    var node=document.getElementById(cfg[0]);
+    if(node&&!node.innerHTML) node.innerHTML=cmsAccMultiFilter(cfg[1],cfg[2],cfg[3]);
+  });
+}
+function cmsPaymentRateSelected(id){
+  var values=cmsAccGetMultiValues(id);
+  return !values.length||values.indexOf('Tất cả')>=0?null:values;
+}
+function cmsPaymentRateFormValue(id){
+  var values=cmsAccGetMultiValues(id);
+  return values.indexOf('Tất cả')>=0?'Tất cả':values.join(', ');
+}
+function cmsPaymentRateMatches(value,selected){
+  if(!selected) return true;
+  var rowValues=String(value||'').split(',').map(function(x){return x.trim()});
+  return selected.some(function(x){return rowValues.indexOf(x)>=0;});
+}
 function cmsRenderPaymentRates(){
   cmsUpdatePaymentRateRuntimeStatus();
   var tbody = document.getElementById('paymentRateRows');
   if(!tbody) return;
-  var currency = cmsGetValue('rateFilterCurrency');
-  var status = cmsGetValue('rateFilterStatus');
+  cmsPaymentRateInitMulti();
+  var target = cmsPaymentRateSelected('rateFilterTarget');
+  var partner = cmsPaymentRateSelected('rateFilterPartner');
+  var product = cmsPaymentRateSelected('rateFilterProduct');
+  var status = cmsPaymentRateSelected('rateFilterStatus');
+  var keyword = cmsGetValue('rateQuickSearch').toLowerCase();
   var rows = cmsPaymentRates.filter(function(item){
-    return (!currency || item.currency === currency) && (!status || item.status === status);
+    var haystack = [item.target,item.partner,item.product,item.currency,item.value,item.status,cmsPaymentFormatDateTime(item.start),cmsPaymentFormatDateTime(item.end)].join(' ').toLowerCase();
+    return cmsPaymentRateMatches(item.target,target) && cmsPaymentRateMatches(item.partner,partner) && cmsPaymentRateMatches(item.product,product) && cmsPaymentRateMatches(item.status,status) && (!keyword || haystack.indexOf(keyword) !== -1);
   });
-
-  tbody.innerHTML = rows.length ? rows.map(function(item){
-    var unit = item.currency === 'VNĐ' ? 'Point / 1.000 VNĐ' : 'Point / 1 Vcoin';
+  tbody.innerHTML = rows.length ? rows.map(function(item,index){
+    var currencyLabel = item.currency === 'VNĐ' ? '1.000 VNĐ' : '1 Vcoin';
+    var ratio = cmsPaymentNumber(item.value,'') + ' Point';
+    var pauseIcon = item.status === 'Tạm dừng' ? 'fa-play' : 'fa-pause';
+    var pauseTitle = item.status === 'Tạm dừng' ? 'Tiếp tục' : 'Tạm dừng';
     return '<tr>' +
-      '<td>' + cmsSafeText(item.id) + '</td>' +
-      '<td>' + cmsSafeText(item.currency) + '</td>' +
-      '<td><span class="payment-money">' + cmsPaymentNumber(item.value,'') + '</span> ' + cmsSafeText(unit) + '</td>' +
+      '<td>' + (index + 1) + '</td>' +
+      '<td>' + cmsSafeText(item.target) + '</td>' +
+      '<td>' + cmsSafeText(item.partner) + '</td>' +
+      '<td>' + cmsSafeText(item.product) + '</td>' +
+      '<td>' + cmsSafeText(currencyLabel) + '</td>' +
+      '<td><span class="payment-money">' + cmsSafeText(ratio) + '</span></td>' +
       '<td>' + cmsSafeText(cmsPaymentFormatDateTime(item.start)) + '</td>' +
       '<td>' + cmsSafeText(cmsPaymentFormatDateTime(item.end)) + '</td>' +
       '<td>' + cmsPaymentStatusHtml(item.status) + '</td>' +
-      '<td>' + cmsSafeText(item.createdBy) + '</td>' +
-      '<td>' + cmsSafeText(item.createdAt) + '</td>' +
-      '<td>' + cmsSafeText(item.note || '') + '</td>' +
-            '<td class="ops"><button class="icon-square orange" onclick="cmsOpenPaymentRateForm(\'' + item.id + '\')"><i class="fa fa-edit"></i></button><button class="icon-square blue" onclick="cmsActivatePaymentRate(\'' + item.id + '\')"><i class="fa fa-check"></i></button><button class="icon-square red" onclick="cmsDeletePaymentRate(\'' + item.id + '\')"><i class="fa fa-trash"></i></button></td>' +
+      '<td class="ops payment-rate-actions"><button class="icon-square orange" title="Cập nhật" onclick="cmsOpenPaymentRateForm(\'' + item.id + '\')"><i class="fa fa-edit"></i></button><button class="icon-square blue" title="' + pauseTitle + '" onclick="cmsTogglePaymentRatePause(\'' + item.id + '\')"><i class="fa ' + pauseIcon + '"></i></button><button class="icon-square red" title="Xóa" onclick="cmsDeletePaymentRate(\'' + item.id + '\')"><i class="fa fa-trash"></i></button></td>' +
     '</tr>';
   }).join('') : '<tr><td colspan="10">Không có dữ liệu</td></tr>';
+  var count = document.getElementById('paymentRateCount');
+  if(count) count.textContent = rows.length + ' bản ghi';
+}
+
+function cmsTogglePaymentRateColumns(){
+  var table = document.getElementById('paymentRateTable');
+  if(!table) return;
+  var hidden = table.classList.toggle('payment-rate-compact-columns');
+  cmsPaymentAlert('paymentRateAlert','success',hidden ? 'Đã ẩn cột Đối tác và Sản phẩm.' : 'Đã hiện đầy đủ các cột.');
+}
+
+function cmsTogglePaymentRatePause(id){
+  var item = cmsPaymentRates.find(function(rate){return rate.id === id;});
+  if(!item) return;
+  var isPaused = item.status === 'Tạm dừng';
+  var actionText = isPaused ? 'tiếp tục' : 'tạm dừng';
+  var confirmTitle = isPaused ? 'Xác nhận tiếp tục chính sách' : 'Xác nhận tạm dừng chính sách';
+  cmsConfirmAction(confirmTitle,'Bạn có chắc chắn muốn ' + actionText + ' chính sách <b>' + cmsSafeText(item.id) + '</b>?','Xác nhận',function(){
+    item.status = isPaused ? 'Chờ áp dụng' : 'Tạm dừng';
+    cmsPaymentAlert('paymentRateAlert','success',isPaused ? 'Đã tiếp tục chính sách.' : 'Đã tạm dừng chính sách.');
+    cmsRenderPaymentRates();
+  });
+}
+
+function cmsUpdatePaymentRateHint(){
+  var hint = document.getElementById('rateValueHint');
+  if(hint) hint.textContent = cmsGetValue('rateCurrency') === 'Vcoin' ? 'Số Point nhận được cho mỗi 1 Vcoin' : 'Số Point nhận được cho mỗi 1.000 VNĐ';
 }
 
 function cmsRenderPaymentRateLogs(){
@@ -1486,23 +1554,27 @@ function cmsBackPaymentRateList(){
 
 function cmsResetPaymentRateForm(){
   cmsSetValue('rateEditingId','');
+  cmsPaymentRateInitMulti();
+  ['rateTarget','ratePartner','rateProduct'].forEach(function(id){cmsAccSetMultiValues(id,'Tất cả');});
   cmsSetValue('rateCurrency','VNĐ');
   cmsSetValue('rateValue','');
   cmsSetValue('rateStart','');
   cmsSetValue('rateEnd','');
-  cmsSetValue('rateNote','');
+  cmsUpdatePaymentRateHint();
   cmsPaymentAlert('paymentRateAlert','', '');
 }
 
 function cmsSavePaymentRate(){
   var id = cmsGetValue('rateEditingId');
+  var target = cmsPaymentRateFormValue('rateTarget');
+  var partner = cmsPaymentRateFormValue('ratePartner');
+  var product = cmsPaymentRateFormValue('rateProduct');
   var currency = cmsGetValue('rateCurrency');
   var value = Number(cmsGetValue('rateValue'));
   var start = cmsGetValue('rateStart');
   var end = cmsGetValue('rateEnd');
-  var note = cmsGetValue('rateNote');
 
-  if(!currency || !value || value <= 0 || !start || !end){
+  if(!target || !partner || !product || !currency || !value || value <= 0 || !start || !end){
     cmsPaymentAlert('paymentRateAlert','error','Vui lòng nhập đủ thông tin bắt buộc. Tỉ lệ quy đổi phải lớn hơn 0.');
     return;
   }
@@ -1510,22 +1582,19 @@ function cmsSavePaymentRate(){
     cmsPaymentAlert('paymentRateAlert','error','Thời gian hiệu lực đến phải lớn hơn thời gian hiệu lực từ.');
     return;
   }
-  if(note.length > 500){
-    cmsPaymentAlert('paymentRateAlert','error','Ghi chú tối đa 500 ký tự.');
-    return;
-  }
-
   var current = id ? cmsPaymentRates.find(function(item){return item.id === id;}) : null;
   if(current){
-    var old = current.currency + ' ' + current.value + ' từ ' + current.start + ' đến ' + current.end;
+    var old = current.target + ' / ' + current.partner + ' / ' + current.product + ' / ' + current.currency + ' ' + current.value + ' từ ' + current.start + ' đến ' + current.end;
+    current.target = target;
+    current.partner = partner;
+    current.product = product;
     current.currency = currency;
     current.value = value;
     current.start = start;
     current.end = end;
-    current.note = note;
     cmsPushPaymentRateLog('Sửa ' + id + '. Trước: ' + old + '. Sau: ' + currency + ' ' + value + '.');
   } else {
-    current = {id:cmsPaymentNextId('RATE',cmsPaymentRates),currency:currency,value:value,start:start,end:end,status:'Chờ áp dụng',note:note,createdBy:'hongtt',createdAt:cmsNow(),used:false};
+    current = {id:cmsPaymentNextId('RATE',cmsPaymentRates),target:target,partner:partner,product:product,currency:currency,value:value,start:start,end:end,status:'Chờ áp dụng',createdBy:'hongtt',createdAt:cmsNow(),used:false};
     cmsPaymentRates.unshift(current);
     cmsPushPaymentRateLog('Tạo mới ' + current.id + ' cho loại tiền ' + currency + '.');
   }
@@ -1552,11 +1621,15 @@ function cmsEditPaymentRate(id){
   var item = cmsPaymentRates.find(function(rate){return rate.id === id;});
   if(!item) return;
   cmsSetValue('rateEditingId',item.id);
+  cmsPaymentRateInitMulti();
+  cmsAccSetMultiValues('rateTarget',item.target);
+  cmsAccSetMultiValues('ratePartner',item.partner);
+  cmsAccSetMultiValues('rateProduct',item.product);
   cmsSetValue('rateCurrency',item.currency);
   cmsSetValue('rateValue',item.value);
   cmsSetValue('rateStart',item.start);
   cmsSetValue('rateEnd',item.end);
-  cmsSetValue('rateNote',item.note);
+  cmsUpdatePaymentRateHint();
   cmsPaymentAlert('paymentRateAlert','success','Đang sửa ' + item.id + '.');
   showScreen('payment-rate-form');
 }
@@ -2083,6 +2156,7 @@ function cmsSaveLoyaltyConfigForm(){
 /* Đã bỏ cơ chế chặn nút Thêm mới/Cập nhật dùng chung của Loyalty.
    Từng CMS tự quản lý màn hình và luồng cấu hình riêng. */
 document.addEventListener('DOMContentLoaded',function(){
+  setTimeout(cmsPaymentRateInitMulti,0);
   cmsInitPaymentAdmin();
 });
 
@@ -2290,7 +2364,7 @@ function cmsAccWrap(id,title,icon,body){return '<section class="screen hidden ac
 function cmsAccFilter(fields,action){return '<div class="filter-box"><div class="filter-grid">'+fields+'</div><div class="filter-actions">'+cmsAccBtn('blue','fa-search','Tra cứu',action)+'</div></div>'}
 function cmsAccEditField(label,id,req,opts,type){var mark=req?' <span class="required">*</span>':'';var control=opts?'<select id="'+id+'">'+opts.map(x=>'<option>'+x+'</option>').join('')+'</select>':'<input id="'+id+'" type="'+(type||'text')+'">';return '<div class="account-edit-row"><label>'+label+mark+'</label><div>'+control+'<div class="field-error" id="err-'+id+'"></div></div></div>'}
 function cmsAccField(label,id,type,req,opts){var mark=req?' <span class="required-mark">*</span>':'';if(opts)return '<label>'+label+mark+'<select id="'+id+'">'+opts.map(x=>'<option>'+x+'</option>').join('')+'</select><span class="field-error" id="err-'+id+'"></span></label>';return '<label>'+label+mark+'<input id="'+id+'" type="'+(type||'text')+'"><span class="field-error" id="err-'+id+'"></span></label>'}
-function cmsAccMultiFilter(label,id,opts){var items=opts.filter(function(x){return x!=='Tất cả'});return '<div class="acc-multi-filter"><span>'+label+'</span><details ontoggle="cmsAccMultiToggle(this)"><summary id="'+id+'Summary">Tất cả</summary><div class="acc-multi-options"><label class="acc-multi-all"><input type="checkbox" checked onchange="cmsAccToggleMultiAll(\''+id+'\',this)"> Tất cả</label>'+items.map(function(x){return '<label><input type="checkbox" data-multi="'+id+'" value="'+x+'" onchange="cmsAccUpdateMulti(\''+id+'\')"> '+x+'</label>'}).join('')+'</div></details></div>'}
+function cmsAccMultiFilter(label,id,opts){var items=opts.filter(function(x){return x!=='Tất cả'});return '<div class="acc-multi-filter"><span>'+label+'</span><details ontoggle="cmsAccMultiToggle(this)"><summary id="'+id+'Summary">Tất cả</summary><div class="acc-multi-options"><label class="acc-multi-all"><input type="checkbox" checked onchange="cmsAccToggleMultiAll(\''+id+'\',this)"><span>Tất cả</span></label>'+items.map(function(x){return '<label><input type="checkbox" data-multi="'+id+'" value="'+x+'" onchange="cmsAccUpdateMulti(\''+id+'\')"><span>'+x+'</span></label>'}).join('')+'</div></details></div>'}
 
 function cmsAccCloseMultiDropdowns(except){document.querySelectorAll('.acc-multi-filter details[open]').forEach(function(d){if(d!==except)d.removeAttribute('open')})}
 function cmsAccMultiToggle(details){if(details&&details.open)cmsAccCloseMultiDropdowns(details)}
@@ -2610,7 +2684,7 @@ var cmsEventBenefitEvents=[
 ];
 var cmsEventBenefitRows=[
  {code:'EVT_PHONE_VERIFY',name:'Xác thực số điện thoại',condition:'Đã xác thực SĐT',transactionType:'',transactionValue:'',rewardType:'Point',rewardValue:'1000',receivePeriod:'Trọn đời',receiveLimit:1,otherLimitType:'Tài khoản',otherLimitValue:1,start:'2026-07-01T00:00',end:'2026-12-31T23:59',status:'Hiệu lực'},
- {code:'EVT_FIRST_TOPUP',name:'Nạp Point lần đầu',condition:'Phát sinh giao dịch',transactionType:'Nạp Point',transactionValue:'100000',rewardType:'Voucher',rewardValue:'FIRST100',receivePeriod:'Trọn đời',receiveLimit:1,otherLimitType:'Thiết bị',otherLimitValue:1,start:'2026-08-01T00:00',end:'2027-07-31T23:59',status:'Chờ áp dụng'},
+ {code:'EVT_FIRST_TOPUP',name:'Nạp Point lần đầu',condition:'Phát sinh giao dịch',transactionType:'Nạp Point',transactionValue:'100000',rewardType:'Voucher',rewardValue:'Voucher giảm 10%',rewardQuantity:1,receivePeriod:'Trọn đời',receiveLimit:1,otherLimitType:'Thiết bị',otherLimitValue:1,start:'2026-08-01T00:00',end:'2027-07-31T23:59',status:'Chờ áp dụng'},
  {code:'EVT_PAYMENT',name:'Thanh toán dịch vụ',condition:'Phát sinh giao dịch',transactionType:'Thanh toán',transactionValue:'50000',rewardType:'EXP',rewardValue:'20',receivePeriod:'Tháng',receiveLimit:5,otherLimitType:'IP',otherLimitValue:3,start:'2026-01-01T00:00',end:'2026-06-30T23:59',status:'Hết hiệu lực'}
 ];
 var cmsEventBenefitState={page:1,size:10,hiddenColumns:new Set(),editIndex:null};
@@ -2618,14 +2692,14 @@ function cmsEventBenefitInit(){var s=document.getElementById('eventBenefitEvent'
 function cmsEventBenefitFiltered(){var f=(document.getElementById('eventBenefitFromFilter')||{}).value||'',to=(document.getElementById('eventBenefitToFilter')||{}).value||'',rw=(document.getElementById('eventBenefitRewardFilter')||{}).value||'',st=(document.getElementById('eventBenefitStatusFilter')||{}).value||'',q=((document.getElementById('eventBenefitQuickSearch')||{}).value||'').toLowerCase();return cmsEventBenefitRows.map(function(r,i){return {row:r,index:i}}).filter(function(x){var r=x.row,t=Object.values(r).join(' ').toLowerCase();return(!f||new Date(r.start)>=new Date(f))&&(!to||new Date(r.end)<=new Date(to))&&(!rw||r.rewardType===rw)&&(!st||r.status===st)&&(!q||t.indexOf(q)>=0)})}
 function cmsEventBenefitSearch(){cmsEventBenefitState.page=1;cmsEventBenefitRender()}
 function cmsEventBenefitStatusClass(s){return s==='Hiệu lực'?'texp-status-active':s==='Chờ áp dụng'?'texp-status-waiting':s==='Hết hiệu lực'?'texp-status-expired':'texp-status-paused'}
-function cmsEventBenefitRewardText(r){return r.rewardType==='Voucher'?r.rewardValue:(Number(r.rewardValue)||0).toLocaleString('vi-VN')+' '+r.rewardType}
+function cmsEventBenefitRewardText(r){return r.rewardType==='Voucher'?r.rewardValue+' x '+(r.rewardQuantity||1):(Number(r.rewardValue)||0).toLocaleString('vi-VN')+' '+r.rewardType}
 function cmsEventBenefitRender(){var body=document.getElementById('eventBenefitTableBody');if(!body)return;var rows=cmsEventBenefitFiltered(),pages=Math.max(1,Math.ceil(rows.length/cmsEventBenefitState.size));if(cmsEventBenefitState.page>pages)cmsEventBenefitState.page=pages;var off=(cmsEventBenefitState.page-1)*cmsEventBenefitState.size,part=rows.slice(off,off+cmsEventBenefitState.size);body.innerHTML=part.map(function(x,i){var r=x.row,a='<button class="icon-square orange" type="button" title="Cập nhật" onclick="cmsEventBenefitOpenForm('+x.index+')"><i class="fa fa-edit"></i></button> ';if(r.status!=='Tạm dừng'&&r.status!=='Hết hiệu lực')a+='<button class="icon-square red" type="button" title="Tạm dừng" onclick="cmsEventBenefitPause('+x.index+')"><i class="fa fa-ban"></i></button> ';a+='<button class="icon-square red" type="button" title="Xóa" onclick="cmsEventBenefitDelete('+x.index+')"><i class="fa fa-trash"></i></button>';return '<tr><td>'+(off+i+1)+'</td><td>'+r.code+'</td><td>'+r.name+'</td><td>'+r.rewardType+'</td><td>'+cmsEventBenefitRewardText(r)+'</td><td>'+r.receiveLimit+' / '+r.receivePeriod+'</td><td>'+r.otherLimitValue+' / '+r.otherLimitType+'</td><td>'+cmsAexpFormatDate(r.start)+'</td><td>'+cmsAexpFormatDate(r.end)+'</td><td><span class="texp-table-status '+cmsEventBenefitStatusClass(r.status)+'">'+r.status+'</span></td><td class="action-cell">'+a+'</td></tr>'}).join('')||'<tr><td colspan="11" style="text-align:center">Không có dữ liệu</td></tr>';document.getElementById('eventBenefitPageInfo').textContent=rows.length?'Hiển thị từ '+(off+1)+' tới '+Math.min(off+cmsEventBenefitState.size,rows.length)+' của '+rows.length+' bản ghi':'Không có bản ghi';var p=document.getElementById('eventBenefitPager');p.innerHTML='<button '+(cmsEventBenefitState.page===1?'disabled':'')+' onclick="cmsEventBenefitPage('+(cmsEventBenefitState.page-1)+')">Trước</button>'+Array.from({length:pages},function(_,n){return '<button class="'+(n+1===cmsEventBenefitState.page?'active':'')+'" onclick="cmsEventBenefitPage('+(n+1)+')">'+(n+1)+'</button>'}).join('')+'<button '+(cmsEventBenefitState.page===pages?'disabled':'')+' onclick="cmsEventBenefitPage('+(cmsEventBenefitState.page+1)+')">Tiếp</button>';cmsEventBenefitApplyColumns()}
 function cmsEventBenefitPage(p){cmsEventBenefitState.page=p;cmsEventBenefitRender()}
-function cmsEventBenefitOpenForm(index){cmsEventBenefitState.editIndex=typeof index==='number'?index:null;showScreen('loyalty-event-benefit-form');cmsEventBenefitResetForm(false);var edit=cmsEventBenefitState.editIndex!==null,r=edit?cmsEventBenefitRows[cmsEventBenefitState.editIndex]:null;document.getElementById('eventBenefitFormTitle').textContent=edit?'Cập nhật thiết lập':'Thêm mới thiết lập';if(r){eventBenefitEvent.value=r.code;eventBenefitCondition.value=r.condition;eventBenefitTransactionType.value=r.transactionType||'Nạp Point';eventBenefitTransactionValue.value=r.transactionValue||'';eventBenefitRewardType.value=r.rewardType;eventBenefitRewardValue.value=r.rewardValue;eventBenefitReceivePeriod.value=r.receivePeriod;eventBenefitReceiveLimit.value=r.receiveLimit;eventBenefitOtherLimitType.value=r.otherLimitType;eventBenefitOtherLimitValue.value=r.otherLimitValue;eventBenefitStart.value=r.start;eventBenefitEnd.value=r.end}cmsEventBenefitToggleTransaction();cmsEventBenefitRewardChanged()}
+function cmsEventBenefitOpenForm(index){cmsEventBenefitState.editIndex=typeof index==='number'?index:null;showScreen('loyalty-event-benefit-form');cmsEventBenefitResetForm(false);var edit=cmsEventBenefitState.editIndex!==null,r=edit?cmsEventBenefitRows[cmsEventBenefitState.editIndex]:null;document.getElementById('eventBenefitFormTitle').textContent=edit?'Cập nhật thiết lập':'Thêm mới thiết lập';if(r){eventBenefitEvent.value=r.code;eventBenefitCondition.value=r.condition;eventBenefitTransactionType.value=r.transactionType||'Nạp Point';eventBenefitTransactionValue.value=r.transactionValue||'';eventBenefitRewardType.value=r.rewardType;cmsEventBenefitRewardChanged();eventBenefitRewardValue.value=r.rewardValue;eventBenefitVoucherQuantity.value=r.rewardQuantity||1;eventBenefitReceivePeriod.value=r.receivePeriod;eventBenefitReceiveLimit.value=r.receiveLimit;eventBenefitOtherLimitType.value=r.otherLimitType;eventBenefitOtherLimitValue.value=r.otherLimitValue;eventBenefitStart.value=r.start;eventBenefitEnd.value=r.end}cmsEventBenefitToggleTransaction();cmsEventBenefitRewardChanged()}
 function cmsEventBenefitToggleTransaction(){var row=document.getElementById('eventBenefitTransactionRow'),show=(document.getElementById('eventBenefitCondition')||{}).value==='Phát sinh giao dịch';if(row)row.classList.toggle('hidden',!show)}
-function cmsEventBenefitRewardChanged(){var t=(document.getElementById('eventBenefitRewardType')||{}).value||'Voucher',v=document.getElementById('eventBenefitRewardValue');if(!v)return;v.type=t==='Voucher'?'text':'number';v.placeholder=t==='Voucher'?'Nhập mã Voucher':'Nhập giá trị '+t;v.min=t==='Voucher'?'':1}
-function cmsEventBenefitResetForm(clearMode){['eventBenefitTransactionValue','eventBenefitRewardValue','eventBenefitReceiveLimit','eventBenefitOtherLimitValue','eventBenefitStart','eventBenefitEnd'].forEach(function(id){var e=document.getElementById(id);if(e)e.value=''});['eventBenefitEvent','eventBenefitCondition','eventBenefitTransactionType','eventBenefitRewardType','eventBenefitReceivePeriod','eventBenefitOtherLimitType'].forEach(function(id){var e=document.getElementById(id);if(e)e.selectedIndex=0});document.querySelectorAll('#screen-loyalty-event-benefit-form .field-error').forEach(function(e){e.textContent=''});cmsSetAlert('eventBenefitFormAlert','','');cmsEventBenefitToggleTransaction();cmsEventBenefitRewardChanged();if(clearMode!==false)cmsEventBenefitState.editIndex=null}
-function cmsEventBenefitSave(){var required=['eventBenefitEvent','eventBenefitCondition','eventBenefitRewardType','eventBenefitRewardValue','eventBenefitReceiveLimit','eventBenefitOtherLimitValue','eventBenefitStart','eventBenefitEnd'],ok=true;required.forEach(function(id){var e=document.getElementById(id),er=document.getElementById('err-'+id),bad=!e||!String(e.value).trim();if(er)er.textContent=bad?'Trường bắt buộc.':'';ok=ok&&!bad});var isTx=eventBenefitCondition.value==='Phát sinh giao dịch';if(isTx&&!String(eventBenefitTransactionValue.value).trim()){document.getElementById('err-eventBenefitTransactionValue').textContent='Trường bắt buộc.';ok=false}else document.getElementById('err-eventBenefitTransactionValue').textContent='';if(eventBenefitStart.value&&eventBenefitEnd.value&&new Date(eventBenefitEnd.value)<=new Date(eventBenefitStart.value)){document.getElementById('err-eventBenefitEnd').textContent='Ngày kết thúc phải sau ngày áp dụng.';ok=false}if(!ok)return;var ev=cmsEventBenefitEvents.find(function(x){return x.code===eventBenefitEvent.value}),old=cmsEventBenefitState.editIndex!==null?cmsEventBenefitRows[cmsEventBenefitState.editIndex]:null,row={code:ev.code,name:ev.name,condition:eventBenefitCondition.value,transactionType:isTx?eventBenefitTransactionType.value:'',transactionValue:isTx?eventBenefitTransactionValue.value:'',rewardType:eventBenefitRewardType.value,rewardValue:eventBenefitRewardValue.value,receivePeriod:eventBenefitReceivePeriod.value,receiveLimit:+eventBenefitReceiveLimit.value,otherLimitType:eventBenefitOtherLimitType.value,otherLimitValue:+eventBenefitOtherLimitValue.value,start:eventBenefitStart.value,end:eventBenefitEnd.value,status:old?old.status:(new Date(eventBenefitStart.value)>new Date()?'Chờ áp dụng':'Hiệu lực')};if(old)cmsEventBenefitRows[cmsEventBenefitState.editIndex]=row;else cmsEventBenefitRows.push(row);cmsSetAlert('eventBenefitFormAlert','success','Đã lưu thiết lập ưu đãi sự kiện.');cmsEventBenefitRender()}
+function cmsEventBenefitRewardChanged(){var t=(document.getElementById('eventBenefitRewardType')||{}).value||'Voucher',row=document.getElementById('eventBenefitRewardValueRow'),v=document.getElementById('eventBenefitRewardValue'),qRow=document.getElementById('eventBenefitVoucherQuantityRow');if(!v)return;var replacement;if(t==='Voucher'){replacement=document.createElement('select');replacement.innerHTML=cmsRankBenefitVouchers.map(function(x){return '<option>'+x+'</option>'}).join('');if(row)row.querySelector('.form-label-text').innerHTML='Voucher <span class="required">*</span>';if(qRow)qRow.classList.remove('hidden')}else{replacement=document.createElement('input');replacement.type='number';replacement.min='1';replacement.placeholder='Nhập giá trị '+t;if(row)row.querySelector('.form-label-text').innerHTML='Giá trị thưởng <span class="required">*</span>';if(qRow)qRow.classList.add('hidden')}replacement.id='eventBenefitRewardValue';replacement.value=v.value||'';v.replaceWith(replacement)}
+function cmsEventBenefitResetForm(clearMode){['eventBenefitTransactionValue','eventBenefitRewardValue','eventBenefitVoucherQuantity','eventBenefitReceiveLimit','eventBenefitOtherLimitValue','eventBenefitStart','eventBenefitEnd'].forEach(function(id){var e=document.getElementById(id);if(e)e.value=''});['eventBenefitEvent','eventBenefitCondition','eventBenefitTransactionType','eventBenefitRewardType','eventBenefitReceivePeriod','eventBenefitOtherLimitType'].forEach(function(id){var e=document.getElementById(id);if(e)e.selectedIndex=0});document.querySelectorAll('#screen-loyalty-event-benefit-form .field-error').forEach(function(e){e.textContent=''});cmsSetAlert('eventBenefitFormAlert','','');cmsEventBenefitToggleTransaction();cmsEventBenefitRewardChanged();if(clearMode!==false)cmsEventBenefitState.editIndex=null}
+function cmsEventBenefitSave(){var required=['eventBenefitEvent','eventBenefitCondition','eventBenefitRewardType','eventBenefitRewardValue','eventBenefitReceiveLimit','eventBenefitOtherLimitValue','eventBenefitStart','eventBenefitEnd'],ok=true;required.forEach(function(id){var e=document.getElementById(id),er=document.getElementById('err-'+id),bad=!e||!String(e.value).trim();if(er)er.textContent=bad?'Trường bắt buộc.':'';ok=ok&&!bad});var isTx=eventBenefitCondition.value==='Phát sinh giao dịch';var isVoucher=eventBenefitRewardType.value==='Voucher';if(isVoucher&&!String(eventBenefitVoucherQuantity.value).trim()){document.getElementById('err-eventBenefitVoucherQuantity').textContent='Trường bắt buộc.';ok=false}else document.getElementById('err-eventBenefitVoucherQuantity').textContent='';if(isVoucher&&Number(eventBenefitVoucherQuantity.value)<1){document.getElementById('err-eventBenefitVoucherQuantity').textContent='Số lượng phải lớn hơn 0.';ok=false}if(isTx&&!String(eventBenefitTransactionValue.value).trim()){document.getElementById('err-eventBenefitTransactionValue').textContent='Trường bắt buộc.';ok=false}else document.getElementById('err-eventBenefitTransactionValue').textContent='';if(eventBenefitStart.value&&eventBenefitEnd.value&&new Date(eventBenefitEnd.value)<=new Date(eventBenefitStart.value)){document.getElementById('err-eventBenefitEnd').textContent='Ngày kết thúc phải sau ngày áp dụng.';ok=false}if(!ok)return;var ev=cmsEventBenefitEvents.find(function(x){return x.code===eventBenefitEvent.value}),old=cmsEventBenefitState.editIndex!==null?cmsEventBenefitRows[cmsEventBenefitState.editIndex]:null,row={code:ev.code,name:ev.name,condition:eventBenefitCondition.value,transactionType:isTx?eventBenefitTransactionType.value:'',transactionValue:isTx?eventBenefitTransactionValue.value:'',rewardType:eventBenefitRewardType.value,rewardValue:eventBenefitRewardValue.value,rewardQuantity:isVoucher?+eventBenefitVoucherQuantity.value:0,receivePeriod:eventBenefitReceivePeriod.value,receiveLimit:+eventBenefitReceiveLimit.value,otherLimitType:eventBenefitOtherLimitType.value,otherLimitValue:+eventBenefitOtherLimitValue.value,start:eventBenefitStart.value,end:eventBenefitEnd.value,status:old?old.status:(new Date(eventBenefitStart.value)>new Date()?'Chờ áp dụng':'Hiệu lực')};if(old)cmsEventBenefitRows[cmsEventBenefitState.editIndex]=row;else cmsEventBenefitRows.push(row);cmsSetAlert('eventBenefitFormAlert','success','Đã lưu thiết lập ưu đãi sự kiện.');cmsEventBenefitRender()}
 function cmsEventBenefitPause(i){cmsAccConfirm('Tạm dừng thiết lập','Bạn xác nhận tạm dừng thiết lập ưu đãi sự kiện này?',function(){cmsEventBenefitRows[i].status='Tạm dừng';cmsEventBenefitRender()})}
 function cmsEventBenefitDelete(i){cmsAccConfirm('Xóa thiết lập','Bạn xác nhận xóa thiết lập ưu đãi sự kiện này?',function(){cmsEventBenefitRows.splice(i,1);cmsEventBenefitRender()})}
 function cmsEventBenefitApplyColumns(){var table=document.getElementById('eventBenefitTable');if(!table)return;Array.from(table.rows).forEach(function(row){Array.from(row.cells).forEach(function(c,i){c.style.display=cmsEventBenefitState.hiddenColumns.has(i)?'none':''})})}
@@ -2635,24 +2709,24 @@ document.addEventListener('DOMContentLoaded',cmsEventBenefitInit);
 /* Loyalty member-rank benefit */
 var cmsRankBenefitVouchers=['Voucher giảm 5%','Voucher giảm 10%','Voucher 50.000 VNĐ','Voucher miễn phí vận chuyển'];
 var cmsRankBenefitRows=[
- {rank:'Bạc',rewards:[{type:'Voucher',value:'Voucher giảm 5%'},{type:'Point',value:'20000'}],policy:'Mỗi lần đạt hạng',start:'2026-07-01T00:00',end:'2026-12-31T23:59',status:'Hiệu lực'},
- {rank:'Vàng',rewards:[{type:'EXP',value:'500'},{type:'Voucher',value:'Voucher giảm 10%'}],policy:'Chỉ lần đầu',start:'2026-08-01T00:00',end:'2027-01-31T23:59',status:'Chờ áp dụng'},
+ {rank:'Bạc',rewards:[{type:'Voucher',value:'Voucher giảm 5%',quantity:1},{type:'Point',value:'20000'}],policy:'Mỗi lần đạt hạng',start:'2026-07-01T00:00',end:'2026-12-31T23:59',status:'Hiệu lực'},
+ {rank:'Vàng',rewards:[{type:'EXP',value:'500'},{type:'Voucher',value:'Voucher giảm 10%',quantity:1}],policy:'Chỉ lần đầu',start:'2026-08-01T00:00',end:'2027-01-31T23:59',status:'Chờ áp dụng'},
  {rank:'Bạch Kim',rewards:[{type:'Point',value:'50000'}],policy:'Mỗi lần đạt hạng',start:'2026-01-01T00:00',end:'2026-06-30T23:59',status:'Hết hiệu lực'}
 ];
 var cmsRankBenefitState={page:1,size:10,hiddenColumns:new Set(),editIndex:null};
 function cmsRankBenefitInit(){if(!document.getElementById('rankBenefitTableBody'))return;cmsRankBenefitRender()}
 function cmsRankBenefitFiltered(){var f=(document.getElementById('rankBenefitFromFilter')||{}).value||'',t=(document.getElementById('rankBenefitToFilter')||{}).value||'',rw=(document.getElementById('rankBenefitRewardFilter')||{}).value||'',q=((document.getElementById('rankBenefitQuickSearch')||{}).value||'').toLowerCase();return cmsRankBenefitRows.map(function(r,i){return{row:r,index:i}}).filter(function(x){var r=x.row,text=[r.rank,r.policy,r.status].concat(r.rewards.map(function(a){return a.type+' '+a.value})).join(' ').toLowerCase();return(!f||new Date(r.start)>=new Date(f))&&(!t||new Date(r.end)<=new Date(t))&&(!rw||r.rewards.some(function(a){return a.type===rw}))&&(!q||text.indexOf(q)>=0)})}
 function cmsRankBenefitSearch(){cmsRankBenefitState.page=1;cmsRankBenefitRender()}
-function cmsRankBenefitValueText(a){return a.type==='Voucher'?a.value:(Number(a.value)||0).toLocaleString('vi-VN')+' '+a.type}
+function cmsRankBenefitValueText(a){return a.type==='Voucher'?a.value+' x '+(a.quantity||1):(Number(a.value)||0).toLocaleString('vi-VN')+' '+a.type}
 function cmsRankBenefitRender(){var body=document.getElementById('rankBenefitTableBody');if(!body)return;var rows=cmsRankBenefitFiltered(),pages=Math.max(1,Math.ceil(rows.length/cmsRankBenefitState.size));if(cmsRankBenefitState.page>pages)cmsRankBenefitState.page=pages;var off=(cmsRankBenefitState.page-1)*cmsRankBenefitState.size,part=rows.slice(off,off+cmsRankBenefitState.size),html='';part.forEach(function(x,i){var r=x.row,n=Math.max(1,r.rewards.length),actions='<button class="icon-square orange" type="button" title="Cập nhật" onclick="cmsRankBenefitOpenForm('+x.index+')"><i class="fa fa-edit"></i></button> ';if(r.status!=='Tạm dừng'&&r.status!=='Hết hiệu lực')actions+='<button class="icon-square red" type="button" title="Tạm dừng" onclick="cmsRankBenefitPause('+x.index+')"><i class="fa fa-ban"></i></button> ';actions+='<button class="icon-square red" type="button" title="Xóa" onclick="cmsRankBenefitDelete('+x.index+')"><i class="fa fa-trash"></i></button>';r.rewards.forEach(function(a,j){html+='<tr>';if(j===0){html+='<td rowspan="'+n+'">'+(off+i+1)+'</td><td rowspan="'+n+'">'+r.rank+'</td>'}html+='<td>'+a.type+'</td><td>'+cmsRankBenefitValueText(a)+'</td>';if(j===0)html+='<td rowspan="'+n+'">'+r.policy+'</td><td rowspan="'+n+'">'+cmsAexpFormatDate(r.start)+'</td><td rowspan="'+n+'">'+cmsAexpFormatDate(r.end)+'</td><td rowspan="'+n+'"><span class="texp-table-status '+cmsEventBenefitStatusClass(r.status)+'">'+r.status+'</span></td><td rowspan="'+n+'" class="action-cell">'+actions+'</td>';html+='</tr>'})});body.innerHTML=html||'<tr><td colspan="9" style="text-align:center">Không có dữ liệu</td></tr>';document.getElementById('rankBenefitPageInfo').textContent=rows.length?'Hiển thị từ '+(off+1)+' tới '+Math.min(off+cmsRankBenefitState.size,rows.length)+' của '+rows.length+' bản ghi':'Không có bản ghi';document.getElementById('rankBenefitPager').innerHTML='<button '+(cmsRankBenefitState.page===1?'disabled':'')+' onclick="cmsRankBenefitPage('+(cmsRankBenefitState.page-1)+')">Trước</button>'+Array.from({length:pages},function(_,n){return '<button class="'+(n+1===cmsRankBenefitState.page?'active':'')+'" onclick="cmsRankBenefitPage('+(n+1)+')">'+(n+1)+'</button>'}).join('')+'<button '+(cmsRankBenefitState.page===pages?'disabled':'')+' onclick="cmsRankBenefitPage('+(cmsRankBenefitState.page+1)+')">Tiếp</button>';cmsRankBenefitApplyColumns()}
 function cmsRankBenefitPage(p){cmsRankBenefitState.page=p;cmsRankBenefitRender()}
-function cmsRankBenefitRewardHtml(a){a=a||{type:'Voucher',value:''};var options='<option>Voucher</option><option>Point</option><option>EXP</option>';var value=a.type==='Voucher'?'<select class="rank-benefit-reward-value">'+cmsRankBenefitVouchers.map(function(v){return '<option'+(v===a.value?' selected':'')+'>'+v+'</option>'}).join('')+'</select>':'<input class="rank-benefit-reward-value" min="1" type="number" placeholder="Nhập giá trị '+a.type+'" value="'+(a.value||'')+'"/>';return '<div class="rank-benefit-reward-item"><select class="rank-benefit-reward-type" onchange="cmsRankBenefitRewardTypeChanged(this)">'+options.replace('>'+a.type+'<',' selected>'+a.type+'<')+'</select>'+value+'<button class="icon-square red" type="button" title="Xóa loại thưởng" onclick="cmsRankBenefitRemoveReward(this)"><i class="fa fa-trash"></i></button></div>'}
+function cmsRankBenefitRewardHtml(a){a=a||{type:'Voucher',value:'',quantity:1};var options='<option>Voucher</option><option>Point</option><option>EXP</option>';var value=a.type==='Voucher'?'<select class="rank-benefit-reward-value">'+cmsRankBenefitVouchers.map(function(v){return '<option'+(v===a.value?' selected':'')+'>'+v+'</option>'}).join('')+'</select><input class="rank-benefit-reward-quantity" min="1" type="number" placeholder="Số lượng" value="'+(a.quantity||1)+'"/>':'<input class="rank-benefit-reward-value" min="1" type="number" placeholder="Nhập giá trị '+a.type+'" value="'+(a.value||'')+'"/><input class="rank-benefit-reward-quantity hidden" min="1" type="number" placeholder="Số lượng"/>';return '<div class="rank-benefit-reward-item"><select class="rank-benefit-reward-type" onchange="cmsRankBenefitRewardTypeChanged(this)">'+options.replace('>'+a.type+'<',' selected>'+a.type+'<')+'</select>'+value+'<button class="icon-square red" type="button" title="Xóa loại thưởng" onclick="cmsRankBenefitRemoveReward(this)"><i class="fa fa-trash"></i></button></div>'}
 function cmsRankBenefitAddReward(a){var list=document.getElementById('rankBenefitRewardList');if(list)list.insertAdjacentHTML('beforeend',cmsRankBenefitRewardHtml(a))}
 function cmsRankBenefitRemoveReward(btn){var list=document.getElementById('rankBenefitRewardList');if(list&&list.children.length>1)btn.closest('.rank-benefit-reward-item').remove()}
-function cmsRankBenefitRewardTypeChanged(sel){var item=sel.closest('.rank-benefit-reward-item'),old=item.querySelector('.rank-benefit-reward-value'),type=sel.value,repl;if(type==='Voucher'){repl=document.createElement('select');repl.className='rank-benefit-reward-value';repl.innerHTML=cmsRankBenefitVouchers.map(function(v){return '<option>'+v+'</option>'}).join('')}else{repl=document.createElement('input');repl.className='rank-benefit-reward-value';repl.type='number';repl.min='1';repl.placeholder='Nhập giá trị '+type}old.replaceWith(repl)}
+function cmsRankBenefitRewardTypeChanged(sel){var item=sel.closest('.rank-benefit-reward-item'),old=item.querySelector('.rank-benefit-reward-value'),qty=item.querySelector('.rank-benefit-reward-quantity'),type=sel.value,repl;if(type==='Voucher'){repl=document.createElement('select');repl.className='rank-benefit-reward-value';repl.innerHTML=cmsRankBenefitVouchers.map(function(v){return '<option>'+v+'</option>'}).join('');qty.classList.remove('hidden');qty.value=qty.value||1}else{repl=document.createElement('input');repl.className='rank-benefit-reward-value';repl.type='number';repl.min='1';repl.placeholder='Nhập giá trị '+type;qty.classList.add('hidden');qty.value=''}old.replaceWith(repl)}
 function cmsRankBenefitOpenForm(index){cmsRankBenefitState.editIndex=typeof index==='number'?index:null;showScreen('loyalty-rank-benefit-form');cmsRankBenefitResetForm(false);var edit=cmsRankBenefitState.editIndex!==null,r=edit?cmsRankBenefitRows[cmsRankBenefitState.editIndex]:null;document.getElementById('rankBenefitFormTitle').textContent=edit?'Cập nhật thiết lập':'Thêm mới thiết lập';if(r){rankBenefitRank.value=r.rank;rankBenefitPolicy.value=r.policy;rankBenefitStart.value=r.start;rankBenefitEnd.value=r.end;document.getElementById('rankBenefitRewardList').innerHTML='';r.rewards.forEach(cmsRankBenefitAddReward)}}
 function cmsRankBenefitResetForm(clearMode){var list=document.getElementById('rankBenefitRewardList');if(!list)return;rankBenefitRank.selectedIndex=0;rankBenefitPolicy.selectedIndex=0;rankBenefitStart.value='';rankBenefitEnd.value='';list.innerHTML='';cmsRankBenefitAddReward();document.querySelectorAll('#screen-loyalty-rank-benefit-form .field-error').forEach(function(e){e.textContent=''});cmsSetAlert('rankBenefitFormAlert','','');if(clearMode!==false)cmsRankBenefitState.editIndex=null}
-function cmsRankBenefitSave(){var rewards=[],ok=true;document.querySelectorAll('#rankBenefitRewardList .rank-benefit-reward-item').forEach(function(item){var type=item.querySelector('.rank-benefit-reward-type').value,value=item.querySelector('.rank-benefit-reward-value').value;if(!String(value).trim())ok=false;rewards.push({type:type,value:value})});document.getElementById('err-rankBenefitRewards').textContent=ok?'':'Nhập đầy đủ giá trị thưởng.';['rankBenefitRank','rankBenefitPolicy','rankBenefitStart','rankBenefitEnd'].forEach(function(id){var e=document.getElementById(id),bad=!String(e.value).trim();document.getElementById('err-'+id).textContent=bad?'Trường bắt buộc.':'';ok=ok&&!bad});if(rankBenefitStart.value&&rankBenefitEnd.value&&new Date(rankBenefitEnd.value)<=new Date(rankBenefitStart.value)){document.getElementById('err-rankBenefitEnd').textContent='Ngày kết thúc phải sau ngày áp dụng.';ok=false}if(!ok)return;var old=cmsRankBenefitState.editIndex!==null?cmsRankBenefitRows[cmsRankBenefitState.editIndex]:null,row={rank:rankBenefitRank.value,rewards:rewards,policy:rankBenefitPolicy.value,start:rankBenefitStart.value,end:rankBenefitEnd.value,status:old?old.status:(new Date(rankBenefitStart.value)>new Date()?'Chờ áp dụng':'Hiệu lực')};if(old)cmsRankBenefitRows[cmsRankBenefitState.editIndex]=row;else cmsRankBenefitRows.push(row);cmsSetAlert('rankBenefitFormAlert','success','Đã lưu thiết lập ưu đãi hạng thành viên.');cmsRankBenefitRender()}
+function cmsRankBenefitSave(){var rewards=[],ok=true;document.querySelectorAll('#rankBenefitRewardList .rank-benefit-reward-item').forEach(function(item){var type=item.querySelector('.rank-benefit-reward-type').value,value=item.querySelector('.rank-benefit-reward-value').value,quantity=type==='Voucher'?item.querySelector('.rank-benefit-reward-quantity').value:'';if(!String(value).trim()||(type==='Voucher'&&(!String(quantity).trim()||Number(quantity)<1)))ok=false;rewards.push({type:type,value:value,quantity:type==='Voucher'?+quantity:0})});document.getElementById('err-rankBenefitRewards').textContent=ok?'':'Nhập đầy đủ giá trị thưởng.';['rankBenefitRank','rankBenefitPolicy','rankBenefitStart','rankBenefitEnd'].forEach(function(id){var e=document.getElementById(id),bad=!String(e.value).trim();document.getElementById('err-'+id).textContent=bad?'Trường bắt buộc.':'';ok=ok&&!bad});if(rankBenefitStart.value&&rankBenefitEnd.value&&new Date(rankBenefitEnd.value)<=new Date(rankBenefitStart.value)){document.getElementById('err-rankBenefitEnd').textContent='Ngày kết thúc phải sau ngày áp dụng.';ok=false}if(!ok)return;var old=cmsRankBenefitState.editIndex!==null?cmsRankBenefitRows[cmsRankBenefitState.editIndex]:null,row={rank:rankBenefitRank.value,rewards:rewards,policy:rankBenefitPolicy.value,start:rankBenefitStart.value,end:rankBenefitEnd.value,status:old?old.status:(new Date(rankBenefitStart.value)>new Date()?'Chờ áp dụng':'Hiệu lực')};if(old)cmsRankBenefitRows[cmsRankBenefitState.editIndex]=row;else cmsRankBenefitRows.push(row);cmsSetAlert('rankBenefitFormAlert','success','Đã lưu thiết lập ưu đãi hạng thành viên.');cmsRankBenefitRender()}
 function cmsRankBenefitPause(i){cmsAccConfirm('Tạm dừng thiết lập','Bạn xác nhận tạm dừng thiết lập ưu đãi hạng thành viên này?',function(){cmsRankBenefitRows[i].status='Tạm dừng';cmsRankBenefitRender()})}
 function cmsRankBenefitDelete(i){cmsAccConfirm('Xóa thiết lập','Bạn xác nhận xóa thiết lập ưu đãi hạng thành viên này?',function(){cmsRankBenefitRows.splice(i,1);cmsRankBenefitRender()})}
 function cmsRankBenefitApplyColumns(){var table=document.getElementById('rankBenefitTable');if(!table)return;Array.from(table.rows).forEach(function(row){Array.from(row.cells).forEach(function(c,i){c.style.display=cmsRankBenefitState.hiddenColumns.has(i)?'none':''})})}
@@ -2817,8 +2891,10 @@ function cmsLookupMemberRank(){
   setText('loyaltyRankLifetimeExp',Number(acc.loyalty.lifetimeExp || 0).toLocaleString('vi-VN') + ' EXP');
   var targetExp = acc.loyalty.targetExp || (Number(acc.loyalty.cycleExp || 0) + Number(acc.loyalty.expMissing || 0));
   var targetTExp = acc.loyalty.targetTExp || 80;
-  setText('loyaltyRankCycleExp',Number(acc.loyalty.cycleExp || 0).toLocaleString('vi-VN') + ' EXP / Cần đạt ' + Number(targetExp).toLocaleString('vi-VN') + ' EXP để lên hạng hoặc giữ hạng');
-  setText('loyaltyRankCycleTExp',Number(acc.loyalty.cycleTExp || 0).toLocaleString('vi-VN') + ' T-EXP / Cần đạt ' + Number(targetTExp).toLocaleString('vi-VN') + ' T-EXP để lên hạng hoặc giữ hạng');
+  var maintainExp = Number(acc.loyalty.maintainExp || 0);
+  var maintainTExp = Number(acc.loyalty.maintainTExp || 0);
+  setText('loyaltyRankCycleExp',Number(acc.loyalty.cycleExp || 0).toLocaleString('vi-VN') + ' EXP / Cần đạt ' + Number(targetExp).toLocaleString('vi-VN') + ' EXP để lên hạng | ' + maintainExp.toLocaleString('vi-VN') + ' EXP giữ hạng');
+  setText('loyaltyRankCycleTExp',Number(acc.loyalty.cycleTExp || 0).toLocaleString('vi-VN') + ' T-EXP / Cần đạt ' + Number(targetTExp).toLocaleString('vi-VN') + ' T-EXP để lên hạng | ' + maintainTExp.toLocaleString('vi-VN') + ' T-EXP giữ hạng');
   setText('loyaltyRankNext',acc.loyalty.nextRank || '-');
   setText('loyaltyRankCycleStart',acc.loyalty.cycleStart);
   setText('loyaltyRankCycleEnd',acc.loyalty.cycleEnd);
