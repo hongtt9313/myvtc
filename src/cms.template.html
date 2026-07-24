@@ -543,22 +543,7 @@
 <div class="account-info-row"><b>Phương thức bảo mật</b><div class="account-security-methods" id="lookupSecurityMethods"></div></div>
 <div class="account-info-row"><b>Xác thực 2 bước</b><span data-lookup="twoFa"></span></div>
 <div class="account-info-block"><b>Tài khoản liên kết</b><div class="table-wrap social-link-table-wrap"><table class="account-table social-link-table"><thead><tr><th>Thông tin</th><th>Google</th><th>Apple</th><th>Facebook</th></tr></thead><tbody id="lookupSocialLinks"></tbody></table></div></div>
-<div class="table-wrap">
-<table class="account-table">
-<thead>
-<tr>
-<th>STT</th>
-<th>Nền tảng</th>
-<th>Thiết bị</th>
-<th>Hệ điều hành</th>
-<th>Phiên bản</th>
-<th>IP</th>
-<th>Thời điểm đăng nhập</th>
-</tr>
-</thead>
-<tbody id="lookupSessions"></tbody>
-</table>
-</div>
+
 </div>
 </div>
 <div class="account-card">
@@ -612,19 +597,7 @@
 <div class="account-info-row"><b>Lifetime EXP</b><span data-lookup="lifetimeExp"></span></div>
 <div class="account-info-row"><b>Cycle EXP</b><span data-lookup="cycleExpSummary"></span></div>
 <div class="account-info-row"><b>Chu kỳ</b><span data-lookup="cycleRange"></span></div>
-<div class="table-wrap">
-<table class="account-table">
-<thead>
-<tr>
-<th>STT</th>
-<th>Thời điểm</th>
-<th>Loại thay đổi</th>
-<th>Lý do</th>
-</tr>
-</thead>
-<tbody id="lookupRankHistory"></tbody>
-</table>
-</div>
+
 </div>
 </div>
 </div>
@@ -1066,7 +1039,8 @@
 <div class="texp-entry-row"><label class="form-label-text" for="eventBenefitCondition">Điều kiện <span class="required">*</span></label><select id="eventBenefitCondition" onchange="cmsEventBenefitToggleTransaction()"><option>Đã xác thực SĐT</option><option>Đã xác thực Email</option><option>Đã liên kết Google</option><option>Đã liên kết Facebook</option><option>Đã liên kết Apple</option><option>Đã xác thực CCCD</option><option>Phát sinh giao dịch</option></select><span class="field-error" id="err-eventBenefitCondition"></span></div>
 <div class="texp-entry-row hidden" id="eventBenefitTransactionRow"><label class="form-label-text">Chi tiết giao dịch <span class="required">*</span></label><div class="event-benefit-inline-fields"><select id="eventBenefitTransactionType"><option>Nạp Point</option><option>Thanh toán</option></select><input id="eventBenefitTransactionValue" min="1" placeholder="Nhập giá trị giao dịch" step="1" type="number"/></div><span class="field-error" id="err-eventBenefitTransactionValue"></span></div>
 <div class="texp-entry-row"><label class="form-label-text" for="eventBenefitRewardType">Loại thưởng <span class="required">*</span></label><select id="eventBenefitRewardType" onchange="cmsEventBenefitRewardChanged()"><option>Voucher</option><option>Point</option><option>EXP</option></select><span class="field-error" id="err-eventBenefitRewardType"></span></div>
-<div class="texp-entry-row"><label class="form-label-text" for="eventBenefitRewardValue">Giá trị thưởng <span class="required">*</span></label><input id="eventBenefitRewardValue" placeholder="Nhập mã Voucher" type="text"/><span class="field-error" id="err-eventBenefitRewardValue"></span></div>
+<div class="texp-entry-row" id="eventBenefitRewardValueRow"><label class="form-label-text" for="eventBenefitRewardValue">Voucher <span class="required">*</span></label><select id="eventBenefitRewardValue"></select><span class="field-error" id="err-eventBenefitRewardValue"></span></div>
+<div class="texp-entry-row" id="eventBenefitVoucherQuantityRow"><label class="form-label-text" for="eventBenefitVoucherQuantity">Số lượng <span class="required">*</span></label><input id="eventBenefitVoucherQuantity" min="1" placeholder="Nhập số lượng Voucher" step="1" type="number"/><span class="field-error" id="err-eventBenefitVoucherQuantity"></span></div>
 <div class="texp-entry-row"><label class="form-label-text">Lượt nhận tối đa <span class="required">*</span></label><div class="event-benefit-inline-fields"><select id="eventBenefitReceivePeriod"><option>Ngày</option><option>Tháng</option><option>Năm</option><option>Trọn đời</option></select><input id="eventBenefitReceiveLimit" min="1" placeholder="Nhập số lượt" step="1" type="number"/></div><span class="field-error" id="err-eventBenefitReceiveLimit"></span></div>
 <div class="texp-entry-row"><label class="form-label-text">Giới hạn khác <span class="required">*</span></label><div class="event-benefit-inline-fields"><select id="eventBenefitOtherLimitType"><option>Tài khoản</option><option>Thiết bị</option><option>IP</option></select><input id="eventBenefitOtherLimitValue" min="1" placeholder="Nhập giá trị giới hạn" step="1" type="number"/></div><span class="field-error" id="err-eventBenefitOtherLimitValue"></span></div>
 <div class="texp-entry-row"><label class="form-label-text" for="eventBenefitStart">Ngày áp dụng <span class="required">*</span></label><input id="eventBenefitStart" step="1" type="datetime-local"/><span class="field-error" id="err-eventBenefitStart"></span></div>
@@ -1203,13 +1177,18 @@
 </div>
 <div class="account-alert" id="loyaltyRankLookupAlert"></div>
 <div class="hidden loyalty-rank-result" id="loyaltyRankLookupResult">
+<div class="loyalty-rank-result-grid">
+<div class="loyalty-rank-left-column">
+<div class="account-card loyalty-rank-basic-card">
+<div class="account-card-title loyalty-rank-card-title">Thông tin cơ bản</div>
 <div class="account-profile-head loyalty-rank-profile-head">
 <div class="loyalty-rank-profile-info">
-<div class="account-name" id="loyaltyRankFullName"></div>
 <div class="loyalty-rank-account-meta">
 <div><span>Username</span><b id="loyaltyRankUsername"></b></div>
+<div><span>Họ và tên</span><b id="loyaltyRankFullName"></b></div>
 <div><span>Account ID</span><b id="loyaltyRankAccountId"></b></div>
 <div><span>Trạng thái hoạt động</span><b id="loyaltyRankStatus"></b></div>
+</div>
 </div>
 </div>
 </div>
@@ -1223,12 +1202,14 @@
 <div class="account-info-row"><b>Hạng tiếp theo</b><span id="loyaltyRankNext"></span></div>
 <div class="account-info-row"><b>Ngày bắt đầu chu kỳ</b><span id="loyaltyRankCycleStart"></span></div>
 <div class="account-info-row"><b>Ngày kết thúc chu kỳ</b><span id="loyaltyRankCycleEnd"></span></div>
+</div>
+</div>
+</div>
+<div class="account-card loyalty-rank-history-card">
+<div class="account-card-title loyalty-rank-card-title">Lịch sử thay đổi hạng</div>
 <div class="table-wrap loyalty-rank-history-wrap">
 <table class="account-table loyalty-rank-history-table">
-<thead>
-<tr class="loyalty-rank-history-title"><th colspan="4">Lịch sử thay đổi hạng</th></tr>
-<tr><th>STT</th><th>Thời điểm</th><th>Loại thay đổi</th><th>Lý do</th></tr>
-</thead>
+<thead><tr><th>STT</th><th>Thời điểm</th><th>Loại thay đổi</th><th>Lý do</th></tr></thead>
 <tbody id="loyaltyRankHistoryBody"></tbody>
 </table>
 </div>
@@ -1267,58 +1248,55 @@
 </div>
 </section>
 <section class="screen hidden" id="screen-payment-rate">
-<div class="cms-screen-title"><i class="fa fa-exchange-alt"></i> Quản trị tỉ lệ quy đổi Point</div>
-<div class="cms-content">
+<div class="cms-screen-title"><i class="fa fa-exchange-alt"></i> Thanh toán &gt; Quản trị tỉ lệ quy đổi Point</div>
+<div class="cms-content payment-rate-content">
 <div class="account-alert" id="paymentRateAlert"></div>
-<div class="tools-row">
-<div class="filter-row">
-<label>Loại tiền <select class="select" id="rateFilterCurrency" onchange="cmsRenderPaymentRates()"><option value="">Tất cả</option><option>VNĐ</option><option>Vcoin</option></select></label>
-<label>Trạng thái <select class="select" id="rateFilterStatus" onchange="cmsRenderPaymentRates()"><option value="">Tất cả</option><option>Chờ áp dụng</option><option>Hiệu lực</option><option>Hết hiệu lực</option></select></label>
+<div class="payment-rate-filter-box">
+<div class="payment-rate-filter-grid">
+<div id="rateFilterTargetControl"></div>
+<div id="rateFilterPartnerControl"></div>
+<div id="rateFilterProductControl"></div>
+<div id="rateFilterStatusControl"></div>
 </div>
-<button class="btn green" onclick="cmsOpenPaymentRateForm()"><i class="fa fa-plus"></i> Thêm tỉ lệ</button>
+<div class="cms-actions-center">
+<button class="btn blue" onclick="cmsRenderPaymentRates()" type="button"><i class="fa fa-search"></i> Tra cứu</button>
+<button class="btn green" onclick="cmsOpenPaymentRateForm()" type="button"><i class="fa fa-plus"></i> Thêm mới</button>
 </div>
-<div class="table-wrap">
-<table class="data-table payment-table">
-<thead>
-<tr>
-<th>Mã tỉ lệ</th>
-<th>Loại tiền</th>
-<th>Tỉ lệ quy đổi</th>
-<th>Hiệu lực từ</th>
-<th>Hiệu lực đến</th>
-<th>Trạng thái</th>
-<th>Người tạo</th>
-<th>Thời gian tạo</th>
-<th>Ghi chú</th>
-<th>Chức năng</th>
-</tr>
-</thead>
+</div>
+<div class="payment-rate-toolbar">
+<div class="toolbar-left"><button class="btn gray" onclick="cmsTogglePaymentRateColumns()" type="button"><i class="fa fa-columns"></i> Ẩn hiện cột</button></div>
+<div class="toolbar-right"><div class="payment-rate-quick-search"><i class="fa fa-search"></i><input class="toolbar-search" id="rateQuickSearch" oninput="cmsRenderPaymentRates()" placeholder="Tìm kiếm nhanh" type="text"/></div></div>
+</div>
+<div class="table-wrap payment-rate-table-wrap">
+<table class="data-table payment-table" id="paymentRateTable">
+<thead><tr>
+<th>STT</th><th>Đối tượng</th><th>Đối tác</th><th>Sản phẩm</th><th>Loại tiền</th><th>Tỉ lệ quy đổi</th><th>Thời gian áp dụng</th><th>Thời gian kết thúc</th><th>Trạng thái</th><th>Thao tác</th>
+</tr></thead>
 <tbody id="paymentRateRows"></tbody>
 </table>
 </div>
-<div class="payment-panel">
-<div class="payment-panel-title"><i class="fa fa-history"></i> Lịch sử thay đổi</div>
-<div class="payment-log" id="paymentRateLogs"></div>
-</div>
+<div class="page-foot"><span id="paymentRateCount">0 bản ghi</span><div class="pager"><button class="active" type="button">1</button></div></div>
 </div>
 </section>
 <section class="screen hidden" id="screen-payment-rate-form">
 <div class="cms-screen-title" id="paymentRateBreadcrumb"><i class="fa fa-edit"></i> Thanh toán &gt; Quản trị tỉ lệ quy đổi Point</div>
-<div class="cms-content">
-<div class="payment-panel standard-entry-panel">
-<div class="payment-panel-title"><i class="fa fa-edit"></i> <span id="paymentRateFormTitle">Thêm mới tỉ lệ quy đổi</span></div>
+<div class="cms-content payment-rate-form-content">
+<div class="payment-panel standard-entry-panel payment-rate-entry-panel">
+<div class="payment-panel-title"><i class="fa fa-edit"></i> <span id="paymentRateFormTitle">Thêm mới tỉ lệ quy đổi Point</span></div>
 <input id="rateEditingId" type="hidden"/>
-<div class="payment-form-grid standard-entry-form">
-<label><span class="form-label-text">Loại tiền <span class="required">*</span></span><select id="rateCurrency"><option value="VNĐ">VNĐ</option><option value="Vcoin">Vcoin</option></select></label>
-<label><span class="form-label-text">Tỉ lệ quy đổi <span class="required">*</span></span><input id="rateValue" min="1" placeholder="Point nhận được" type="number"/></label>
-<label><span class="form-label-text">Hiệu lực từ <span class="required">*</span></span><input id="rateStart" type="datetime-local"/></label>
-<label><span class="form-label-text">Hiệu lực đến <span class="required">*</span></span><input id="rateEnd" type="datetime-local"/></label>
-<label class="payment-full"><span class="form-label-text">Ghi chú</span><textarea id="rateNote" maxlength="500" placeholder="Tối đa 500 ký tự"></textarea></label>
+<div class="payment-form-grid standard-entry-form payment-rate-entry-grid">
+<div class="payment-rate-multi-field"><span class="form-label-text">Đối tượng <span class="required">*</span></span><div id="rateTargetControl"></div></div>
+<div class="payment-rate-multi-field"><span class="form-label-text">Đối tác <span class="required">*</span></span><div id="ratePartnerControl"></div></div>
+<div class="payment-rate-multi-field"><span class="form-label-text">Sản phẩm <span class="required">*</span></span><div id="rateProductControl"></div></div>
+<label><span class="form-label-text">Loại tiền <span class="required">*</span></span><select id="rateCurrency"><option value="VNĐ">1.000 VNĐ</option><option value="Vcoin">1 Vcoin</option></select></label>
+<label><span class="form-label-text">Tỉ lệ quy đổi <span class="required">*</span></span><input id="rateValue" min="1" placeholder="Nhập số Point" type="number"/></label>
+<label><span class="form-label-text">Thời gian áp dụng <span class="required">*</span></span><input id="rateStart" type="datetime-local"/></label>
+<label><span class="form-label-text">Thời gian kết thúc <span class="required">*</span></span><input id="rateEnd" type="datetime-local"/></label>
 </div>
-<div class="form-bottom payment-form-actions">
-<button class="btn blue" onclick="cmsSavePaymentRate()"><i class="fa fa-save"></i> Lưu lại</button>
-<button class="btn green" onclick="cmsResetPaymentRateForm()"><i class="fa fa-refresh"></i> Làm mới</button>
-<button class="btn gray" onclick="cmsBackPaymentRateList()"><i class="fa fa-arrow-left"></i> Quay lại</button>
+<div class="form-bottom payment-form-actions payment-rate-form-actions">
+<button class="btn gray" onclick="cmsBackPaymentRateList()" type="button"><i class="fa fa-arrow-left"></i> Quay lại</button>
+<button class="btn green" onclick="cmsResetPaymentRateForm()" type="button"><i class="fa fa-refresh"></i> Làm mới</button>
+<button class="btn blue" onclick="cmsSavePaymentRate()" type="button"><i class="fa fa-save"></i> Lưu lại</button>
 </div>
 </div>
 </div>
