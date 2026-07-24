@@ -4413,3 +4413,390 @@ color:#333;
   #screen-loyalty-member-rank-lookup .loyalty-rank-search-box label input{min-width:0}
   #screen-loyalty-member-rank-lookup .loyalty-rank-card .account-info-row{grid-template-columns:1fr;gap:6px}
 }
+
+/* Voucher quantity fields in Loyalty benefit forms */
+#screen-loyalty-rank-benefit-form .rank-benefit-reward-item{
+  grid-template-columns:minmax(150px,.55fr) minmax(240px,1fr) minmax(120px,.45fr) 40px!important;
+}
+#screen-loyalty-rank-benefit-form .rank-benefit-reward-quantity.hidden,
+#screen-loyalty-event-benefit-form #eventBenefitVoucherQuantityRow.hidden{display:none!important}
+@media(max-width:760px){
+  #screen-loyalty-rank-benefit-form .rank-benefit-reward-item{grid-template-columns:1fr!important}
+}
+
+/* Loyalty > Tra cứu hạng thành viên: bố cục 2 cột */
+#screen-loyalty-member-rank-lookup .loyalty-rank-lookup-shell{
+  max-width:none;
+}
+#screen-loyalty-member-rank-lookup .loyalty-rank-search-box{
+  max-width:none;
+}
+#screen-loyalty-member-rank-lookup .loyalty-rank-result-grid{
+  display:grid;
+  grid-template-columns:minmax(0,1fr) minmax(0,1fr);
+  gap:14px;
+  align-items:start;
+}
+#screen-loyalty-member-rank-lookup .loyalty-rank-left-column{
+  display:flex;
+  flex-direction:column;
+  gap:14px;
+  min-width:0;
+}
+#screen-loyalty-member-rank-lookup .loyalty-rank-basic-card,
+#screen-loyalty-member-rank-lookup .loyalty-rank-card,
+#screen-loyalty-member-rank-lookup .loyalty-rank-history-card{
+  width:100%;
+  max-width:none;
+  margin:0;
+  box-sizing:border-box;
+  overflow:hidden;
+}
+#screen-loyalty-member-rank-lookup .loyalty-rank-profile-head{
+  margin:0;
+  padding:14px 18px;
+  border:0;
+  border-radius:0;
+  box-shadow:none;
+}
+#screen-loyalty-member-rank-lookup .loyalty-rank-account-meta{
+  grid-template-columns:1fr;
+  gap:8px;
+}
+#screen-loyalty-member-rank-lookup .loyalty-rank-account-meta>div{
+  display:grid;
+  grid-template-columns:150px minmax(0,1fr);
+}
+#screen-loyalty-member-rank-lookup .loyalty-rank-history-card{
+  min-width:0;
+}
+#screen-loyalty-member-rank-lookup .loyalty-rank-history-wrap{
+  margin-top:0;
+  overflow-x:auto;
+}
+#screen-loyalty-member-rank-lookup .loyalty-rank-history-table{
+  min-width:620px;
+}
+#screen-loyalty-member-rank-lookup .loyalty-rank-history-table th:first-child,
+#screen-loyalty-member-rank-lookup .loyalty-rank-history-table td:first-child{
+  width:54px;
+  text-align:center;
+}
+#screen-loyalty-member-rank-lookup .loyalty-rank-history-table th:nth-child(2){width:180px}
+#screen-loyalty-member-rank-lookup .loyalty-rank-history-table th:nth-child(3){width:150px}
+@media(max-width:1180px){
+  #screen-loyalty-member-rank-lookup .loyalty-rank-result-grid{
+    grid-template-columns:1fr;
+  }
+}
+@media(max-width:700px){
+  #screen-loyalty-member-rank-lookup .loyalty-rank-account-meta>div{
+    grid-template-columns:1fr;
+    gap:4px;
+  }
+}
+
+/* Loyalty member rank lookup refinements */
+#screen-loyalty-member-rank-lookup .loyalty-rank-basic-card,
+#screen-loyalty-member-rank-lookup .loyalty-rank-profile-head,
+#screen-loyalty-member-rank-lookup .loyalty-rank-profile-info,
+#screen-loyalty-member-rank-lookup .loyalty-rank-account-meta{
+  background:#fff;
+}
+#screen-loyalty-member-rank-lookup .loyalty-rank-profile-head{
+  padding:0;
+}
+#screen-loyalty-member-rank-lookup .loyalty-rank-account-meta{
+  display:block;
+  margin:0;
+}
+#screen-loyalty-member-rank-lookup .loyalty-rank-account-meta>div{
+  display:grid;
+  grid-template-columns:150px minmax(0,1fr);
+  gap:12px;
+  min-height:42px;
+  padding:10px 16px;
+  border-bottom:1px solid #e5e7eb;
+  box-sizing:border-box;
+}
+#screen-loyalty-member-rank-lookup .loyalty-rank-account-meta>div:last-child{
+  border-bottom:0;
+}
+#screen-loyalty-member-rank-lookup .loyalty-rank-account-meta span,
+#screen-loyalty-member-rank-lookup .loyalty-rank-account-meta b{
+  align-self:center;
+}
+
+
+/* 2026-07-24: sửa ưu đãi hạng thành viên và drop-down CMS Tài khoản */
+#screen-loyalty-rank-benefit .loyalty-admin-shell{
+  border:0!important;
+  box-shadow:none!important;
+  background:transparent!important;
+  padding:0!important;
+}
+#screen-loyalty-rank-benefit .loyalty-reference-filter{
+  position:relative!important;
+  overflow:visible!important;
+}
+#screen-loyalty-rank-benefit-form .rank-benefit-reward-item{
+  display:grid!important;
+  grid-template-columns:minmax(0,1fr) minmax(0,1.35fr) 92px 40px!important;
+  gap:8px!important;
+  width:100%!important;
+  max-width:520px!important;
+  align-items:center!important;
+  box-sizing:border-box!important;
+}
+#screen-loyalty-rank-benefit-form .rank-benefit-reward-item .rank-benefit-reward-quantity{
+  width:92px!important;
+  min-width:92px!important;
+  max-width:92px!important;
+  padding-left:8px!important;
+  padding-right:8px!important;
+}
+#screen-loyalty-rank-benefit-form .rank-benefit-reward-item .icon-square{
+  width:40px!important;
+  min-width:40px!important;
+  margin:0!important;
+}
+
+#screen-otp-display-policy .filter-box,
+#screen-otp-history .filter-box{
+  position:relative!important;
+  overflow:visible!important;
+  isolation:auto!important;
+}
+#screen-otp-display-policy .filter-grid,
+#screen-otp-history .filter-grid{
+  position:relative!important;
+  overflow:visible!important;
+}
+#screen-otp-display-policy .acc-multi-filter,
+#screen-otp-history .acc-multi-filter{
+  position:relative!important;
+  overflow:visible!important;
+}
+#screen-otp-display-policy .acc-multi-filter details,
+#screen-otp-history .acc-multi-filter details{
+  position:relative!important;
+  overflow:visible!important;
+}
+#screen-otp-display-policy .acc-multi-filter details[open],
+#screen-otp-history .acc-multi-filter details[open]{
+  z-index:1000!important;
+}
+#screen-otp-display-policy .acc-multi-options,
+#screen-otp-history .acc-multi-options{
+  z-index:1100!important;
+  min-width:100%!important;
+  width:max-content!important;
+  max-width:360px!important;
+  background:#fff!important;
+}
+#screen-otp-display-policy .module-toolbar,
+#screen-otp-history .module-toolbar,
+#screen-otp-display-policy .table-scroll,
+#screen-otp-history .table-scroll{
+  position:relative!important;
+  z-index:1!important;
+}
+@media(max-width:700px){
+  #screen-loyalty-rank-benefit-form .rank-benefit-reward-item{
+    grid-template-columns:1fr!important;
+  }
+  #screen-loyalty-rank-benefit-form .rank-benefit-reward-item .rank-benefit-reward-quantity{
+    width:100%!important;
+    min-width:0!important;
+    max-width:none!important;
+  }
+}
+
+/* 2026-07-24: bỏ đường viền thừa bên trong bộ lọc ưu đãi hạng thành viên */
+#screen-loyalty-rank-benefit .loyalty-reference-filter .cms-actions-center{
+  border:0!important;
+  border-radius:0!important;
+  background:transparent!important;
+  padding:0!important;
+  margin:16px 0 0!important;
+  box-shadow:none!important;
+}
+
+/* 2026-07-24: sửa nội dung và kích thước drop-down OTP */
+#screen-otp-display-policy .acc-multi-options,
+#screen-otp-history .acc-multi-options{
+  width:100%!important;
+  min-width:100%!important;
+  max-width:none!important;
+  overflow-x:hidden!important;
+  overflow-y:auto!important;
+  padding:6px 8px!important;
+}
+#screen-otp-display-policy .acc-multi-options label,
+#screen-otp-history .acc-multi-options label{
+  display:grid!important;
+  grid-template-columns:18px minmax(0,1fr)!important;
+  align-items:center!important;
+  justify-content:stretch!important;
+  gap:8px!important;
+  width:100%!important;
+  min-width:0!important;
+  padding:7px 4px!important;
+  margin:0!important;
+  color:#344054!important;
+  font-size:14px!important;
+  line-height:1.3!important;
+  text-align:left!important;
+  white-space:normal!important;
+  box-sizing:border-box!important;
+}
+#screen-otp-display-policy .acc-multi-options label span,
+#screen-otp-history .acc-multi-options label span{
+  display:block!important;
+  min-width:0!important;
+  overflow:visible!important;
+  color:#344054!important;
+  font-size:14px!important;
+}
+#screen-otp-display-policy .acc-multi-options input[type="checkbox"],
+#screen-otp-history .acc-multi-options input[type="checkbox"]{
+  width:16px!important;
+  height:16px!important;
+  min-width:16px!important;
+  margin:0!important;
+  justify-self:start!important;
+}
+
+/* Payment > Point conversion rate */
+#screen-payment-rate .payment-rate-content{padding:18px 20px 22px}
+#screen-payment-rate .payment-rate-filter-box{background:#eaf4fb;border:1px solid #c9e0f2;border-radius:4px;padding:20px 20px 16px}
+#screen-payment-rate .payment-rate-filter-grid{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:16px 20px}
+#screen-payment-rate .payment-rate-filter-grid label{display:flex;align-items:center;gap:10px;min-width:0;font-size:13px;font-weight:600;color:#303846}
+#screen-payment-rate .payment-rate-filter-grid label>span{width:72px;flex:0 0 72px;white-space:nowrap}
+#screen-payment-rate .payment-rate-filter-grid select{width:100%;min-width:0;height:36px;border:1px solid #d9dfe8;border-radius:3px;background:#fff;padding:0 10px}
+#screen-payment-rate .cms-actions-center{display:flex;justify-content:center;gap:10px;margin-top:18px}
+#screen-payment-rate .payment-rate-toolbar{display:flex;align-items:center;justify-content:space-between;margin-top:16px;padding:11px 12px;background:#fff;border:1px solid #e1e6ee;border-bottom:0;border-radius:4px 4px 0 0}
+#screen-payment-rate .payment-rate-quick-search{position:relative;display:flex;align-items:center}
+#screen-payment-rate .payment-rate-quick-search>i{position:absolute;left:11px;color:#8d98aa;font-size:12px}
+#screen-payment-rate .payment-rate-quick-search .toolbar-search{width:260px;height:34px;padding:0 10px 0 32px;border:1px solid #dfe4ec;border-radius:3px;outline:none}
+#screen-payment-rate .payment-rate-table-wrap{margin:0;border-radius:0;border-color:#e1e6ee;overflow-x:auto}
+#screen-payment-rate #paymentRateTable{min-width:1080px;table-layout:fixed}
+#screen-payment-rate #paymentRateTable th,#screen-payment-rate #paymentRateTable td{font-size:12px;vertical-align:middle}
+#screen-payment-rate #paymentRateTable th:nth-child(1){width:46px}
+#screen-payment-rate #paymentRateTable th:nth-child(2){width:105px}
+#screen-payment-rate #paymentRateTable th:nth-child(3){width:115px}
+#screen-payment-rate #paymentRateTable th:nth-child(4){width:105px}
+#screen-payment-rate #paymentRateTable th:nth-child(5){width:72px}
+#screen-payment-rate #paymentRateTable th:nth-child(6){width:155px}
+#screen-payment-rate #paymentRateTable th:nth-child(7),#screen-payment-rate #paymentRateTable th:nth-child(8){width:128px}
+#screen-payment-rate #paymentRateTable th:nth-child(9){width:92px}
+#screen-payment-rate #paymentRateTable th:nth-child(10){width:104px}
+#screen-payment-rate .payment-rate-actions{white-space:nowrap}
+#screen-payment-rate .payment-rate-actions .icon-square{margin:0 2px}
+#screen-payment-rate .page-foot{border:1px solid #e1e6ee;border-top:0;background:#fff;border-radius:0 0 4px 4px;padding:10px 12px}
+#screen-payment-rate #paymentRateTable.payment-rate-compact-columns th:nth-child(3),#screen-payment-rate #paymentRateTable.payment-rate-compact-columns td:nth-child(3),#screen-payment-rate #paymentRateTable.payment-rate-compact-columns th:nth-child(4),#screen-payment-rate #paymentRateTable.payment-rate-compact-columns td:nth-child(4){display:none}
+#screen-payment-rate-form .payment-rate-form-content{padding:18px 20px 22px}
+#screen-payment-rate-form .payment-rate-entry-panel{max-width:none;width:100%;margin:0}
+#screen-payment-rate-form .payment-rate-entry-grid{grid-template-columns:repeat(2,minmax(0,1fr));gap:18px 24px}
+#screen-payment-rate-form .payment-rate-entry-grid label{position:relative}
+#screen-payment-rate-form .payment-rate-entry-grid input,#screen-payment-rate-form .payment-rate-entry-grid select{height:38px}
+#screen-payment-rate-form .payment-rate-hint{display:block;margin-top:6px;color:#7a8494;font-size:12px;font-weight:400}
+#screen-payment-rate-form .payment-rate-form-actions{justify-content:flex-end;gap:10px}
+@media(max-width:1100px){#screen-payment-rate .payment-rate-filter-grid{grid-template-columns:repeat(2,minmax(0,1fr))}}
+@media(max-width:720px){#screen-payment-rate .payment-rate-filter-grid,#screen-payment-rate-form .payment-rate-entry-grid{grid-template-columns:1fr}#screen-payment-rate .payment-rate-toolbar{align-items:stretch;gap:10px;flex-direction:column}#screen-payment-rate .payment-rate-quick-search .toolbar-search{width:100%}}
+
+#paymentRateTable .payment-status{background:transparent!important;border:0!important;padding:0!important;border-radius:0!important;}
+#screen-payment-rate .payment-rate-filter-grid>div{min-width:0}
+#screen-payment-rate .payment-rate-filter-grid .acc-multi-filter{display:flex;align-items:center;gap:10px;min-width:0;font-size:13px;font-weight:600;color:#303846}
+#screen-payment-rate .payment-rate-filter-grid .acc-multi-filter>span{width:72px;flex:0 0 72px;white-space:nowrap}
+#screen-payment-rate .payment-rate-filter-grid details{position:relative;flex:1;min-width:0}
+#screen-payment-rate .payment-rate-filter-grid summary{height:36px;display:flex;align-items:center;padding:0 10px;border:1px solid #d9dfe8;border-radius:3px;background:#fff;box-sizing:border-box;cursor:pointer}
+#screen-payment-rate .payment-rate-filter-grid .acc-multi-options{z-index:250}
+#screen-payment-rate-form .payment-rate-multi-field{display:grid;grid-template-columns:170px minmax(0,1fr);align-items:center;gap:10px;min-width:0}
+#screen-payment-rate-form .payment-rate-multi-field>.form-label-text{text-align:right;font-weight:600}
+#screen-payment-rate-form .payment-rate-multi-field .acc-multi-filter{display:block;width:100%}
+#screen-payment-rate-form .payment-rate-multi-field .acc-multi-filter>span{display:none}
+#screen-payment-rate-form .payment-rate-multi-field details{position:relative;width:100%}
+#screen-payment-rate-form .payment-rate-multi-field summary{height:38px;display:flex;align-items:center;padding:0 12px;border:1px solid #cfd8e3;border-radius:4px;background:#fff;box-sizing:border-box;cursor:pointer}
+#screen-payment-rate-form .payment-rate-multi-field .acc-multi-options{z-index:250}
+@media(max-width:720px){#screen-payment-rate-form .payment-rate-multi-field{grid-template-columns:1fr}#screen-payment-rate-form .payment-rate-multi-field>.form-label-text{text-align:left}}
+
+/* Fix Payment > Quản trị tỉ lệ quy đổi Point theo ghi chú giao diện */
+#screen-payment-rate .payment-rate-filter-box{
+  padding:14px 16px 12px!important;
+}
+#screen-payment-rate .payment-rate-filter-grid{
+  align-items:center!important;
+  gap:12px 18px!important;
+}
+#screen-payment-rate .payment-rate-filter-grid .acc-multi-filter{
+  display:grid!important;
+  grid-template-columns:82px minmax(0,1fr)!important;
+  align-items:center!important;
+  gap:8px!important;
+  width:100%!important;
+  min-width:0!important;
+}
+#screen-payment-rate .payment-rate-filter-grid .acc-multi-filter>span{
+  width:auto!important;
+  flex:none!important;
+  margin:0!important;
+  text-align:right!important;
+  line-height:36px!important;
+  white-space:nowrap!important;
+}
+#screen-payment-rate .payment-rate-filter-grid .acc-multi-filter details{
+  width:100%!important;
+  min-width:0!important;
+}
+#screen-payment-rate .cms-actions-center{
+  margin-top:12px!important;
+}
+
+#screen-payment-rate-form .payment-rate-entry-grid{
+  width:min(100%,760px)!important;
+  max-width:760px!important;
+  padding:24px 20px 18px!important;
+}
+#screen-payment-rate-form .payment-rate-entry-grid>label,
+#screen-payment-rate-form .payment-rate-entry-grid>.payment-rate-multi-field{
+  display:grid!important;
+  grid-template-columns:170px minmax(0,500px)!important;
+  justify-content:center!important;
+  align-items:center!important;
+  gap:10px!important;
+  margin:0 0 14px!important;
+  min-height:38px!important;
+}
+#screen-payment-rate-form .payment-rate-entry-grid>label>.form-label-text,
+#screen-payment-rate-form .payment-rate-entry-grid>.payment-rate-multi-field>.form-label-text{
+  width:auto!important;
+  text-align:right!important;
+  white-space:nowrap!important;
+}
+#screen-payment-rate-form .payment-rate-entry-grid>label>input,
+#screen-payment-rate-form .payment-rate-entry-grid>label>select,
+#screen-payment-rate-form .payment-rate-entry-grid>.payment-rate-multi-field>div{
+  width:100%!important;
+  max-width:500px!important;
+  min-width:0!important;
+  box-sizing:border-box!important;
+}
+@media(max-width:1100px){
+  #screen-payment-rate .payment-rate-filter-grid .acc-multi-filter{
+    grid-template-columns:90px minmax(0,1fr)!important;
+  }
+}
+@media(max-width:720px){
+  #screen-payment-rate .payment-rate-filter-grid .acc-multi-filter,
+  #screen-payment-rate-form .payment-rate-entry-grid>label,
+  #screen-payment-rate-form .payment-rate-entry-grid>.payment-rate-multi-field{
+    grid-template-columns:1fr!important;
+  }
+  #screen-payment-rate .payment-rate-filter-grid .acc-multi-filter>span,
+  #screen-payment-rate-form .payment-rate-entry-grid>label>.form-label-text,
+  #screen-payment-rate-form .payment-rate-entry-grid>.payment-rate-multi-field>.form-label-text{
+    text-align:left!important;
+    line-height:normal!important;
+  }
+}
