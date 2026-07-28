@@ -9,7 +9,7 @@
     id: '31735b35ecba3981',
     rank: 'Hạng Đồng',
     balance: 1000,
-    avatar: null,
+    avatar: 'thumbnail/avatar-user.jpg',
     username: '0389954275',
     phone: '0389954275',
     email: 'thuyhong.vnt@gmail.com',
@@ -142,6 +142,7 @@ function findRecoveryAccounts(keyword) {
         // ================================================================
         function renderHeader() {
     const navRight = document.getElementById('nav-right');
+    window.setTimeout(() => { if (typeof renderHomeAccountCard === 'function') renderHomeAccountCard(); }, 0);
     const navLinks = document.getElementById('main-nav-links');
 
     if (!navRight) return;
@@ -150,7 +151,7 @@ function findRecoveryAccounts(keyword) {
 
     if (navLinks) {
         const activePageMap = {
-            'MyVTC_Home.html': 'MyVTC_Home.html',
+            'MyAccount.html': 'MyAccount.html',
             'Service.html': 'Service.html',
             'Shop.html': 'Shop.html',
             'RechargeDetail.html': 'Shop.html',
@@ -180,66 +181,31 @@ function findRecoveryAccounts(keyword) {
 }
 
     const displayUsername = currentUser.username || currentUser.phone || currentUser.email || currentUser.name || 'Tài khoản';
-    const displayUserId = currentUser.id || 'N/A';
     const displayRank = currentUser.rank || 'Hạng Đồng';
     const displayBalance = Number(currentUser.balance || 1000).toLocaleString('vi-VN');
-    const avatarHtml = currentUser.avatar
-        ? `<img src="${currentUser.avatar}" alt="Avatar">`
-        : `<i class="fas fa-user"></i>`;
+    const avatarSrc = currentUser.avatar || 'thumbnail/avatar-user.jpg';
+    const avatarHtml = `<img src="${avatarSrc}" alt="Avatar của ${displayUsername}" onerror="this.src='thumbnail/avatar-user.jpg'">`;
 
     navRight.innerHTML = `
         <div class="relative" id="avatar-dropdown-container">
-            <button onclick="toggleAvatarDropdown()" class="avatar-btn">
-                <div class="avatar-icon">${avatarHtml}</div>
-                <i class="fas fa-chevron-down text-xs text-gray-400 transition-transform duration-200" id="avatar-arrow"></i>
+            <button onclick="toggleAvatarDropdown()" class="avatar-btn" aria-label="Mở menu tài khoản" aria-expanded="false">
+                <span class="avatar-icon-wrap">
+                    <span class="avatar-icon">${avatarHtml}</span>
+                    <span class="avatar-rank-badge" title="${displayRank}" aria-label="${displayRank}">
+                        <i class="fas fa-crown" aria-hidden="true"></i>
+                    </span>
+                </span>
+                <span class="avatar-topbar-info">
+                    <span class="avatar-topbar-username">${displayUsername}</span>
+                    <span class="avatar-topbar-balance">${displayBalance}</span>
+                </span>
+                <i class="fas fa-chevron-down avatar-chevron text-xs text-gray-400 transition-transform duration-200" id="avatar-arrow" aria-hidden="true"></i>
             </button>
 
-            <div class="avatar-dropdown" id="avatar-dropdown">
-                <div class="user-info">
-                    <div class="user-label">Username</div>
-                    <div class="name">${displayUsername}</div>
-
-                    <div class="id-row">
-                        <span>UserID: ${displayUserId}</span>
-                        <button onclick="copyUserId(event)" class="copy-btn" title="Sao chép UserID">
-                            <i class="fas fa-copy"></i>
-                        </button>
-                    </div>
-
-                    <div class="rank-row">
-                        <i class="fas fa-crown"></i>
-                        <span>${displayRank}</span>
-                    </div>
-
-                    <div class="balance-row">
-                        <span>Số dư</span>
-                        <strong>${displayBalance}</strong>
-                        <span class="point-coin">P</span>
-                    </div>
-                </div>
-
-                <div class="dropdown-divider"></div>
-
-                <button class="dropdown-item" onclick="handleAccount()">
-                    <i class="fas fa-user-circle w-5 text-center"></i>
-                    Tài khoản
-                </button>
-
-                <button class="dropdown-item" onclick="handleBag()">
-                    <i class="fas fa-shopping-bag w-5 text-center"></i>
-                    Túi đồ
-                </button>
-
-                <button class="dropdown-item" onclick="handleTransactions()">
-                    <i class="fas fa-receipt w-5 text-center"></i>
-                    Lịch sử giao dịch
-                </button>
-
-                <div class="dropdown-divider"></div>
-
-                <button class="dropdown-item text-red-600 hover:bg-red-50" onclick="handleLogout()">
+            <div class="avatar-dropdown avatar-dropdown-logout-only" id="avatar-dropdown">
+                <button class="dropdown-item avatar-logout-btn text-red-600 hover:bg-red-50" onclick="handleLogout()">
                     <i class="fas fa-sign-out-alt w-5 text-center"></i>
-                    Đăng xuất
+                    <span>Đăng xuất</span>
                 </button>
             </div>
         </div>
@@ -4389,6 +4355,15 @@ function closeSupportFaq(shouldScroll = true) {
     }
 }
 
+document.addEventListener('DOMContentLoaded', function () {
+    const supportDetail = document.getElementById('support-faq-detail');
+    if (!supportDetail) return;
+    const faqKey = new URLSearchParams(window.location.search).get('faq');
+    if (faqKey && supportFaqData[faqKey]) {
+        openSupportFaq(faqKey);
+    }
+});
+
 // ================================================================
 //  ACCOUNT NOTIFICATIONS
 // ================================================================
@@ -4537,4 +4512,215 @@ document.addEventListener('keydown', function (event) {
         event.preventDefault();
         applyRechargeVoucher();
     }
+});
+
+// ================================================================
+//  HOME PAGE: SLIDER, ACCOUNT CARD, SERVICES BY UNIT
+// ================================================================
+let homeSlideIndex = 0;
+let homeSlideTimer = null;
+
+function renderHomeSlides() {
+    const slides = Array.from(document.querySelectorAll('[data-home-slide]'));
+    const dots = Array.from(document.querySelectorAll('.home-slider-dots button'));
+    if (!slides.length) return;
+    homeSlideIndex = (homeSlideIndex + slides.length) % slides.length;
+    slides.forEach((slide, index) => slide.classList.toggle('active', index === homeSlideIndex));
+    dots.forEach((dot, index) => dot.classList.toggle('active', index === homeSlideIndex));
+}
+
+function resetHomeSlideTimer() {
+    if (homeSlideTimer) window.clearInterval(homeSlideTimer);
+    if (document.querySelector('[data-home-slide]')) {
+        homeSlideTimer = window.setInterval(() => {
+            homeSlideIndex += 1;
+            renderHomeSlides();
+        }, 5500);
+    }
+}
+
+function changeHomeSlide(step) {
+    homeSlideIndex += step;
+    renderHomeSlides();
+    resetHomeSlideTimer();
+}
+
+function goToHomeSlide(index) {
+    homeSlideIndex = index;
+    renderHomeSlides();
+    resetHomeSlideTimer();
+}
+
+function renderHomeAccountCard() {
+    const card = document.getElementById('home-account-card');
+    if (!card) return;
+    if (!isLoggedIn) {
+        card.innerHTML = `
+            <div class="home-account-login">
+                <div class="home-account-login-icon"><i class="fas fa-user"></i></div>
+                <h3>Chào mừng đến MyVTC</h3>
+                <p>Đăng nhập để xem số dư, hạng thành viên và các dịch vụ của bạn.</p>
+                <button class="home-primary-btn" onclick="openAuthModal('login')">Đăng nhập</button>
+            </div>`;
+        return;
+    }
+    const displayUsername = currentUser.username || currentUser.phone || currentUser.email || currentUser.name || 'Tài khoản';
+    const displayUserId = currentUser.id || 'saved_acc_001';
+    const displayRank = currentUser.rank || 'Hạng Đồng';
+    const displayBalance = Number(currentUser.balance || 1000).toLocaleString('vi-VN');
+    const avatarHtml = currentUser.avatar ? `<img src="${currentUser.avatar}" alt="Avatar">` : '<i class="fas fa-user"></i>';
+    card.innerHTML = `
+        <div class="home-account-profile">
+            <div class="home-account-avatar">${avatarHtml}</div>
+            <div><div class="home-account-name">${displayUsername}</div><div class="home-account-id">UserID: ${displayUserId} <button class="copy-btn" onclick="copyUserId(event)" title="Sao chép"><i class="fas fa-copy"></i></button></div></div>
+        </div>
+        <div class="home-account-rank"><i class="fas fa-crown"></i><span>${displayRank}</span></div>
+        <div class="home-account-balance"><span>Số dư</span><strong>${displayBalance}</strong><span class="point-coin">P</span></div>
+        <div class="home-account-menu">
+            <a href="MyAccount.html"><i class="fas fa-user-circle"></i>Tài khoản</a>
+            <a href="Loyalty.html"><i class="fas fa-shopping-bag"></i>Túi đồ</a>
+            <a href="MyAccount.html#transactions"><i class="fas fa-receipt"></i>Lịch sử giao dịch</a>
+            <button onclick="handleLogout()"><i class="fas fa-right-from-bracket"></i>Đăng xuất</button>
+        </div>`;
+}
+
+const homeUnitData = {
+    game: [
+        ['thumbnail/thumb_001.png', 'Audition PC', 'Dịch vụ âm nhạc, thời trang và vũ đạo.'],
+        ['thumbnail/thumb_002.png', 'Đột Kích', 'Dịch vụ FPS chiến thuật với nhiều chế độ thi đấu.'],
+        ['thumbnail/thumb_003.png', 'Truy Kích PC', 'Dịch vụ bắn súng trực tuyến dành cho PC.'],
+        ['thumbnail/thumb_004.png', 'Phi đội', 'Dịch vụ không chiến và nhiệm vụ phi đội.']
+    ],
+    mobile: [
+        ['thumbnail/thumb_006.png', 'PUBG Mobile', 'Dịch vụ nhập vai hành động trên di động.'],
+        ['thumbnail/thumb_008.png', 'Arena of Valor', 'Dịch vụ MOBA trên di động.'],
+        ['thumbnail/thumb_009.png', 'Honor of Kings', 'Dịch vụ MOBA dành cho cộng đồng quốc tế.'],
+        ['thumbnail/thumb_013.png', 'Brawl Stars', 'Dịch vụ đối kháng nhiều người chơi.']
+    ],
+    digital: [
+        ['icon/icon_004.jpg', 'VTC Digital', 'Nội dung số và tiện ích trực tuyến.'],
+        ['icon/icon_005.jpg', 'Kho nội dung giải trí', 'Nội dung giải trí dành cho gia đình.'],
+        ['icon/icon_006.jpg', 'Dịch vụ tiện ích', 'Tiện ích số cho người dùng MyVTC.'],
+        ['icon/icon_018.jpg', 'Nội dung tương tác', 'Dịch vụ nội dung và cộng đồng.']
+    ],
+    studio: [
+        ['thumbnail/thumb_014.png', 'VTC Studio', 'Sản xuất và phát hành nội dung số.'],
+        ['thumbnail/thumb_015.png', 'Dream Studio', 'Dịch vụ sáng tạo hình ảnh và nhân vật.'],
+        ['thumbnail/thumb_016.png', 'Creative Lab', 'Nội dung giải trí và sản phẩm sáng tạo.'],
+        ['thumbnail/thumb_019.png', 'Animation Studio', 'Sản xuất hoạt hình và nội dung số.']
+    ],
+    academy: [
+        ['icon/icon_003.jpg', 'Lập trình', 'Khóa học công nghệ và phát triển phần mềm.'],
+        ['icon/icon_010.jpg', 'Thiết kế', 'Đào tạo thiết kế và mỹ thuật số.'],
+        ['icon/icon_017.jpg', '3D và Animation', 'Đào tạo sản xuất nội dung 3D.'],
+        ['icon/icon_020.jpg', 'Hướng nghiệp', 'Kết nối học viên với doanh nghiệp.']
+    ]
+};
+homeUnitData.all = Object.values(homeUnitData).flat();
+
+let currentHomeUnit = 'all';
+let currentHomeUnitPage = 0;
+const homeUnitPageSize = 8;
+
+function renderHomeUnitServices() {
+    const list = document.getElementById('home-unit-services');
+    const pagination = document.getElementById('home-unit-pagination');
+    if (!list) return;
+    const items = homeUnitData[currentHomeUnit] || homeUnitData.all;
+    const pageCount = Math.max(1, Math.ceil(items.length / homeUnitPageSize));
+    currentHomeUnitPage = Math.min(currentHomeUnitPage, pageCount - 1);
+    const pageItems = items.slice(currentHomeUnitPage * homeUnitPageSize, (currentHomeUnitPage + 1) * homeUnitPageSize);
+    list.innerHTML = pageItems.map(item => `
+        <a class="home-service-item" href="Service.html">
+            <img class="home-service-item-icon" src="${item[0]}" alt="${item[1]}">
+            <div><h3>${item[1]}</h3><p>${item[2]}</p></div>
+        </a>`).join('');
+    if (pagination) {
+        pagination.innerHTML = Array.from({ length: pageCount }, (_, index) => `
+            <button type="button" class="${index === currentHomeUnitPage ? 'active' : ''}" aria-label="Trang ${index + 1}" onclick="goToHomeUnitPage(${index})"></button>`).join('');
+    }
+    document.querySelectorAll('.home-unit-arrow').forEach(button => {
+        button.disabled = pageCount <= 1;
+    });
+}
+
+function selectHomeUnit(unit, button) {
+    document.querySelectorAll('.home-unit-tab').forEach(item => item.classList.toggle('active', item === button));
+    currentHomeUnit = unit;
+    currentHomeUnitPage = 0;
+    renderHomeUnitServices();
+}
+
+function changeHomeUnitPage(step) {
+    const items = homeUnitData[currentHomeUnit] || homeUnitData.all;
+    const pageCount = Math.max(1, Math.ceil(items.length / homeUnitPageSize));
+    currentHomeUnitPage = (currentHomeUnitPage + step + pageCount) % pageCount;
+    renderHomeUnitServices();
+}
+
+function goToHomeUnitPage(page) {
+    currentHomeUnitPage = page;
+    renderHomeUnitServices();
+}
+
+function initHomeHotDragScroll() {
+    const scroller = document.querySelector('.home-hot-scroll');
+    if (!scroller || scroller.dataset.dragReady === 'true') return;
+
+    scroller.dataset.dragReady = 'true';
+    let isDragging = false;
+    let startX = 0;
+    let startScrollLeft = 0;
+    let moved = false;
+
+    scroller.addEventListener('pointerdown', function (event) {
+        if (event.pointerType === 'mouse' && event.button !== 0) return;
+        isDragging = true;
+        moved = false;
+        startX = event.clientX;
+        startScrollLeft = scroller.scrollLeft;
+        scroller.classList.add('is-dragging');
+        scroller.setPointerCapture(event.pointerId);
+    });
+
+    scroller.addEventListener('pointermove', function (event) {
+        if (!isDragging) return;
+        const distance = event.clientX - startX;
+        if (Math.abs(distance) > 4) moved = true;
+        scroller.scrollLeft = startScrollLeft - distance;
+        if (moved) event.preventDefault();
+    });
+
+    function stopDrag(event) {
+        if (!isDragging) return;
+        isDragging = false;
+        scroller.classList.remove('is-dragging');
+        if (scroller.hasPointerCapture(event.pointerId)) scroller.releasePointerCapture(event.pointerId);
+    }
+
+    scroller.addEventListener('pointerup', stopDrag);
+    scroller.addEventListener('pointercancel', stopDrag);
+    scroller.addEventListener('click', function (event) {
+        if (!moved) return;
+        event.preventDefault();
+        event.stopPropagation();
+        moved = false;
+    }, true);
+}
+
+let homeHeaderMobileState = window.matchMedia('(max-width: 720px)').matches;
+window.addEventListener('resize', function () {
+    const nextMobileState = window.matchMedia('(max-width: 720px)').matches;
+    if (nextMobileState === homeHeaderMobileState) return;
+    homeHeaderMobileState = nextMobileState;
+    renderHeader();
+});
+
+document.addEventListener('DOMContentLoaded', function () {
+    renderHomeSlides();
+    resetHomeSlideTimer();
+    renderHomeAccountCard();
+    initHomeHotDragScroll();
+    const defaultUnit = document.querySelector('.home-unit-tab.active');
+    if (defaultUnit) selectHomeUnit(defaultUnit.dataset.unit, defaultUnit);
 });
