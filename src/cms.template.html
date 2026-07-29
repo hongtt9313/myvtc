@@ -27,6 +27,7 @@
 <button onclick="showScreen('profile-type-list',this)" type="button"><i class="fa fa-book"></i> Quản trị loại hồ sơ</button>
 <button onclick="showScreen('product-type-list',this)" type="button"><i class="fa fa-cube"></i> Quản trị loại sản phẩm</button>
 <button onclick="showScreen('product-list',this)" type="button"><i class="fa fa-cubes"></i> Quản trị sản phẩm</button>
+<button onclick="showScreen('recharge-package-list',this)" type="button"><i class="fa fa-money-bill-wave"></i> Quản trị gói nạp</button>
 </div>
 </div>
 <div class="cms-menu-item">
@@ -61,7 +62,7 @@
 <button onclick="showScreen('loyalty-member-rank-lookup',this)" type="button"><i class="fa fa-user-tag"></i> Tra cứu hạng thành viên</button>
 </div>
 </div>
-<div class="cms-menu-item">
+<div class="cms-menu-item cms-payment-menu">
 <button class="cms-nav-btn" type="button"><i class="fa fa-credit-card"></i> Thanh toán <i class="fa fa-caret-down"></i></button>
 <div class="cms-dropdown cms-dropdown-wide">
 <button onclick="showScreen('payment-rate',this)" type="button"><i class="fa fa-exchange-alt"></i> Quản trị tỉ lệ quy đổi Point</button>
@@ -69,6 +70,18 @@
 <button onclick="showScreen('payment-refund',this)" type="button"><i class="fa fa-undo"></i> Quản lý hoàn Point</button>
 <button onclick="showScreen('payment-transaction',this)" type="button"><i class="fa fa-search"></i> Tra cứu lịch sử giao dịch</button>
 <button onclick="showScreen('payment-adjustment',this)" type="button"><i class="fa fa-plus-minus"></i> Cộng bù/Thu hồi Point</button>
+</div>
+</div>
+
+<div class="cms-menu-item cms-support-menu">
+<button class="cms-nav-btn" type="button"><i class="fa fa-headset"></i> Support <i class="fa fa-caret-down"></i></button>
+<div class="cms-dropdown cms-dropdown-wide">
+<button onclick="showScreen('support-faq-topic',this);cmsSupportRender('topic')" type="button"><i class="fa fa-folder-open"></i> Quản lý chủ đề FAQ</button>
+<button onclick="showScreen('support-faq-article',this);cmsSupportRender('article')" type="button"><i class="fa fa-file-lines"></i> Quản lý bài viết FAQ</button>
+<button onclick="showScreen('support-notification-template',this);cmsSupportRender('template')" type="button"><i class="fa fa-bell"></i> Quản lý Mẫu Thông báo</button>
+<button onclick="showScreen('support-notification',this);cmsSupportRender('notification')" type="button"><i class="fa fa-paper-plane"></i> Quản lý thông báo</button>
+<button onclick="showScreen('support-feature-limit',this);cmsSupportRender('limit')" type="button"><i class="fa fa-shield-halved"></i> Quản trị giới hạn tính năng</button>
+<button onclick="showScreen('support-access-time',this);cmsSupportRender('accessTime')" type="button"><i class="fa fa-clock"></i> Quản lý thời gian truy cập</button>
 </div>
 </div>
 </nav>
@@ -478,6 +491,67 @@
 <div class="cms-form-row"><label>Link IOS</label><input/></div>
 <div class="cms-form-row"><label>Trạng thái hoạt động:</label><input checked="" class="cms-status-checkbox" type="checkbox"/></div>
 </div></div><div class="form-bottom"><button class="btn gray" onclick="showScreen('product-list')"><i class="fa fa-backward"></i> Quay lại</button><button class="btn green"><i class="fa fa-refresh"></i> Làm mới</button><button class="btn blue"><i class="fa fa-save"></i> Lưu thay đổi</button></div></div>
+</section>
+<section class="screen hidden" id="screen-recharge-package-list">
+<div class="cms-screen-title"><i class="fa fa-money-bill-wave"></i> CMS quản trị sản phẩm/ Quản trị gói nạp</div>
+<div class="cms-content">
+<div class="product-filter-grid">
+<label>Tên gói nạp: <input class="input" placeholder="Nhập tên gói nạp"/></label>
+<label>Sản phẩm: <select class="select"><option>Tất cả</option><option>Nạp số dư MyVTC</option><option>Silkroad Origin VTC</option><option>Football Pro VTC</option></select></label>
+<label>Trạng thái: <select class="select"><option>Tất cả</option><option>Hoạt động</option><option>Không hoạt động</option></select></label>
+<label>Hiển thị: <select class="select"><option>Tất cả</option><option>Không hiển thị</option><option>Có hiển thị</option><option>Website</option><option>App</option></select></label>
+</div>
+<div class="cms-actions-center"><button class="btn gray"><i class="fa fa-search"></i> Tra Cứu</button><button class="btn green" onclick="showScreen('recharge-package-form-add')"><i class="fa fa-user-plus"></i> Thêm mới</button></div>
+<div class="tools-row"><button class="btn gray"><i class="fa fa-eye-slash"></i> Ẩn/hiện cột</button><label>Tìm Kiếm:<input class="input"/></label></div>
+<div class="table-wrap"><table class="data-table"><thead><tr><th>STT</th><th>Mã gói nạp</th><th>Gói nạp</th><th>Sản phẩm</th><th>Mệnh giá đối tác</th><th>Đơn giá Point</th><th>Đơn giá VNĐ</th><th>Ưu tiên hiển thị</th><th>Hiển thị</th><th>Trạng thái</th><th>Chức năng</th></tr></thead><tbody id="rechargePackageTableBody">
+<tr><td>1</td><td>MYVTC-BALANCE</td><td>Nạp số dư MyVTC</td><td>Nạp số dư MyVTC</td><td></td><td></td><td></td><td>1</td><td>Website</td><td>Hoạt động</td><td><button class="icon-square red" title="Tạm dừng"><i class="fa fa-ban"></i></button><button class="icon-square orange" title="Cập nhật" onclick="showScreen('recharge-package-form-edit')"><i class="fa fa-edit"></i></button><button class="icon-square red" title="Xóa"><i class="fa fa-trash"></i></button></td></tr>
+<tr><td>2</td><td>SRO-20</td><td>20 Silk</td><td>Silkroad Origin VTC</td><td>20 Silk</td><td>20 Point</td><td>20.000 VNĐ</td><td>2</td><td>Website</td><td>Hoạt động</td><td><button class="icon-square red" title="Tạm dừng"><i class="fa fa-ban"></i></button><button class="icon-square orange" title="Cập nhật" onclick="showScreen('recharge-package-form-edit')"><i class="fa fa-edit"></i></button><button class="icon-square red" title="Xóa"><i class="fa fa-trash"></i></button></td></tr>
+<tr><td>3</td><td>SRO-50</td><td>50 Silk</td><td>Silkroad Origin VTC</td><td>50 Silk</td><td>50 Point</td><td>50.000 VNĐ</td><td>3</td><td>Website</td><td>Hoạt động</td><td><button class="icon-square red" title="Tạm dừng"><i class="fa fa-ban"></i></button><button class="icon-square orange" title="Cập nhật" onclick="showScreen('recharge-package-form-edit')"><i class="fa fa-edit"></i></button><button class="icon-square red" title="Xóa"><i class="fa fa-trash"></i></button></td></tr>
+<tr><td>4</td><td>SRO-103</td><td>103 Silk</td><td>Silkroad Origin VTC</td><td>103 Silk</td><td>100 Point</td><td>100.000 VNĐ</td><td>4</td><td>Website</td><td>Hoạt động</td><td><button class="icon-square red" title="Tạm dừng"><i class="fa fa-ban"></i></button><button class="icon-square orange" title="Cập nhật" onclick="showScreen('recharge-package-form-edit')"><i class="fa fa-edit"></i></button><button class="icon-square red" title="Xóa"><i class="fa fa-trash"></i></button></td></tr>
+<tr><td>5</td><td>SRO-210</td><td>210 Silk</td><td>Silkroad Origin VTC</td><td>210 Silk</td><td>200 Point</td><td>200.000 VNĐ</td><td>5</td><td>Website</td><td>Hoạt động</td><td><button class="icon-square red" title="Tạm dừng"><i class="fa fa-ban"></i></button><button class="icon-square orange" title="Cập nhật" onclick="showScreen('recharge-package-form-edit')"><i class="fa fa-edit"></i></button><button class="icon-square red" title="Xóa"><i class="fa fa-trash"></i></button></td></tr>
+<tr><td>6</td><td>SRO-530</td><td>530 Silk</td><td>Silkroad Origin VTC</td><td>530 Silk</td><td>500 Point</td><td>500.000 VNĐ</td><td>6</td><td>Website</td><td>Hoạt động</td><td><button class="icon-square red" title="Tạm dừng"><i class="fa fa-ban"></i></button><button class="icon-square orange" title="Cập nhật" onclick="showScreen('recharge-package-form-edit')"><i class="fa fa-edit"></i></button><button class="icon-square red" title="Xóa"><i class="fa fa-trash"></i></button></td></tr>
+<tr><td>7</td><td>SRO-1100</td><td>1100 Silk</td><td>Silkroad Origin VTC</td><td>1100 Silk</td><td>1.000 Point</td><td>1.000.000 VNĐ</td><td>7</td><td>Website</td><td>Hoạt động</td><td><button class="icon-square red" title="Tạm dừng"><i class="fa fa-ban"></i></button><button class="icon-square orange" title="Cập nhật" onclick="showScreen('recharge-package-form-edit')"><i class="fa fa-edit"></i></button><button class="icon-square red" title="Xóa"><i class="fa fa-trash"></i></button></td></tr>
+<tr><td>8</td><td>FP-20</td><td>25.000 Epic Coin</td><td>Football Pro VTC</td><td>25.000 Epic Coin</td><td>20 Point</td><td>20.000 VNĐ</td><td>8</td><td>App</td><td>Hoạt động</td><td><button class="icon-square red" title="Tạm dừng"><i class="fa fa-ban"></i></button><button class="icon-square orange" title="Cập nhật" onclick="showScreen('recharge-package-form-edit')"><i class="fa fa-edit"></i></button><button class="icon-square red" title="Xóa"><i class="fa fa-trash"></i></button></td></tr>
+<tr><td>9</td><td>FP-50</td><td>62.500 Epic Coin</td><td>Football Pro VTC</td><td>62.500 Epic Coin</td><td>50 Point</td><td>50.000 VNĐ</td><td>9</td><td>Website</td><td>Hoạt động</td><td><button class="icon-square red" title="Tạm dừng"><i class="fa fa-ban"></i></button><button class="icon-square orange" title="Cập nhật" onclick="showScreen('recharge-package-form-edit')"><i class="fa fa-edit"></i></button><button class="icon-square red" title="Xóa"><i class="fa fa-trash"></i></button></td></tr>
+<tr><td>10</td><td>FP-100</td><td>125.000 Epic Coin</td><td>Football Pro VTC</td><td>125.000 Epic Coin</td><td>100 Point</td><td>100.000 VNĐ</td><td>10</td><td>App</td><td>Hoạt động</td><td><button class="icon-square red" title="Tạm dừng"><i class="fa fa-ban"></i></button><button class="icon-square orange" title="Cập nhật" onclick="showScreen('recharge-package-form-edit')"><i class="fa fa-edit"></i></button><button class="icon-square red" title="Xóa"><i class="fa fa-trash"></i></button></td></tr>
+<tr><td>11</td><td>FP-200</td><td>250.000 Epic Coin</td><td>Football Pro VTC</td><td>250.000 Epic Coin</td><td>200 Point</td><td>200.000 VNĐ</td><td>11</td><td>Website</td><td>Hoạt động</td><td><button class="icon-square red" title="Tạm dừng"><i class="fa fa-ban"></i></button><button class="icon-square orange" title="Cập nhật" onclick="showScreen('recharge-package-form-edit')"><i class="fa fa-edit"></i></button><button class="icon-square red" title="Xóa"><i class="fa fa-trash"></i></button></td></tr>
+<tr><td>12</td><td>FP-500</td><td>625.000 Epic Coin</td><td>Football Pro VTC</td><td>625.000 Epic Coin</td><td>500 Point</td><td>500.000 VNĐ</td><td>12</td><td>App</td><td>Hoạt động</td><td><button class="icon-square red" title="Tạm dừng"><i class="fa fa-ban"></i></button><button class="icon-square orange" title="Cập nhật" onclick="showScreen('recharge-package-form-edit')"><i class="fa fa-edit"></i></button><button class="icon-square red" title="Xóa"><i class="fa fa-trash"></i></button></td></tr>
+<tr><td>13</td><td>FP-1000</td><td>1.250.000 Epic Coin</td><td>Football Pro VTC</td><td>1.250.000 Epic Coin</td><td>1.000 Point</td><td>1.000.000 VNĐ</td><td>13</td><td>Website</td><td>Hoạt động</td><td><button class="icon-square red" title="Tạm dừng"><i class="fa fa-ban"></i></button><button class="icon-square orange" title="Cập nhật" onclick="showScreen('recharge-package-form-edit')"><i class="fa fa-edit"></i></button><button class="icon-square red" title="Xóa"><i class="fa fa-trash"></i></button></td></tr>
+</tbody></table></div>
+<div class="page-foot recharge-package-page-foot"><span id="rechargePackagePageInfo">Hiển thị từ 1 tới 5 của 13 bản ghi</span><div class="pager" id="rechargePackagePagination"></div></div>
+</div>
+</section>
+<section class="screen hidden" id="screen-recharge-package-form-add">
+<div class="cms-warning"><span>Chú ý!</span> Hãy chắc chắn nhập vào đầy đủ thông tin tại các mục bắt buộc đánh dấu (*)</div>
+<div class="cms-screen-title"><i class="fa fa-user-plus"></i> Thêm mới Gói nạp</div>
+<div class="cms-content compact"><div class="form-section"><i class="fa fa-wrench"></i> Thông Tin Cơ Bản</div><div class="form-shell"><div class="cms-form-wide recharge-package-form">
+<div class="cms-form-row"><label>Sản phẩm:<span class="required">*</span></label><select required><option value="">Chọn sản phẩm</option><option>Nạp số dư MyVTC</option><option>Silkroad Origin VTC</option><option>Football Pro VTC</option></select></div>
+<div class="cms-form-row"><label>Mã sản phẩm:<span class="required">*</span></label><input required placeholder="Nhập mã sản phẩm"/></div>
+<div class="cms-form-row"><label>Mệnh giá đối tác:<span class="required">*</span></label><input min="0" required type="number" placeholder="Nhập mệnh giá"/></div>
+<div class="cms-form-row"><label>Đơn giá Point:<span class="required">*</span></label><input min="0" required type="number" placeholder="Nhập đơn giá Point"/></div>
+<div class="cms-form-row"><label>Đơn giá VNĐ:<span class="required">*</span></label><input min="0" required type="number" placeholder="Nhập đơn giá VNĐ"/></div>
+<div class="cms-form-row"><label>Tên sản phẩm:<span class="required">*</span></label><input required placeholder="Nhập tên sản phẩm"/></div>
+<div class="cms-form-row"><label>Ảnh:</label><input accept="image/*" class="cms-file recharge-package-image" type="file"/></div>
+<div class="cms-form-row"><label>Trạng thái:</label><div class="cms-checkbox-label"><input checked class="cms-status-checkbox" type="checkbox"/> Hoạt động</div></div>
+<div class="cms-form-row"><label>Ưu tiên hiển thị:<span class="required">*</span></label><select required><option>1</option><option>2</option><option>3</option><option>4</option><option>5</option><option>6</option><option>7</option><option>8</option><option>9</option><option>10</option><option>11</option><option>12</option><option>13</option><option>14</option><option>15</option><option>16</option><option>17</option><option>18</option><option>19</option><option>20</option></select></div>
+<div class="cms-form-row"><label>Hiển thị:<span class="required">*</span></label><select required><option>Không hiển thị</option><option>Có hiển thị</option><option>Website</option><option>App</option></select></div>
+</div></div><div class="form-bottom"><button class="btn gray" onclick="showScreen('recharge-package-list')"><i class="fa fa-backward"></i> Quay lại</button><button class="btn green recharge-package-reset"><i class="fa fa-refresh"></i> Làm mới</button><button class="btn blue recharge-package-save"><i class="fa fa-save"></i> Thêm mới</button></div></div>
+</section>
+<section class="screen hidden" id="screen-recharge-package-form-edit">
+<div class="cms-warning"><span>Chú ý!</span> Hãy chắc chắn nhập vào đầy đủ thông tin tại các mục bắt buộc đánh dấu (*)</div>
+<div class="cms-screen-title"><i class="fa fa-edit"></i> Cập nhật Gói nạp</div>
+<div class="cms-content compact"><div class="form-section"><i class="fa fa-wrench"></i> Thông Tin Cơ Bản</div><div class="form-shell"><div class="cms-form-wide recharge-package-form">
+<div class="cms-form-row"><label>Sản phẩm:<span class="required">*</span></label><select required><option>Nạp số dư MyVTC</option><option>Silkroad Origin VTC</option><option>Football Pro VTC</option></select></div>
+<div class="cms-form-row"><label>Mã sản phẩm:<span class="required">*</span></label><input required value="AU100"/></div>
+<div class="cms-form-row"><label>Mệnh giá đối tác:<span class="required">*</span></label><input min="0" required type="number" value="100000"/></div>
+<div class="cms-form-row"><label>Đơn giá Point:<span class="required">*</span></label><input min="0" required type="number" value="100000"/></div>
+<div class="cms-form-row"><label>Đơn giá VNĐ:<span class="required">*</span></label><input min="0" required type="number" value="100000"/></div>
+<div class="cms-form-row"><label>Tên sản phẩm:<span class="required">*</span></label><input required value="Gói Audition 100.000"/></div>
+<div class="cms-form-row"><label>Ảnh:</label><input accept="image/*" class="cms-file recharge-package-image" type="file"/><span class="recharge-current-image">Ảnh hiện tại: package-audition-100.png</span></div>
+<div class="cms-form-row"><label>Trạng thái:</label><div class="cms-checkbox-label"><input checked class="cms-status-checkbox" type="checkbox"/> Hoạt động</div></div>
+<div class="cms-form-row"><label>Ưu tiên hiển thị:<span class="required">*</span></label><select required><option selected>1</option><option>2</option><option>3</option><option>4</option><option>5</option><option>6</option><option>7</option><option>8</option><option>9</option><option>10</option><option>11</option><option>12</option><option>13</option><option>14</option><option>15</option><option>16</option><option>17</option><option>18</option><option>19</option><option>20</option></select></div>
+<div class="cms-form-row"><label>Hiển thị:<span class="required">*</span></label><select required><option>Không hiển thị</option><option>Có hiển thị</option><option selected>Website</option><option>App</option></select></div>
+</div></div><div class="form-bottom"><button class="btn gray" onclick="showScreen('recharge-package-list')"><i class="fa fa-backward"></i> Quay lại</button><button class="btn green recharge-package-reset"><i class="fa fa-refresh"></i> Làm mới</button><button class="btn blue recharge-package-save"><i class="fa fa-save"></i> Lưu thay đổi</button></div></div>
 </section>
 <section class="screen hidden" id="screen-account-lookup">
 <div class="cms-screen-title"><i class="fa fa-search"></i> Quản trị tài khoản / Tra cứu thông tin tài khoản</div>
@@ -1302,139 +1376,206 @@
 </div>
 </section>
 <section class="screen hidden" id="screen-payment-limit">
-<div class="cms-screen-title"><i class="fa fa-sliders-h"></i> Quản trị hạn mức giao dịch</div>
-<div class="cms-content">
+<div class="cms-screen-title"><i class="fa fa-sliders-h"></i> Thanh toán &gt; Quản trị hạn mức giao dịch</div>
+<div class="cms-content payment-limit-content">
 <div class="account-alert" id="paymentLimitAlert"></div>
-<div class="tools-row">
-<div class="filter-row">
-<label>Nghiệp vụ <select class="select" id="limitFilterBusiness" onchange="cmsRenderPaymentLimits()"><option value="">Tất cả</option><option>Nạp Point</option><option>Thanh toán bằng Point</option><option>Thanh toán bằng VTC Pay</option></select></label>
-<label>Trạng thái <select class="select" id="limitFilterStatus" onchange="cmsRenderPaymentLimits()"><option value="">Tất cả</option><option>Chờ hiệu lực</option><option>Đang hoạt động</option><option>Hết hiệu lực</option><option>Đã hủy</option></select></label>
+<div class="payment-limit-filter-box">
+<div class="payment-limit-filter-grid">
+<div id="limitFilterPartnerControl"></div>
+<div id="limitFilterProductControl"></div>
+<div id="limitFilterBusinessControl"></div>
+<div id="limitFilterPaymentControl"></div>
+<div id="limitFilterStatusControl"></div>
 </div>
-<button class="btn green" onclick="cmsOpenPaymentLimitForm()"><i class="fa fa-plus"></i> Thêm hạn mức</button>
+<div class="cms-actions-center">
+<button class="btn blue" onclick="cmsRenderPaymentLimits()" type="button"><i class="fa fa-search"></i> Tra cứu</button>
+<button class="btn green" onclick="cmsOpenPaymentLimitForm()" type="button"><i class="fa fa-plus"></i> Thêm mới</button>
 </div>
-<div class="table-wrap">
-<table class="data-table payment-table">
-<thead>
-<tr>
-<th>Mã cấu hình</th>
-<th>Nghiệp vụ</th>
-<th>Tối thiểu</th>
-<th>Tối đa</th>
-<th>Ràng buộc tài khoản</th>
-<th>Bắt đầu</th>
-<th>Kết thúc</th>
-<th>Trạng thái</th>
-<th>Chức năng</th>
-</tr>
-</thead>
+</div>
+<div class="payment-limit-toolbar">
+<div class="toolbar-left"><button class="btn gray" onclick="cmsTogglePaymentLimitColumns()" type="button"><i class="fa fa-columns"></i> Ẩn hiện cột</button></div>
+<div class="toolbar-right"><div class="payment-limit-quick-search"><i class="fa fa-search"></i><input class="toolbar-search" id="limitQuickSearch" oninput="cmsRenderPaymentLimits()" placeholder="Tìm kiếm nhanh" type="text"/></div></div>
+</div>
+<div class="table-wrap payment-limit-table-wrap">
+<table class="data-table payment-table" id="paymentLimitTable">
+<thead><tr>
+<th>STT</th><th>Đối tượng</th><th>Đối tác</th><th>Sản phẩm</th><th>Loại giao dịch</th><th>Hình thức thanh toán</th><th>Thời gian áp dụng</th><th>Thời gian kết thúc</th><th>Trạng thái</th><th>Thao tác</th>
+</tr></thead>
 <tbody id="paymentLimitRows"></tbody>
 </table>
 </div>
+<div class="page-foot"><span id="paymentLimitCount">0 bản ghi</span><div class="pager"><button class="active" type="button">1</button></div></div>
 </div>
 </section>
 <section class="screen hidden" id="screen-payment-limit-form">
 <div class="cms-screen-title" id="paymentLimitBreadcrumb"><i class="fa fa-edit"></i> Thanh toán &gt; Quản trị hạn mức giao dịch</div>
-<div class="cms-content">
-<div class="payment-panel standard-entry-panel">
+<div class="cms-content payment-limit-form-content">
+<div class="payment-panel standard-entry-panel payment-limit-entry-panel">
 <div class="payment-panel-title"><i class="fa fa-edit"></i> <span id="paymentLimitFormTitle">Thêm mới hạn mức giao dịch</span></div>
 <input id="limitEditingId" type="hidden"/>
-<div class="payment-form-grid standard-entry-form">
-<label><span class="form-label-text">Nghiệp vụ <span class="required">*</span></span><select id="limitBusiness"><option>Nạp Point</option><option>Thanh toán bằng Point</option><option>Thanh toán bằng VTC Pay</option></select></label>
-<label><span class="form-label-text">Giá trị tối thiểu X <span class="required">*</span></span><input id="limitMin" min="0" placeholder="Point" type="number"/></label>
-<label><span class="form-label-text">Giá trị tối đa Y <span class="required">*</span></span><input id="limitMax" min="1" placeholder="Point" type="number"/></label>
-<label><span class="form-label-text">Thời gian bắt đầu <span class="required">*</span></span><input id="limitStart" type="datetime-local"/></label>
+<div class="payment-form-grid standard-entry-form payment-limit-entry-grid">
+<div class="payment-limit-multi-field"><span class="form-label-text">Đối tượng <span class="required">*</span></span><div id="limitTargetControl"></div></div>
+<div class="payment-limit-multi-field"><span class="form-label-text">Đối tác <span class="required">*</span></span><div id="limitPartnerControl"></div></div>
+<div class="payment-limit-multi-field"><span class="form-label-text">Sản phẩm <span class="required">*</span></span><div id="limitProductControl"></div></div>
+<label><span class="form-label-text">Loại giao dịch <span class="required">*</span></span><select id="limitBusiness"><option>Nạp Point</option><option>Mua hàng</option></select></label>
+<div class="payment-limit-multi-field"><span class="form-label-text">Hình thức thanh toán <span class="required">*</span></span><div id="limitPaymentControl"></div></div>
+<label><span class="form-label-text">Giá trị tối thiểu <span class="required">*</span></span><input id="limitMin" min="0" placeholder="Nhập giá trị tối thiểu" type="number"/></label>
+<label><span class="form-label-text">Giá trị tối đa <span class="required">*</span></span><input id="limitMax" min="1" placeholder="Nhập giá trị tối đa" type="number"/></label>
+<label><span class="form-label-text">Điều kiện ràng buộc <span class="required">*</span></span><select id="limitCondition"></select></label>
+<label><span class="form-label-text">Thời gian áp dụng <span class="required">*</span></span><input id="limitStart" type="datetime-local"/></label>
 <label><span class="form-label-text">Thời gian kết thúc <span class="required">*</span></span><input id="limitEnd" type="datetime-local"/></label>
-<label><span class="form-label-text">Trạng thái </span><select id="limitStatus"><option>Chờ hiệu lực</option><option>Đang hoạt động</option><option>Hết hiệu lực</option><option>Đã hủy</option></select></label>
-<label class="payment-check"><input id="limitRequireEkyc" type="checkbox"/><span class="form-checkbox-text"> Yêu cầu Đã xác thực CCCD</span></label>
 </div>
-<div class="form-bottom payment-form-actions">
-<button class="btn blue" onclick="cmsSavePaymentLimit()"><i class="fa fa-save"></i> Lưu lại</button>
-<button class="btn green" onclick="cmsResetPaymentLimitForm()"><i class="fa fa-refresh"></i> Làm mới</button>
-<button class="btn gray" onclick="cmsBackPaymentLimitList()"><i class="fa fa-arrow-left"></i> Quay lại</button>
+<div class="form-bottom payment-form-actions payment-limit-form-actions">
+<button class="btn gray" onclick="cmsBackPaymentLimitList()" type="button"><i class="fa fa-arrow-left"></i> Quay lại</button>
+<button class="btn green" onclick="cmsResetPaymentLimitForm()" type="button"><i class="fa fa-refresh"></i> Làm mới</button>
+<button class="btn blue" onclick="cmsSavePaymentLimit()" type="button"><i class="fa fa-save"></i> Lưu lại</button>
 </div>
 </div>
 </div>
 </section>
 <section class="screen hidden" id="screen-payment-refund">
-<div class="cms-screen-title"><i class="fa fa-undo"></i> Thanh toán &gt; Quản lý hoàn Point</div>
+<div class="cms-screen-title"><i class="fa fa-undo"></i> Thanh toán &gt; Quản trị hoàn Point</div>
 <div class="cms-content">
-<div class="payment-panel standard-entry-panel">
-<div class="payment-panel-title"><i class="fa fa-search"></i> Tạo yêu cầu hoàn Point</div>
+<div class="loyalty-admin-shell refund-admin-shell">
 <div class="account-alert" id="paymentRefundAlert"></div>
-<div class="payment-form-grid standard-entry-form">
-<label><span class="form-label-text">Mã giao dịch gốc <span class="required">*</span></span><input id="refundOriginalTx" placeholder="VD: TX-PAY-0001"/></label>
-<label><span class="form-label-text">Người dùng <span class="required">*</span></span><input id="refundPhone" placeholder="SĐT người dùng"/></label>
-<label class="payment-full"><span class="form-label-text">Lý do hoàn tiền <span class="required">*</span></span><textarea id="refundReason" placeholder="Nhập lý do hoàn Point"></textarea></label>
+<div class="loyalty-reference-filter refund-filter-box">
+<div class="loyalty-filter-grid refund-filter-grid">
+<label>Từ ngày <input class="input" id="refundFilterFrom" type="datetime-local"/></label>
+<label>Đến ngày <input class="input" id="refundFilterTo" type="datetime-local"/></label>
+<label>Sản phẩm <select class="select" id="refundFilterProduct"><option value="">Tất cả</option><option>Audition</option><option>Silkroad Origin VTC</option><option>Football Pro VTC</option></select></label>
+<label>Gói nạp <select class="select" id="refundFilterPackage"><option value="">Tất cả</option><option>Gói Kim Cương</option><option>530 Silk</option><option>25.000 Epic Coin</option></select></label>
+<label>Tài khoản <input class="input" id="refundFilterAccount" placeholder="SĐT, Email hoặc Username"/></label>
+<label>Mã giao dịch <input class="input" id="refundFilterTransaction" placeholder="Nhập mã giao dịch"/></label>
+<label>Mã yêu cầu <input class="input" id="refundFilterRequest" placeholder="Nhập mã yêu cầu"/></label>
+<label>Trạng thái <select class="select" id="refundFilterStatus"><option value="">Tất cả</option><option>Chờ duyệt</option><option>Đã duyệt</option><option>Đã hủy</option></select></label>
 </div>
-<div class="form-bottom payment-form-actions">
-<button class="btn info" onclick="cmsCheckRefundTransaction()"><i class="fa fa-search"></i> Kiểm tra giao dịch</button>
-<button class="btn blue" onclick="cmsCreatePointRefund()"><i class="fa fa-undo"></i> Hoàn Point</button>
-<button class="btn green" onclick="cmsResetRefundForm()"><i class="fa fa-refresh"></i> Làm mới</button>
+<div class="cms-actions-center">
+<button class="btn info" onclick="cmsSearchPaymentRefunds()" type="button"><i class="fa fa-search"></i> Tra cứu</button>
+<button class="btn green" onclick="cmsOpenRefundCreateModal()" type="button"><i class="fa fa-plus"></i> Tạo yêu cầu</button>
 </div>
-<div class="payment-detail" id="refundPreview"></div>
 </div>
-<div class="table-wrap"><table class="data-table payment-table"><thead><tr><th>Mã yêu cầu</th><th>Mã giao dịch gốc</th><th>Người dùng</th><th>Số Point hoàn</th><th>Thời gian giao dịch</th><th>Thời gian hoàn</th><th>Lý do</th></tr></thead><tbody id="paymentRefundRows"></tbody></table></div>
+<div class="tools-row refund-tools-row">
+<button class="btn gray" onclick="cmsToggleRefundColumns(this)" type="button"><i class="fa fa-eye-slash"></i> Ẩn/hiện cột</button>
+<label>Tìm kiếm nhanh: <input class="input" id="refundQuickSearch" oninput="cmsSearchPaymentRefunds()" placeholder="Nhập nội dung tìm kiếm"/></label>
+</div>
+<div class="table-wrap refund-table-wrap">
+<table class="data-table" id="paymentRefundTable">
+<thead><tr><th>STT</th><th>Thời gian giao dịch</th><th>Thời gian hoàn</th><th>Tên sản phẩm</th><th>Tên gói nạp</th><th>Mã yêu cầu</th><th>Mã giao dịch</th><th>Mã đối tác</th><th>Tài khoản</th><th>Số Point</th><th>Người cập nhật</th><th>Ghi chú</th><th>Trạng thái</th><th>Chức năng</th></tr></thead>
+<tbody id="paymentRefundRows"></tbody>
+</table>
+</div>
+<div class="page-foot"><span id="paymentRefundCount">Hiển thị 0 bản ghi</span><div class="pager"><button onclick="cmsSetRefundPage(cmsRefundPage-1)" type="button">Trước</button><button class="active" id="paymentRefundPage" type="button">1</button><button onclick="cmsSetRefundPage(cmsRefundPage+1)" type="button">Tiếp</button></div></div>
+</div>
 </div>
 </section>
+<div class="cms-modal refund-modal" id="refundCreateModal" onclick="if(event.target===this)cmsCloseRefundCreateModal()">
+<div class="cms-modal-dialog refund-modal-dialog">
+<div class="cms-modal-header"><h3><i class="fa fa-plus-circle"></i> Tạo yêu cầu hoàn giao dịch</h3><button onclick="cmsCloseRefundCreateModal()" type="button">×</button></div>
+<div class="cms-modal-body">
+<div class="account-alert" id="refundCreateAlert"></div>
+<div class="refund-create-search">
+<label><span>Mã giao dịch gốc <b class="required">*</b></span><input id="refundOriginalTx" placeholder="Nhập mã giao dịch gốc"/></label>
+<label><span>Tài khoản <b class="required">*</b></span><input id="refundAccount" placeholder="SĐT, Email hoặc Username"/></label>
+<button class="btn info" onclick="cmsCheckRefundTransaction()" type="button"><i class="fa fa-search"></i> Tìm kiếm</button>
+</div>
+<div class="refund-transaction-preview hidden" id="refundPreview"></div>
+<label class="refund-reason-row hidden" id="refundReasonRow"><span>Lý do <b class="required">*</b></span><textarea id="refundReason" placeholder="Nhập lý do hoàn giao dịch"></textarea></label>
+</div>
+<div class="cms-modal-footer"><button class="btn gray" onclick="cmsCloseRefundCreateModal()" type="button">Hủy</button><button class="btn blue" id="refundCreateButton" onclick="cmsCreatePointRefund()" type="button" disabled><i class="fa fa-save"></i> Tạo yêu cầu hoàn</button></div>
+</div>
+</div>
+<div class="cms-modal refund-modal" id="refundApproveModal" onclick="if(event.target===this)cmsCloseRefundApproveModal()">
+<div class="cms-modal-dialog refund-modal-dialog refund-approve-dialog">
+<div class="cms-modal-header"><h3><i class="fa fa-check-circle"></i> Duyệt yêu cầu hoàn giao dịch</h3><button onclick="cmsCloseRefundApproveModal()" type="button">×</button></div>
+<div class="cms-modal-body"><div class="refund-detail-grid" id="refundApproveContent"></div></div>
+<div class="cms-modal-footer"><button class="btn gray" onclick="cmsCancelRefundRequest()" type="button"><i class="fa fa-times"></i> Hủy</button><button class="btn blue" onclick="cmsApproveRefundRequest()" type="button"><i class="fa fa-check"></i> Duyệt</button></div>
+</div>
+</div>
+<div class="cms-modal refund-modal" id="refundViewModal" onclick="if(event.target===this)cmsCloseRefundViewModal()">
+<div class="cms-modal-dialog refund-modal-dialog refund-approve-dialog">
+<div class="cms-modal-header"><h3><i class="fa fa-info-circle"></i> Chi tiết yêu cầu hoàn giao dịch</h3><button onclick="cmsCloseRefundViewModal()" type="button">×</button></div>
+<div class="cms-modal-body"><div class="refund-detail-grid" id="refundViewContent"></div></div>
+<div class="cms-modal-footer"><button class="btn gray" onclick="cmsCloseRefundViewModal()" type="button">Đóng</button></div>
+</div>
+</div>
 <section class="screen hidden" id="screen-payment-transaction">
-<div class="cms-screen-title"><i class="fa fa-search"></i> Tra cứu lịch sử giao dịch</div>
-<div class="cms-content">
-<div class="payment-panel">
-<div class="payment-panel-title"><i class="fa fa-filter"></i> Bộ lọc giao dịch</div>
-<div class="payment-form-grid payment-search-grid">
-<label>Người dùng<input id="txFilterUser" placeholder="SĐT"/></label>
-<label>Mã giao dịch MyVTC<input id="txFilterMyvtc" placeholder="MyVTC ID"/></label>
-<label>Mã giao dịch VTC Pay<input id="txFilterVtcpay" placeholder="VTC Pay ID"/></label>
-<label>Mã dịch vụ<input id="txFilterService" placeholder="Service ID"/></label>
-<label>Mã đối tác<input id="txFilterPartner" placeholder="Reference ID"/></label>
-<label>Loại giao dịch<select id="txFilterType"><option value="">Tất cả</option><option>Nạp Point</option><option>Thanh toán bằng Point</option><option>Thanh toán bằng VTC Pay</option><option>Hoàn Point</option><option>Cộng bù</option><option>Thu hồi</option></select></label>
-<label>Trạng thái<select id="txFilterStatus"><option value="">Tất cả</option><option>Thành công</option><option>Đang xử lý</option><option>Thất bại</option><option>Hoàn tiền</option></select></label>
-<label>Từ ngày<input id="txFilterFrom" type="date"/></label>
-<label>Đến ngày<input id="txFilterTo" type="date"/></label>
+<div class="cms-screen-title"><i class="fa fa-search"></i> Thanh toán &gt; Tra cứu lịch sử giao dịch</div>
+<div class="cms-content payment-transaction-content">
+<div class="payment-transaction-filter-box">
+<div class="payment-transaction-filter-grid">
+<label><span>Tài khoản</span><input id="txFilterUser" placeholder="SĐT, Email hoặc Username" type="text"/></label>
+<label><span>Mã giao dịch MyVTC</span><input id="txFilterMyvtc" placeholder="Nhập mã giao dịch MyVTC" type="text"/></label>
+<label><span>Mã giao dịch VTC Pay</span><input id="txFilterVtcpay" placeholder="Nhập mã giao dịch VTC Pay" type="text"/></label>
+<label><span>Mã đối tác</span><input id="txFilterPartner" placeholder="Nhập mã đối tác" type="text"/></label>
+<label><span>Sản phẩm</span><select id="txFilterProduct"><option value="">Tất cả</option><option>MyVTC</option><option>Audition</option><option>Silkroad Origin VTC</option><option>Football Pro VTC</option></select></label>
+<label><span>Gói nạp</span><select id="txFilterPackage"><option value="">Tất cả</option><option>Nạp số dư MyVTC</option><option>Gói Kim Cương</option><option>530 Silk</option><option>25.000 Epic Coin</option></select></label>
+<label><span>Loại giao dịch</span><select id="txFilterType"><option value="">Tất cả</option><option>Nạp Point</option><option>Thanh toán</option><option>Hoàn Point</option><option>Cộng bù</option><option>Thu hồi</option></select></label>
+<label><span>Trạng thái</span><select id="txFilterStatus"><option value="">Tất cả</option><option>Thành công</option><option>Đang xử lý</option><option>Thất bại</option><option>Đã hoàn</option></select></label>
+<label><span>Từ ngày</span><input id="txFilterFrom" type="datetime-local"/></label>
+<label><span>Đến ngày</span><input id="txFilterTo" type="datetime-local"/></label>
 </div>
-<div class="form-bottom payment-form-actions">
-<button class="btn blue" onclick="cmsSearchPaymentTransactions()"><i class="fa fa-search"></i> Tra cứu</button>
-<button class="btn green" onclick="cmsResetTransactionFilters()"><i class="fa fa-refresh"></i> Làm mới</button>
-<button class="btn gray" onclick="cmsExportPaymentTransactions()"><i class="fa fa-download"></i> Xuất dữ liệu</button>
+<div class="cms-actions-center"><button class="btn blue" onclick="cmsSearchPaymentTransactions()" type="button"><i class="fa fa-search"></i> Tra cứu</button></div>
 </div>
+<div class="payment-rate-toolbar payment-transaction-toolbar">
+<div class="toolbar-left"><button class="btn gray" onclick="cmsToggleTransactionColumns(this)" type="button"><i class="fa fa-columns"></i> Ẩn hiện cột</button></div>
+<div class="toolbar-right"><div class="payment-rate-quick-search"><i class="fa fa-search"></i><input class="toolbar-search" id="txQuickSearch" oninput="cmsSearchPaymentTransactions(true)" placeholder="Tìm kiếm nhanh" type="text"/></div></div>
 </div>
-<div class="payment-detail hidden" id="transactionDetail"></div>
-<div class="table-wrap"><table class="data-table payment-table"><thead><tr><th>MyVTC ID</th><th>Loại giao dịch</th><th>Người dùng</th><th>Trạng thái</th><th>Khởi tạo</th><th>Thành công</th><th>Số tiền</th><th>Số Point</th><th>Phương thức</th><th>VTC Pay ID</th><th>Mã dịch vụ</th><th>Mã đối tác</th><th>Người cập nhật</th><th>Chức năng</th></tr></thead><tbody id="paymentTransactionRows"></tbody></table></div>
-<div class="page-foot"><span id="paymentTransactionCount"></span><div class="pager"><button onclick="cmsSetTransactionPage(cmsPaymentTransactionPage-1)" type="button">Trước</button><button class="active" id="paymentTransactionPage" type="button">1</button><button onclick="cmsSetTransactionPage(cmsPaymentTransactionPage+1)" type="button">Tiếp</button></div></div>
+<div class="table-wrap payment-transaction-table-wrap"><table class="data-table payment-table" id="paymentTransactionTable"><thead><tr><th>STT</th><th>Thời gian</th><th>Mã giao dịch MyVTC</th><th>Mã giao dịch VTC Pay</th><th>Mã đối tác</th><th>Tài khoản</th><th>Loại giao dịch</th><th>Sản phẩm</th><th>Gói nạp</th><th>Mệnh giá đối tác</th><th>Giá trị (VNĐ)</th><th>Số Point</th><th>Phương thức thanh toán</th><th>Người cập nhật</th><th>Chức năng</th></tr></thead><tbody id="paymentTransactionRows"></tbody></table></div>
+<div class="page-foot"><span id="paymentTransactionCount">Hiển thị 0 bản ghi</span><div class="pager"><button onclick="cmsSetTransactionPage(cmsPaymentTransactionPage-1)" type="button">Trước</button><button class="active" id="paymentTransactionPage" type="button">1</button><button onclick="cmsSetTransactionPage(cmsPaymentTransactionPage+1)" type="button">Tiếp</button></div></div>
 </div>
 </section>
+<div class="cms-modal transaction-detail-modal" id="transactionDetailModal" onclick="if(event.target===this)cmsCloseTransactionDetail()">
+<div class="cms-modal-dialog transaction-detail-dialog">
+<div class="cms-modal-header"><h3><i class="fa fa-info-circle"></i> Chi tiết thông tin giao dịch</h3><button onclick="cmsCloseTransactionDetail()" type="button">×</button></div>
+<div class="cms-modal-body"><div class="transaction-detail-grid" id="transactionDetailContent"></div></div>
+<div class="cms-modal-footer"><button class="btn gray" onclick="cmsCloseTransactionDetail()" type="button">Đóng</button></div>
+</div>
+</div>
 <section class="screen hidden" id="screen-payment-adjustment">
-<div class="cms-screen-title"><i class="fa fa-plus-minus"></i> Cộng bù/Thu hồi Point</div>
-<div class="cms-content">
-<div class="payment-two-col">
-<div class="payment-panel">
-<div class="payment-panel-title"><i class="fa fa-plus-circle"></i> Cộng Point</div>
-<div class="account-alert" id="paymentAddPointAlert"></div>
-<div class="payment-form-grid one-col">
-<label>Người dùng <span class="required">*</span><input id="addPointUser" placeholder="SĐT"/></label>
-<label>Loại sự kiện <span class="required">*</span><select id="addPointEvent"><option>Khiếu nại hợp lệ</option><option>Cộng bù sự kiện</option><option>Ưu đãi chăm sóc khách hàng</option><option>Lỗi hệ thống</option></select></label>
-<label>Số lượng Point <span class="required">*</span><input id="addPointAmount" min="1" type="number"/></label>
-<label>Ngày hết hạn<input id="addPointExpired" type="date"/></label>
-<label>Ghi chú nội bộ<textarea id="addPointNote"></textarea></label>
+<div class="cms-screen-title"><i class="fa fa-plus-minus"></i> Thanh toán &gt; Cộng bù/Thu hồi Point</div>
+<div class="cms-content payment-adjustment-content">
+<div class="account-alert" id="paymentAdjustmentAlert"></div>
+<div class="payment-adjustment-filter-box">
+<div class="payment-adjustment-filter-grid">
+<label><span>Từ ngày</span><input id="adjustmentListFromDate" type="date"/></label>
+<label><span>Đến ngày</span><input id="adjustmentListToDate" type="date"/></label>
+<label><span>Mã giao dịch</span><input id="adjustmentListTransaction" placeholder="Nhập mã giao dịch" type="text"/></label>
+<label><span>Loại nghiệp vụ</span><select id="adjustmentListType"><option value="">Tất cả</option><option value="Thu hồi">Thu hồi</option><option value="Cộng bù">Cộng bù</option></select></label>
 </div>
-<div class="form-bottom payment-form-actions"><button class="btn blue" onclick="cmsCreatePointAdjustment('add')"><i class="fa fa-plus"></i> Cộng Point</button><button class="btn green" onclick="cmsResetAdjustmentForm('add')"><i class="fa fa-refresh"></i> Làm mới</button></div>
-</div>
-<div class="payment-panel">
-<div class="payment-panel-title"><i class="fa fa-minus-circle"></i> Thu hồi Point</div>
-<div class="account-alert" id="paymentRevokePointAlert"></div>
-<div class="payment-form-grid one-col">
-<label>Người dùng <span class="required">*</span><input id="revokePointUser" placeholder="SĐT"/></label>
-<label>Mã giao dịch gốc <span class="required">*</span><input id="revokeOriginalTx" placeholder="MyVTC ID"/></label>
-<label>Số lượng Point <span class="required">*</span><input id="revokePointAmount" min="1" type="number"/></label>
-<label>Lý do thu hồi<select id="revokeReason"><option>Vi phạm chính sách</option><option>Lỗi hệ thống</option><option>Hủy giao dịch</option><option>Lý do khác</option></select></label>
-<label>Ghi chú nội bộ<textarea id="revokePointNote"></textarea></label>
-</div>
-<div class="form-bottom payment-form-actions"><button class="btn red" onclick="cmsCreatePointAdjustment('revoke')"><i class="fa fa-minus"></i> Thu hồi Point</button><button class="btn green" onclick="cmsResetAdjustmentForm('revoke')"><i class="fa fa-refresh"></i> Làm mới</button></div>
+<div class="cms-actions-center">
+<button class="btn blue" onclick="cmsRenderPaymentAdjustments()" type="button"><i class="fa fa-search"></i> Tra cứu</button>
+<button class="btn green" onclick="cmsOpenAdjustmentForm()" type="button"><i class="fa fa-plus"></i> Thêm giao dịch</button>
 </div>
 </div>
-<div class="table-wrap"><table class="data-table payment-table"><thead><tr><th>Mã giao dịch</th><th>Loại</th><th>Người dùng</th><th>Số Point</th><th>Giao dịch gốc</th><th>Lý do/Sự kiện</th><th>Ghi chú nội bộ</th><th>Người cập nhật</th><th>Thời gian</th></tr></thead><tbody id="paymentAdjustmentRows"></tbody></table></div>
+<div class="payment-rate-toolbar">
+<div class="toolbar-left"><button class="btn gray" onclick="cmsToggleAdjustmentColumns()" type="button"><i class="fa fa-columns"></i> Ẩn hiện cột</button></div>
+<div class="toolbar-right"><div class="payment-rate-quick-search"><i class="fa fa-search"></i><input class="toolbar-search" id="adjustmentQuickSearch" oninput="cmsRenderPaymentAdjustments()" placeholder="Tìm kiếm nhanh" type="text"/></div></div>
+</div>
+<div class="table-wrap payment-adjustment-table-wrap"><table class="data-table payment-table" id="paymentAdjustmentTable"><thead><tr><th>STT</th><th>Thời gian giao dịch</th><th>Mã GD gốc</th><th>Số lượng Point</th><th>Ngày hết hạn</th><th>Loại nghiệp vụ</th><th>Mã GD</th><th>Ngày cập nhật</th><th>Người cập nhật</th><th>Lý do</th></tr></thead><tbody id="paymentAdjustmentRows"></tbody></table></div>
+<div class="page-foot"><span id="paymentAdjustmentCount">0 bản ghi</span><div class="pager"><button class="active" type="button">1</button></div></div>
 </div>
 </section>
+<section class="screen hidden" id="screen-payment-adjustment-form">
+<div class="cms-screen-title"><i class="fa fa-edit"></i> Thanh toán &gt; Cộng bù/Thu hồi Point &gt; Thêm giao dịch</div>
+<div class="cms-content payment-adjustment-form-content">
+<div class="account-alert" id="paymentAdjustmentFormAlert"></div>
+<div class="payment-panel standard-entry-panel adjustment-entry-panel">
+<div class="payment-panel-title"><i class="fa fa-edit"></i> Thêm giao dịch Cộng bù/Thu hồi</div>
+<div class="payment-form-grid standard-entry-form adjustment-form-grid">
+<label><span class="form-label-text">Tài khoản <b class="required">*</b></span><input id="adjustmentAccount" list="adjustmentAccountList" oninput="cmsAdjustmentAccountChanged()" placeholder="Nhập Username, SĐT hoặc Email"/><datalist id="adjustmentAccountList"><option value="0936168687">hongtt9313</option><option value="0961381232">lethuy88</option><option value="ngocanh88">ngocanh88</option></datalist></label>
+<label><span class="form-label-text">Từ ngày</span><input id="adjustmentFromDate" onchange="cmsRenderAdjustmentSourceTransactions()" type="date"/></label>
+<label><span class="form-label-text">Đến ngày</span><input id="adjustmentToDate" onchange="cmsRenderAdjustmentSourceTransactions()" type="date"/></label>
+<label><span class="form-label-text">Loại nghiệp vụ <b class="required">*</b></span><select id="adjustmentType" onchange="cmsAdjustmentTypeChanged()"><option value="Thu hồi">Thu hồi</option><option value="Cộng bù">Cộng bù</option></select></label>
+<label class="adjustment-reason-field"><span class="form-label-text">Lý do <b class="required">*</b></span><textarea id="adjustmentReason" maxlength="500" placeholder="Nhập lý do Cộng bù/Thu hồi"></textarea></label>
+<label class="hidden" id="adjustmentNewExpiryField"><span class="form-label-text">Ngày hết hạn mới <b class="required">*</b></span><input id="adjustmentNewExpiry" type="date"/></label>
+</div>
+<div class="adjustment-source-head"><div><strong>Danh sách giao dịch Nạp Point</strong><small>Mặc định hiển thị giao dịch trong tháng hiện tại.</small></div><span id="adjustmentSourceCount">0 giao dịch</span></div>
+<div class="table-wrap adjustment-source-table-wrap"><table class="data-table payment-table"><thead><tr><th>Chọn</th><th>STT</th><th>Thời gian</th><th>Mã giao dịch</th><th>Số lượng Point</th><th>Ngày hết hạn</th></tr></thead><tbody id="adjustmentSourceRows"></tbody></table></div>
+<div class="form-bottom payment-form-actions payment-adjustment-form-actions"><button class="btn gray" onclick="showScreen('payment-adjustment')" type="button"><i class="fa fa-arrow-left"></i> Quay lại</button><button class="btn green" onclick="cmsResetAdjustmentForm()" type="button"><i class="fa fa-refresh"></i> Làm mới</button><button class="btn blue" onclick="cmsOpenAdjustmentConfirm()" type="button"><i class="fa fa-check"></i> Xác nhận</button></div>
+</div>
+</div>
+</section>
+<div class="cms-modal" id="paymentAdjustmentConfirmModal" onclick="if(event.target===this)cmsCloseAdjustmentConfirm()"><div class="cms-modal-dialog adjustment-confirm-dialog"><div class="cms-modal-header"><h3 id="adjustmentConfirmTitle"><i class="fa fa-question-circle"></i> Xác nhận giao dịch</h3><button onclick="cmsCloseAdjustmentConfirm()" type="button">×</button></div><div class="cms-modal-body"><div id="adjustmentConfirmSummary"></div><label class="adjustment-confirm-reason hidden" id="adjustmentConfirmReasonField"><span>Lý do thu hồi <b class="required">*</b></span><textarea id="adjustmentConfirmReason" maxlength="500" placeholder="Nhập lý do thu hồi"></textarea><small id="adjustmentConfirmReasonError"></small></label></div><div class="cms-modal-footer"><button class="btn gray" onclick="cmsCloseAdjustmentConfirm()" type="button">Hủy</button><button class="btn blue" id="adjustmentConfirmButton" onclick="cmsConfirmPointAdjustment()" type="button"><i class="fa fa-check"></i> Xác nhận</button></div></div></div>
 <div aria-modal="true" class="cms-modal-backdrop hidden" id="cmsProductModal" role="dialog">
 <div class="cms-modal-card">
 <div class="cms-modal-head"><strong id="cmsProductModalTitle">Xác nhận</strong><button class="cms-modal-close" onclick="cmsCloseProductModal()" type="button">×</button></div>
@@ -1442,6 +1583,100 @@
 <div class="cms-modal-actions" id="cmsProductModalActions"></div>
 </div>
 </div>
+
+<section class="screen hidden support-screen" id="screen-support-faq-topic">
+<div class="cms-screen-title"><i class="fa fa-folder-open"></i> Support &gt; Quản lý chủ đề FAQ</div>
+<div class="cms-content">
+<div class="support-filter-grid"><label><span>Tên chủ đề</span><input id="supportTopicNameFilter" placeholder="Nhập tên chủ đề"></label><label><span>Trạng thái</span><select id="supportTopicStatusFilter"><option value="">Tất cả</option><option>Hoạt động</option><option>Tạm dừng</option></select></label></div>
+<div class="support-filter-actions"><button class="btn gray" onclick="cmsSupportSearch('topic')"><i class="fa fa-search"></i> Tra cứu</button><button class="btn green" onclick="cmsSupportOpenForm('topic')"><i class="fa fa-plus"></i> Thêm mới</button></div>
+<div class="support-toolbar"><button class="btn gray" onclick="cmsSupportToggleColumns('topic',this)"><i class="fa fa-columns"></i> Ẩn hiện cột</button><div class="support-quick-search"><i class="fa fa-search"></i><input id="supportTopicQuick" oninput="cmsSupportSearch('topic')" placeholder="Tìm kiếm nhanh"></div></div>
+<div class="table-wrap"><table class="data-table support-table" id="supportTopicTable"><thead><tr><th>STT</th><th>Mã chủ đề</th><th>Tên chủ đề</th><th>Thứ tự ưu tiên</th><th>Trạng thái</th><th>Thao tác</th></tr></thead><tbody id="supportTopicRows"></tbody></table></div>
+<div class="page-foot"><span id="supportTopicCount"></span><div class="pager" id="supportTopicPager"></div></div>
+</div></section>
+<section class="screen hidden support-screen" id="screen-support-faq-topic-form"><div class="cms-screen-title"><i class="fa fa-edit"></i> Support &gt; Quản lý chủ đề FAQ</div><div class="cms-content"><div class="support-form-heading"><span id="supportTopicFormTitle">Thêm mới</span> chủ đề FAQ</div><div class="support-form-card"><input type="hidden" id="supportTopicEditId"><div class="support-form-grid"><label><span>Tên chủ đề <b class="required">*</b></span><input id="supportTopicName" placeholder="Nhập tên chủ đề"></label><label><span>Ảnh đại diện</span><input id="supportTopicImage" type="file" accept="image/*"></label><label><span>Thứ tự ưu tiên <b class="required">*</b></span><input id="supportTopicPriority" type="number" min="1" max="999" value="1"></label><label class="support-check"><span>Trạng thái</span><span><input id="supportTopicStatus" type="checkbox" checked> Hoạt động</span></label></div><div class="form-bottom"><button class="btn gray" onclick="showScreen('support-faq-topic')"><i class="fa fa-arrow-left"></i> Quay lại</button><button class="btn green" onclick="cmsSupportResetForm('topic')"><i class="fa fa-refresh"></i> Làm mới</button><button class="btn blue" onclick="cmsSupportSave('topic')"><i class="fa fa-save"></i> Lưu lại</button></div></div></div></section>
+
+<section class="screen hidden support-screen" id="screen-support-faq-article">
+<div class="cms-screen-title"><i class="fa fa-file-lines"></i> Support &gt; Quản lý bài viết FAQ</div><div class="cms-content">
+<div class="support-filter-grid support-filter-four"><label><span>Chủ đề</span><select id="supportArticleTopicFilter"><option value="">Tất cả</option></select></label><label><span>Tên bài viết</span><input id="supportArticleNameFilter" placeholder="Nhập tên bài viết"></label><label><span>Mã bài viết</span><input id="supportArticleCodeFilter" placeholder="Nhập mã bài viết"></label><label><span>Trạng thái</span><select id="supportArticleStatusFilter"><option value="">Tất cả</option><option>Hoạt động</option><option>Tạm dừng</option></select></label></div>
+<div class="support-filter-actions"><button class="btn gray" onclick="cmsSupportSearch('article')"><i class="fa fa-search"></i> Tra cứu</button><button class="btn green" onclick="cmsSupportOpenForm('article')"><i class="fa fa-plus"></i> Thêm mới</button></div>
+<div class="support-toolbar"><button class="btn gray" onclick="cmsSupportToggleColumns('article',this)"><i class="fa fa-columns"></i> Ẩn hiện cột</button><div class="support-quick-search"><i class="fa fa-search"></i><input id="supportArticleQuick" oninput="cmsSupportSearch('article')" placeholder="Tìm kiếm nhanh"></div></div>
+<div class="table-wrap"><table class="data-table support-table" id="supportArticleTable"><thead><tr><th>STT</th><th>Mã bài viết</th><th>Tên chủ đề</th><th>Tên bài viết</th><th>Thứ tự ưu tiên</th><th>Trạng thái</th><th>Thao tác</th></tr></thead><tbody id="supportArticleRows"></tbody></table></div><div class="page-foot"><span id="supportArticleCount"></span><div class="pager" id="supportArticlePager"></div></div></div></section>
+<section class="screen hidden support-screen" id="screen-support-faq-article-form"><div class="cms-screen-title"><i class="fa fa-edit"></i> Support &gt; Quản lý bài viết FAQ</div><div class="cms-content"><div class="support-form-heading"><span id="supportArticleFormTitle">Thêm mới</span> bài viết FAQ</div><div class="support-form-card"><input type="hidden" id="supportArticleEditId"><div class="support-form-grid"><label><span>Chủ đề <b class="required">*</b></span><select id="supportArticleTopic"></select></label><label><span>Tiêu đề <b class="required">*</b></span><input id="supportArticleTitle" placeholder="Nhập tiêu đề bài viết"></label><label class="support-full support-editor-row"><span>Nội dung bài viết <b class="required">*</b></span><div class="support-rich-editor"><div class="support-editor-toolbar"><select id="supportEditorBlock" title="Kiểu chữ" onchange="cmsSupportEditorCommand('formatBlock',this.value);this.selectedIndex=0"><option value="">Định dạng</option><option value="p">Đoạn văn</option><option value="h2">Tiêu đề 2</option><option value="h3">Tiêu đề 3</option></select><select id="supportEditorFont" title="Font chữ" onchange="cmsSupportEditorCommand('fontName',this.value);this.selectedIndex=0"><option value="">Font chữ</option><option value="Arial">Arial</option><option value="Tahoma">Tahoma</option><option value="Times New Roman">Times New Roman</option><option value="Verdana">Verdana</option></select><select id="supportEditorSize" title="Cỡ chữ" onchange="cmsSupportEditorCommand('fontSize',this.value);this.selectedIndex=0"><option value="">Cỡ chữ</option><option value="2">12px</option><option value="3">14px</option><option value="4">16px</option><option value="5">18px</option><option value="6">24px</option></select><button type="button" title="In đậm" onclick="cmsSupportEditorCommand('bold')"><i class="fa fa-bold"></i></button><button type="button" title="In nghiêng" onclick="cmsSupportEditorCommand('italic')"><i class="fa fa-italic"></i></button><button type="button" title="Gạch chân" onclick="cmsSupportEditorCommand('underline')"><i class="fa fa-underline"></i></button><button type="button" title="Danh sách" onclick="cmsSupportEditorCommand('insertUnorderedList')"><i class="fa fa-list-ul"></i></button><button type="button" title="Danh sách số" onclick="cmsSupportEditorCommand('insertOrderedList')"><i class="fa fa-list-ol"></i></button><button type="button" title="Căn trái" onclick="cmsSupportEditorCommand('justifyLeft')"><i class="fa fa-align-left"></i></button><button type="button" title="Căn giữa" onclick="cmsSupportEditorCommand('justifyCenter')"><i class="fa fa-align-center"></i></button><button type="button" title="Chèn liên kết" onclick="cmsSupportInsertLink()"><i class="fa fa-link"></i></button><button type="button" title="Chèn ảnh" onclick="document.getElementById('supportArticleImageUpload').click()"><i class="fa fa-image"></i></button><input id="supportArticleImageUpload" type="file" accept="image/*" hidden onchange="cmsSupportInsertImage(this)"></div><div id="supportArticleContent" class="support-editor-content" contenteditable="true" data-placeholder="Nhập nội dung bài viết"></div></div></label><label class="support-full"><span>Từ khóa tìm kiếm</span><input id="supportArticleKeywords" placeholder="#taikhoan, #thanhtoan, #baomat"></label><label class="support-full support-related-row"><span>Bài viết liên quan</span><div class="support-related-picker"><div class="support-related-search"><i class="fa fa-search"></i><input id="supportArticleRelatedSearch" type="text" placeholder="Tìm kiếm theo tên bài viết" oninput="cmsSupportFilterRelated()"></div><div id="supportArticleRelatedList" class="support-related-list"></div><select id="supportArticleRelated" multiple hidden></select></div></label><label><span>Thứ tự hiển thị</span><input id="supportArticlePriority" type="number" min="1" value="1"></label><label class="support-check"><span>Trạng thái</span><span><input id="supportArticleStatus" type="checkbox" checked> Hoạt động</span></label></div><div class="form-bottom"><button class="btn gray" onclick="showScreen('support-faq-article')"><i class="fa fa-arrow-left"></i> Quay lại</button><button class="btn green" onclick="cmsSupportResetForm('article')"><i class="fa fa-refresh"></i> Làm mới</button><button class="btn blue" onclick="cmsSupportSave('article')"><i class="fa fa-save"></i> Lưu lại</button></div></div></div></section>
+
+<section class="screen hidden support-screen" id="screen-support-notification-template"><div class="cms-screen-title"><i class="fa fa-bell"></i> Support &gt; Quản lý Mẫu Thông báo</div><div class="cms-content">
+<div class="support-filter-grid"><label><span>Tiêu đề thông báo</span><input id="supportTemplateTitleFilter" placeholder="Nhập tiêu đề thông báo"></label><label><span>Sự kiện</span><select id="supportTemplateEventFilter"><option value="">Tất cả</option><option>Đăng nhập hàng ngày</option><option>Liên kết Google</option><option>Xác minh email</option><option>Nạp Point thành công</option><option>Thanh toán thành công</option></select></label><label><span>Trạng thái</span><select id="supportTemplateStatusFilter"><option value="">Tất cả</option><option>Hoạt động</option><option>Tạm dừng</option></select></label></div>
+<div class="support-filter-actions"><button class="btn gray" onclick="cmsSupportSearch('template')"><i class="fa fa-search"></i> Tra cứu</button><button class="btn green" onclick="cmsSupportOpenForm('template')"><i class="fa fa-plus"></i> Thêm mới</button></div><div class="support-toolbar"><button class="btn gray" onclick="cmsSupportToggleColumns('template',this)"><i class="fa fa-columns"></i> Ẩn hiện cột</button><div class="support-quick-search"><i class="fa fa-search"></i><input id="supportTemplateQuick" oninput="cmsSupportSearch('template')" placeholder="Tìm kiếm nhanh"></div></div>
+<div class="table-wrap"><table class="data-table support-table" id="supportTemplateTable"><thead><tr><th>STT</th><th>Mã Template</th><th>Sự kiện</th><th>Tiêu đề thông báo</th><th>Kênh gửi</th><th>Trạng thái</th><th>Thao tác</th></tr></thead><tbody id="supportTemplateRows"></tbody></table></div><div class="page-foot"><span id="supportTemplateCount"></span><div class="pager" id="supportTemplatePager"></div></div></div></section>
+<section class="screen hidden support-screen" id="screen-support-notification-template-form"><div class="cms-screen-title"><i class="fa fa-edit"></i> Support &gt; Quản lý Mẫu Thông báo</div><div class="cms-content"><div class="support-form-heading"><span id="supportTemplateFormTitle">Thêm mới</span> Mẫu Thông báo</div><div class="support-form-card"><input type="hidden" id="supportTemplateEditId"><div class="support-form-grid"><label><span>Sự kiện <b class="required">*</b></span><select id="supportTemplateEvent"><option>Đăng nhập hàng ngày</option><option>Liên kết Google</option><option>Liên kết Apple</option><option>Xác minh email</option><option>Xác minh eKYC</option><option>Nạp Point thành công</option><option>Thanh toán thành công</option></select></label><label><span>Tiêu đề thông báo <b class="required">*</b></span><input id="supportTemplateTitle" placeholder="Nhập tiêu đề thông báo"></label><label class="support-full"><span>Nội dung thông báo <b class="required">*</b></span><textarea id="supportTemplateContent" rows="7" placeholder="Nhập nội dung thông báo"></textarea></label><fieldset class="support-channel support-full"><legend>Kênh gửi <b class="required">*</b></legend><div class="support-channel-options"><label><input type="checkbox" value="Push Notification"> Push Notification</label><label><input type="checkbox" value="In-app"> In-app</label><label><input type="checkbox" value="SMS"> SMS</label><label><input type="checkbox" value="Email"> Email</label></div></fieldset><label class="support-check"><span>Trạng thái</span><span><input id="supportTemplateStatus" type="checkbox" checked> Hoạt động</span></label></div><div class="form-bottom"><button class="btn gray" onclick="showScreen('support-notification-template')"><i class="fa fa-arrow-left"></i> Quay lại</button><button class="btn green" onclick="cmsSupportResetForm('template')"><i class="fa fa-refresh"></i> Làm mới</button><button class="btn blue" onclick="cmsSupportSave('template')"><i class="fa fa-save"></i> Lưu lại</button></div></div></div></section>
+<section class="screen hidden support-screen" id="screen-support-notification"><div class="cms-screen-title"><i class="fa fa-paper-plane"></i> Support &gt; Quản lý thông báo</div><div class="cms-content">
+<div class="support-filter-grid support-filter-four"><label><span>Từ ngày</span><input id="supportNotificationFromFilter" type="datetime-local"></label><label><span>Đến ngày</span><input id="supportNotificationToFilter" type="datetime-local"></label><label><span>Tiêu đề</span><input id="supportNotificationTitleFilter" placeholder="Nhập tiêu đề thông báo"></label><label><span>Kênh gửi</span><select id="supportNotificationChannelFilter"><option value="">Tất cả</option><option>Push Notification</option><option>Email</option><option>SMS</option></select></label><label><span>Loại thông báo</span><select id="supportNotificationTypeFilter"><option value="">Tất cả</option><option>Giao dịch</option><option>Loyalty</option><option>Hỗ trợ</option><option>Hệ thống</option></select></label><label><span>Trạng thái</span><select id="supportNotificationStatusFilter"><option value="">Tất cả</option><option>Chờ gửi</option><option>Đã gửi</option><option>Đã hủy</option></select></label></div>
+<div class="support-filter-actions"><button class="btn gray" onclick="cmsSupportSearch('notification')"><i class="fa fa-search"></i> Tra cứu</button><button class="btn green" onclick="cmsSupportOpenForm('notification')"><i class="fa fa-plus"></i> Thêm mới</button></div>
+<div class="support-toolbar"><button class="btn gray" onclick="cmsSupportToggleColumns('notification',this)"><i class="fa fa-columns"></i> Ẩn hiện cột</button><div class="support-quick-search"><i class="fa fa-search"></i><input id="supportNotificationQuick" oninput="cmsSupportSearch('notification')" placeholder="Tìm kiếm nhanh"></div></div>
+<div class="table-wrap"><table class="data-table support-table" id="supportNotificationTable"><thead><tr><th>STT</th><th>Thời gian gửi</th><th>Tiêu đề</th><th>Kênh gửi</th><th>Loại thông báo</th><th>Đối tượng nhận</th><th>Thời gian cập nhật</th><th>Trạng thái</th><th>Thao tác</th></tr></thead><tbody id="supportNotificationRows"></tbody></table></div><div class="page-foot"><span id="supportNotificationCount"></span><div class="pager" id="supportNotificationPager"></div></div></div></section>
+<section class="screen hidden support-screen" id="screen-support-notification-form"><div class="cms-screen-title"><i class="fa fa-edit"></i> Support &gt; Quản lý thông báo</div><div class="cms-content"><div class="support-form-heading"><span id="supportNotificationFormTitle">Thêm mới</span> thông báo</div><div class="support-form-card"><input type="hidden" id="supportNotificationEditId"><div class="support-form-grid">
+<label><span>Tiêu đề <b class="required">*</b></span><input id="supportNotificationTitle" placeholder="Nhập nội dung tiêu đề thông báo"></label><label><span>Nhóm thông báo <b class="required">*</b></span><select id="supportNotificationType"><option>Giao dịch</option><option>Loyalty</option><option>Hỗ trợ</option><option>Hệ thống</option></select></label>
+<label class="support-full"><span>Nội dung <b class="required">*</b></span><textarea id="supportNotificationContent" rows="8" placeholder="Nhập chi tiết thông báo"></textarea></label>
+<label><span>Đối tượng nhận <b class="required">*</b></span><select id="supportNotificationRecipient" onchange="cmsSupportRecipientChange()"><option>Tất cả</option><option>Theo hạng</option><option>Theo nhóm tài khoản</option><option>Danh sách tài khoản</option></select></label>
+<label class="support-recipient-extra hidden" id="supportNotificationTierWrap"><span>Hạng thành viên <b class="required">*</b></span><select id="supportNotificationTier"><option>Đồng</option><option>Bạc</option><option>Vàng</option><option>Kim Cương</option></select></label>
+<label class="support-recipient-extra hidden" id="supportNotificationFileWrap"><span>Danh sách tài khoản <b class="required">*</b></span><div class="support-file-picker"><input id="supportNotificationFile" type="file" accept=".xlsx,.xls,.csv" hidden onchange="cmsSupportFileSelected(this)"><button class="btn gray" type="button" onclick="document.getElementById('supportNotificationFile').click()"><i class="fa fa-upload"></i> Chọn file tải lên</button><span id="supportNotificationFileName">Chưa chọn file</span></div></label>
+<label class="support-recipient-extra hidden" id="supportNotificationGroupWrap"><span>Nhóm tài khoản <b class="required">*</b></span><select id="supportNotificationGroup"><option>Khách hàng mới</option><option>Khách hàng thường xuyên</option><option>Khách hàng VIP</option><option>Tài khoản cần chăm sóc</option></select></label>
+<fieldset class="support-channel support-full support-notification-channel"><legend>Kênh gửi <b class="required">*</b></legend><div class="support-channel-options"><label><input type="checkbox" value="Push Notification"> Push Notification</label><label><input type="checkbox" value="Email"> Email</label><label><input type="checkbox" value="SMS"> SMS</label></div></fieldset>
+<label><span>Thời gian gửi <b class="required">*</b></span><input id="supportNotificationSendTime" type="datetime-local"></label>
+</div><div class="form-bottom"><button class="btn gray" onclick="showScreen('support-notification')"><i class="fa fa-arrow-left"></i> Quay lại</button><button class="btn green" onclick="cmsSupportResetForm('notification')"><i class="fa fa-refresh"></i> Làm mới</button><button class="btn blue" onclick="cmsSupportSave('notification')"><i class="fa fa-save"></i> Lưu lại</button></div></div></div></section>
+
+<section class="screen hidden support-screen" id="screen-support-feature-limit">
+<div class="cms-screen-title"><i class="fa fa-shield-halved"></i> Support &gt; Quản trị giới hạn tính năng</div><div class="cms-content">
+<div class="support-filter-grid support-filter-four"><label><span>Tên chức năng</span><input id="supportLimitNameFilter" placeholder="Nhập tên chức năng"></label><label><span>Yêu cầu</span><select id="supportLimitRequirementFilter"><option value="">Tất cả</option><option>None</option><option>SĐT</option><option>eKYC</option></select></label><label><span>Đối tượng</span><select id="supportLimitAudienceFilter"><option value="">Tất cả</option><option>Tất cả</option><option>Theo hạng</option></select></label><label><span>Trạng thái</span><select id="supportLimitStatusFilter"><option value="">Tất cả</option><option>Hoạt động</option><option>Tạm dừng</option></select></label></div>
+<div class="support-filter-actions"><button class="btn gray" onclick="cmsSupportSearch('limit')"><i class="fa fa-search"></i> Tra cứu</button><button class="btn green" onclick="cmsSupportOpenForm('limit')"><i class="fa fa-plus"></i> Thêm mới</button></div>
+<div class="support-toolbar"><button class="btn gray" onclick="cmsSupportToggleColumns('limit',this)"><i class="fa fa-columns"></i> Ẩn hiện cột</button><div class="support-quick-search"><i class="fa fa-search"></i><input id="supportLimitQuick" oninput="cmsSupportSearch('limit')" placeholder="Tìm kiếm nhanh"></div></div>
+<div class="table-wrap"><table class="data-table support-table support-limit-table" id="supportLimitTable"><thead><tr><th>STT</th><th>Mã chức năng</th><th>Tên chức năng</th><th>Yêu cầu</th><th>Đối tượng áp dụng</th><th>Ngoại lệ</th><th>Trạng thái</th><th>Thời gian cập nhật</th><th>Người cập nhật</th><th>Chức năng</th></tr></thead><tbody id="supportLimitRows"></tbody></table></div><div class="page-foot"><span id="supportLimitCount"></span><div class="pager" id="supportLimitPager"></div></div></div></section>
+<section class="screen hidden support-screen" id="screen-support-feature-limit-form"><div class="cms-screen-title"><i class="fa fa-edit"></i> Support &gt; Quản trị giới hạn tính năng</div><div class="cms-content"><div class="support-form-heading"><span id="supportLimitFormTitle">Thêm mới</span> giới hạn tính năng</div><div class="support-form-card"><input type="hidden" id="supportLimitEditId"><div class="support-form-grid">
+<label><span>Tên chức năng <b class="required">*</b></span><input id="supportLimitName" placeholder="Nhập tên module/chức năng"></label>
+<label><span>Mức yêu cầu tối thiểu <b class="required">*</b></span><select id="supportLimitRequirement"><option>None</option><option>SĐT</option><option>eKYC</option></select></label>
+<label class="support-full"><span>Mô tả ngắn</span><textarea id="supportLimitDescription" rows="4" placeholder="Diễn giải mục đích của chức năng"></textarea></label>
+<label><span>Đối tượng áp dụng <b class="required">*</b></span><select id="supportLimitAudience" onchange="cmsSupportLimitAudienceChange()"><option>Tất cả</option><option>Theo hạng</option></select></label>
+<label class="hidden" id="supportLimitAudienceTierWrap"><span>Hạng thành viên <b class="required">*</b></span><select id="supportLimitAudienceTier"><option>Đồng</option><option>Bạc</option><option>Vàng</option><option>Kim Cương</option></select></label>
+<label><span>Đối tượng ngoại lệ</span><select id="supportLimitException" onchange="cmsSupportLimitExceptionChange()"><option>Không có</option><option>Theo hạng</option><option>Danh sách tài khoản</option><option>Nhóm tài khoản</option></select></label>
+<label class="hidden" id="supportLimitExceptionTierWrap"><span>Hạng thành viên ngoại lệ <b class="required">*</b></span><select id="supportLimitExceptionTier"><option>Đồng</option><option>Bạc</option><option>Vàng</option><option>Kim Cương</option></select></label>
+<label class="hidden" id="supportLimitExceptionFileWrap"><span>Danh sách tài khoản <b class="required">*</b></span><div class="support-file-picker"><input id="supportLimitExceptionFile" type="file" accept=".xlsx,.xls,.csv" hidden onchange="cmsSupportLimitFileSelected(this)"><button class="btn gray" type="button" onclick="document.getElementById('supportLimitExceptionFile').click()"><i class="fa fa-upload"></i> Chọn file tải lên</button><span id="supportLimitExceptionFileName">Chưa chọn file</span></div></label>
+<label class="hidden" id="supportLimitExceptionGroupWrap"><span>Nhóm tài khoản <b class="required">*</b></span><select id="supportLimitExceptionGroup"><option>Khách hàng mới</option><option>Khách hàng thường xuyên</option><option>Khách hàng VIP</option><option>Tài khoản cần chăm sóc</option></select></label>
+<label class="support-check"><span>Trạng thái</span><span><input id="supportLimitStatus" type="checkbox" checked> Hoạt động</span></label>
+</div><div class="form-bottom"><button class="btn gray" onclick="showScreen('support-feature-limit')"><i class="fa fa-arrow-left"></i> Quay lại</button><button class="btn green" onclick="cmsSupportResetForm('limit')"><i class="fa fa-refresh"></i> Làm mới</button><button class="btn blue" onclick="cmsSupportSave('limit')"><i class="fa fa-save"></i> Lưu lại</button></div></div></div></section>
+
+
+<section class="screen hidden support-screen" id="screen-support-access-time">
+<div class="cms-screen-title"><i class="fa fa-clock"></i> Support &gt; Quản lý thời gian truy cập</div><div class="cms-content">
+<div class="support-filter-grid support-filter-four">
+<label><span>Đối tượng</span><select id="supportAccessTimeAudienceFilter"><option value="">Tất cả</option><option>Hệ thống</option><option>Tài khoản</option></select></label>
+<label><span>Đối tác</span><select id="supportAccessTimePartnerFilter"><option value="">Tất cả</option><option>VTC Game</option><option>VTC Mobile</option><option>VTC Digital</option></select></label>
+<label><span>Sản phẩm</span><select id="supportAccessTimeProductFilter"><option value="">Tất cả</option><option>Silkroad Origin VTC</option><option>Football Pro VTC</option><option>Audition</option><option>VTC Pay</option></select></label>
+<label><span>Nhóm tài khoản</span><select id="supportAccessTimeGroupFilter"><option value="">Tất cả</option><option>Khách hàng mới</option><option>Khách hàng thường xuyên</option><option>Khách hàng VIP</option><option>Tài khoản cần chăm sóc</option></select></label>
+<label><span>Trạng thái</span><select id="supportAccessTimeStatusFilter"><option value="">Tất cả</option><option>Hoạt động</option><option>Tạm dừng</option></select></label>
+</div>
+<div class="support-filter-actions"><button class="btn gray" onclick="cmsSupportSearch('accessTime')"><i class="fa fa-search"></i> Tra cứu</button><button class="btn green" onclick="cmsSupportOpenForm('accessTime')"><i class="fa fa-plus"></i> Thêm mới</button></div>
+<div class="support-toolbar"><button class="btn gray" onclick="cmsSupportToggleColumns('accessTime',this)"><i class="fa fa-columns"></i> Ẩn hiện cột</button><div class="support-quick-search"><i class="fa fa-search"></i><input id="supportAccessTimeQuick" oninput="cmsSupportSearch('accessTime')" placeholder="Tìm kiếm nhanh"></div></div>
+<div class="table-wrap"><table class="data-table support-table support-access-time-table" id="supportAccessTimeTable"><thead><tr><th>STT</th><th>Đối tượng</th><th>Đối tác</th><th>Sản phẩm</th><th>Tối đa theo sản phẩm</th><th>Tối đa theo tài khoản</th><th>Thời gian nghỉ bắt buộc</th><th>Ngưỡng cảnh báo sớm (%)</th><th>Cơ chế reset</th><th>Đối tượng ngoại lệ</th><th>Thời gian bắt đầu</th><th>Thời gian kết thúc</th><th>Trạng thái</th><th>Chức năng</th></tr></thead><tbody id="supportAccessTimeRows"></tbody></table></div>
+<div class="page-foot"><span id="supportAccessTimeCount"></span><div class="pager" id="supportAccessTimePager"></div></div>
+</div></section>
+
+<section class="screen hidden support-screen" id="screen-support-access-time-form"><div class="cms-screen-title"><i class="fa fa-edit"></i> Support &gt; Quản lý thời gian truy cập</div><div class="cms-content"><div class="support-form-heading"><span id="supportAccessTimeFormTitle">Thêm mới</span> thời gian truy cập</div><div class="support-form-card"><input type="hidden" id="supportAccessTimeEditId"><div class="support-form-grid">
+<label><span>Đối tượng <b class="required">*</b></span><select id="supportAccessTimeAudience"><option>Hệ thống</option><option>Tài khoản</option></select></label>
+<label><span>Đối tác <b class="required">*</b></span><select id="supportAccessTimePartner"><option>VTC Game</option><option>VTC Mobile</option><option>VTC Digital</option></select></label>
+<label><span>Sản phẩm <b class="required">*</b></span><select id="supportAccessTimeProduct"><option>Silkroad Origin VTC</option><option>Football Pro VTC</option><option>Audition</option><option>VTC Pay</option></select></label>
+<label><span>Tối đa theo sản phẩm <b class="required">*</b></span><input id="supportAccessTimePerGame" type="number" min="1" value="180"></label>
+<label><span>Tối đa theo tài khoản <b class="required">*</b></span><input id="supportAccessTimeTotal" type="number" min="1" value="300"></label>
+<label><span>Thời gian nghỉ bắt buộc <b class="required">*</b></span><input id="supportAccessTimeRest" type="number" min="0" value="30"></label>
+<label><span>Ngưỡng cảnh báo sớm (%) <b class="required">*</b></span><input id="supportAccessTimeWarning" type="number" min="1" max="100" value="80"></label>
+<label><span>Cơ chế reset <b class="required">*</b></span><input id="supportAccessTimeReset" type="time" value="00:00"></label>
+<label><span>Đối tượng ngoại lệ</span><select id="supportAccessTimeException" onchange="cmsSupportAccessTimeExceptionChange()"><option>Danh sách tài khoản</option><option>Theo hạng</option><option>Nhóm tài khoản</option></select></label>
+<label id="supportAccessTimeExceptionFileWrap"><span>Danh sách tài khoản <b class="required">*</b></span><div class="support-file-picker"><input id="supportAccessTimeExceptionFile" type="file" accept=".xlsx,.xls,.csv" hidden onchange="cmsSupportAccessTimeFileSelected(this)"><button class="btn gray" type="button" onclick="document.getElementById('supportAccessTimeExceptionFile').click()"><i class="fa fa-upload"></i> Chọn file tải lên</button><span id="supportAccessTimeExceptionFileName">Chưa chọn file</span></div></label>
+<label class="hidden" id="supportAccessTimeExceptionTierWrap"><span>Hạng thành viên <b class="required">*</b></span><select id="supportAccessTimeExceptionTier"><option>Đồng</option><option>Bạc</option><option>Vàng</option><option>Kim cương</option></select></label>
+<label class="hidden" id="supportAccessTimeExceptionGroupWrap"><span>Nhóm tài khoản <b class="required">*</b></span><select id="supportAccessTimeExceptionGroup"><option>Khách hàng mới</option><option>Khách hàng thường xuyên</option><option>Khách hàng VIP</option><option>Tài khoản cần chăm sóc</option></select></label>
+<label><span>Thời gian bắt đầu <b class="required">*</b></span><input id="supportAccessTimeStart" type="datetime-local"></label>
+<label><span>Thời gian kết thúc <b class="required">*</b></span><input id="supportAccessTimeEnd" type="datetime-local"></label>
+<label class="support-check"><span>Trạng thái</span><span><input id="supportAccessTimeStatus" type="checkbox" checked> Hoạt động</span></label>
+</div><div class="form-bottom"><button class="btn gray" onclick="showScreen('support-access-time')"><i class="fa fa-arrow-left"></i> Quay lại</button><button class="btn green" onclick="cmsSupportResetForm('accessTime')"><i class="fa fa-refresh"></i> Làm mới</button><button class="btn blue" onclick="cmsSupportSave('accessTime')"><i class="fa fa-save"></i> Lưu lại</button></div></div></div></section>
+
 <script src="scripts/cms.js"></script>
 <div class="cms-modal" id="identityHistoryModal" onclick="if(event.target===this)cmsCloseIdentityHistory()">
 <div class="cms-modal-dialog identity-history-dialog">
