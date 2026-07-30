@@ -82,6 +82,7 @@
 <button onclick="showScreen('support-notification',this);cmsSupportRender('notification')" type="button"><i class="fa fa-paper-plane"></i> Quản lý thông báo</button>
 <button onclick="showScreen('support-feature-limit',this);cmsSupportRender('limit')" type="button"><i class="fa fa-shield-halved"></i> Quản trị giới hạn tính năng</button>
 <button onclick="showScreen('support-access-time',this);cmsSupportRender('accessTime')" type="button"><i class="fa fa-clock"></i> Quản lý thời gian truy cập</button>
+<button onclick="showScreen('support-banner',this);cmsSupportBannerRender()" type="button"><i class="fa fa-images"></i> Quản lý Banner</button>
 </div>
 </div>
 </nav>
@@ -1676,6 +1677,49 @@
 <label><span>Thời gian kết thúc <b class="required">*</b></span><input id="supportAccessTimeEnd" type="datetime-local"></label>
 <label class="support-check"><span>Trạng thái</span><span><input id="supportAccessTimeStatus" type="checkbox" checked> Hoạt động</span></label>
 </div><div class="form-bottom"><button class="btn gray" onclick="showScreen('support-access-time')"><i class="fa fa-arrow-left"></i> Quay lại</button><button class="btn green" onclick="cmsSupportResetForm('accessTime')"><i class="fa fa-refresh"></i> Làm mới</button><button class="btn blue" onclick="cmsSupportSave('accessTime')"><i class="fa fa-save"></i> Lưu lại</button></div></div></div></section>
+
+
+<section class="screen hidden support-screen" id="screen-support-banner">
+  <div class="cms-screen-title"><i class="fa fa-images"></i> Support &gt; Quản lý Banner</div>
+  <div class="cms-content">
+    <div class="filter-box">
+      <div class="support-filter-grid support-filter-three">
+        <label><span>Loại Banner</span><select id="supportBannerTypeFilter"><option value="">Tất cả</option><option>Banner chính</option><option>Banner phụ</option></select></label>
+        <label><span>Trang</span><select id="supportBannerPageFilter"><option value="">Tất cả</option><option>Trang chủ</option><option>Cửa hàng</option><option>Dịch vụ</option></select></label>
+        <label><span>Vị trí</span><select id="supportBannerPositionFilter"><option value="">Tất cả</option><option>Header</option><option>Footer</option><option>Body</option></select></label>
+      </div>
+      <div class="support-filter-actions"><button class="btn gray" onclick="cmsSupportBannerSearch()"><i class="fa fa-search"></i> Tra cứu</button><button class="btn green" onclick="cmsSupportBannerOpenForm()"><i class="fa fa-plus"></i> Thêm mới</button></div>
+    </div>
+    <div class="support-toolbar"><button class="btn gray" onclick="cmsSupportBannerToggleColumns(this)"><i class="fa fa-columns"></i> Ẩn hiện cột</button><div class="support-quick-search"><i class="fa fa-search"></i><input id="supportBannerQuick" oninput="cmsSupportBannerSearch()" placeholder="Tìm kiếm nhanh"></div></div>
+    <div class="table-wrap"><table class="data-table support-table support-banner-table" id="supportBannerTable"><thead><tr><th>STT</th><th>Tên Banner</th><th>Trang</th><th>Vị trí</th><th>Thứ tự</th><th>Loại Banner</th><th>Trạng thái</th><th>Ngày cập nhật</th><th>Người cập nhật</th><th>Chức năng</th></tr></thead><tbody id="supportBannerRows"></tbody></table></div>
+    <div class="page-foot"><span id="supportBannerCount"></span><div class="pager" id="supportBannerPager"></div></div>
+  </div>
+</section>
+
+<section class="screen hidden support-screen" id="screen-support-banner-form">
+  <div class="cms-screen-title"><i class="fa fa-edit"></i> Support &gt; Quản lý Banner</div>
+  <div class="cms-content">
+    <div class="support-form-heading"><span id="supportBannerFormTitle">Thêm mới</span> Banner</div>
+    <div class="support-form-card support-banner-form-card">
+      <input type="hidden" id="supportBannerEditId">
+      <div class="support-form-grid">
+        <label><span>Tên Banner <b class="required">*</b></span><input id="supportBannerName" placeholder="Nhập tên Banner"></label>
+        <label><span>Trang <b class="required">*</b></span><select id="supportBannerPage"><option>Trang chủ</option><option>Cửa hàng</option><option>Dịch vụ</option></select></label>
+        <label><span>Vị trí <b class="required">*</b></span><select id="supportBannerPosition"><option>Header</option><option>Footer</option><option>Body</option></select></label>
+        <label><span>Thứ tự <b class="required">*</b></span><input id="supportBannerOrder" type="number" min="1" value="1" placeholder="Nhập số thứ tự"></label>
+        <label><span>Loại Banner <b class="required">*</b></span><select id="supportBannerType"><option>Banner chính</option><option>Banner phụ</option></select></label>
+        <label><span>Tiêu đề (Tiếng Việt)</span><input id="supportBannerTitleVi" placeholder="Nhập tiêu đề tiếng Việt"></label>
+        <label><span>Tên nút (Tiếng Việt)</span><input id="supportBannerButtonVi" placeholder="Nhập tên nút tiếng Việt"></label>
+        <label><span>Tiêu đề (Tiếng Anh)</span><input id="supportBannerTitleEn" placeholder="Nhập tiêu đề tiếng Anh"></label>
+        <label><span>Tên nút (Tiếng Anh)</span><input id="supportBannerButtonEn" placeholder="Nhập tên nút tiếng Anh"></label>
+        <label><span>Link nút</span><input id="supportBannerLink" type="url" placeholder="https://example.com"></label>
+        <label class="support-check"><span>Trạng thái</span><span><input id="supportBannerStatus" type="checkbox" checked> Hoạt động</span></label>
+        <label class="support-full support-banner-upload-row"><span>Banner <b class="required">*</b></span><div class="support-banner-upload"><input id="supportBannerImage" type="file" accept="image/*" hidden onchange="cmsSupportBannerImageSelected(this)"><button class="btn gray" type="button" onclick="document.getElementById('supportBannerImage').click()"><i class="fa fa-upload"></i> Tải ảnh lên</button><span id="supportBannerImageName">Chưa chọn ảnh</span><img id="supportBannerPreview" class="hidden" alt="Ảnh Banner xem trước"></div></label>
+      </div>
+      <div class="form-bottom"><button class="btn gray" onclick="showScreen('support-banner');cmsSupportBannerRender()"><i class="fa fa-arrow-left"></i> Quay lại</button><button class="btn green" onclick="cmsSupportBannerResetForm()"><i class="fa fa-refresh"></i> Làm mới</button><button class="btn blue" onclick="cmsSupportBannerSave()"><i class="fa fa-save"></i> Lưu lại</button></div>
+    </div>
+  </div>
+</section>
 
 <script src="scripts/cms.js"></script>
 <div class="cms-modal" id="identityHistoryModal" onclick="if(event.target===this)cmsCloseIdentityHistory()">
