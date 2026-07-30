@@ -5758,3 +5758,22 @@ section[id^="screen-support-"] .support-table td{
 
 #screen-support-access-time .support-status{font-weight:400!important;}
 #screen-support-access-time-form .support-check>span:last-child{font-weight:400!important;}
+
+
+/* Support > Quản lý Banner */
+#screen-support-banner .support-filter-three{grid-template-columns:repeat(3,minmax(0,1fr))}
+.support-banner-table{width:100%;table-layout:fixed;min-width:1150px}
+.support-banner-table th:nth-child(1){width:55px}.support-banner-table th:nth-child(2){width:210px}.support-banner-table th:nth-child(3){width:105px}.support-banner-table th:nth-child(4){width:85px}.support-banner-table th:nth-child(5){width:65px}.support-banner-table th:nth-child(6){width:115px}.support-banner-table th:nth-child(7){width:120px}.support-banner-table th:nth-child(8){width:145px}.support-banner-table th:nth-child(9){width:115px}.support-banner-table th:nth-child(10){width:130px}
+.support-banner-table td{text-align:center}.support-banner-table .text-left{text-align:left}.support-banner-hidden-row{background:#fafafa;color:#7c8795}.support-banner-off{display:inline-block;margin-left:8px;padding:2px 7px;border-radius:10px;background:#edf0f3;color:#697586;font-size:11px;white-space:nowrap}
+.support-banner-form-card{max-width:1120px}.support-banner-form-card .support-form-grid{grid-template-columns:1fr 1fr}.support-banner-form-card .support-form-grid>label{grid-template-columns:220px minmax(0,1fr)!important}.support-banner-form-card .support-full{grid-column:1/-1}.support-banner-upload{display:flex;align-items:center;gap:12px;min-height:42px;flex-wrap:wrap}.support-banner-upload>span{color:#667085;max-width:260px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}.support-banner-upload img{display:block;width:260px;height:100px;object-fit:cover;border:1px solid #d8dee7;border-radius:4px;background:#f5f7fa}.support-banner-upload img.hidden{display:none!important}
+@media(max-width:900px){#screen-support-banner .support-filter-three,.support-banner-form-card .support-form-grid{grid-template-columns:1fr}.support-banner-form-card .support-form-grid>label{grid-template-columns:1fr!important}.support-banner-form-card .support-full{grid-column:auto}}
+
+#screen-support-banner .support-status{font-weight:400!important;}
+
+/* Support: status values must use regular font weight across all screens */
+section[id^="screen-support-"] .support-status,
+section[id^="screen-support-"] td .support-status,
+section[id^="screen-support-"] .status-text,
+section[id^="screen-support-"] td[data-column="status"] {
+  font-weight:400!important;
+}
