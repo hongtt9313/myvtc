@@ -1,30 +1,24 @@
-<section class="py-20 bg-slate-50/60 border-t border-b border-gray-100" id="services-explore">
+<section class="home-unit-section" id="services-explore">
 <div class="site-container">
-<div class="text-center max-w-3xl mx-auto mb-16 space-y-3">
-<h2 class="text-3xl font-extrabold text-gray-900 tracking-tight sm:text-4xl">Hệ sinh thái Đa dịch vụ VTC</h2>
-<p class="text-gray-500 text-sm sm:text-base leading-relaxed max-w-2xl mx-auto">Chỉ với duy nhất tài khoản MyVTC, bạn sẵn sàng kết nối mọi dịch vụ giải trí, thanh toán và công nghệ truyền thông đỉnh cao.</p>
-</div>
-<div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
-<div class="bg-white p-6 rounded-2xl border border-gray-100 shadow-sm hover:shadow-md transition-all duration-300 group">
-<div class="w-12 h-12 rounded-xl bg-blue-50 text-blue-600 flex items-center justify-center mb-5 group-hover:bg-blue-600 group-hover:text-white transition-all duration-300"><i class="fas fa-wallet text-xl"></i></div>
-<h4 class="text-lg font-bold text-gray-900 mb-2">VTC Pay</h4>
-<p class="text-gray-500 text-xs sm:text-sm leading-relaxed">Ví điện tử &amp; Cổng thanh toán tiện ích, mua sắm thẻ dịch vụ, nạp hóa đơn nhanh chóng trong vài chạm.</p>
-</div>
-<div class="bg-white p-6 rounded-2xl border border-gray-100 shadow-sm hover:shadow-md transition-all duration-300 group">
-<div class="w-12 h-12 rounded-xl bg-purple-50 text-purple-600 flex items-center justify-center mb-5 group-hover:bg-purple-600 group-hover:text-white transition-all duration-300"><i class="fas fa-cubes text-xl"></i></div>
-<h4 class="text-lg font-bold text-gray-900 mb-2">VTC Services</h4>
-<p class="text-gray-500 text-xs sm:text-sm leading-relaxed">Nhà phát hành hàng loạt dịch vụ giải trí eSports, mang lại trải nghiệm giải trí tương tác tuyệt vời.</p>
-</div>
-<div class="bg-white p-6 rounded-2xl border border-gray-100 shadow-sm hover:shadow-md transition-all duration-300 group">
-<div class="w-12 h-12 rounded-xl bg-cyan-50 text-cyan-600 flex items-center justify-center mb-5 group-hover:bg-cyan-600 group-hover:text-white transition-all duration-300"><i class="fas fa-tv text-xl"></i></div>
-<h4 class="text-lg font-bold text-gray-900 mb-2">VTC Digital</h4>
-<p class="text-gray-500 text-xs sm:text-sm leading-relaxed">Truyền hình kỹ thuật số chất lượng cao với hơn 100 kênh thông tin nội dung đa phương tiện đặc sắc.</p>
-</div>
-<div class="bg-white p-6 rounded-2xl border border-gray-100 shadow-sm hover:shadow-md transition-all duration-300 group">
-<div class="w-12 h-12 rounded-xl bg-emerald-50 text-emerald-600 flex items-center justify-center mb-5 group-hover:bg-emerald-600 group-hover:text-white transition-all duration-300"><i class="fas fa-graduation-cap text-xl"></i></div>
-<h4 class="text-lg font-bold text-gray-900 mb-2">VTC Academy</h4>
-<p class="text-gray-500 text-xs sm:text-sm leading-relaxed">Học viện đào tạo lập trình, thiết kế mỹ thuật số, lập nghiệp đón đầu các xu thế công nghệ tương lai.</p>
+<div class="home-section-heading home-unit-heading">
+<div>
+<h2>Hệ sinh thái VTC</h2>
 </div>
 </div>
+<div class="home-unit-toolbar">
+<div class="home-unit-tabs" role="tablist" aria-label="Đơn vị VTC">
+<button class="home-unit-tab active" type="button" data-unit="all" onclick="selectHomeUnit('all', this)">Tất cả</button>
+<button class="home-unit-tab" type="button" data-unit="game" onclick="selectHomeUnit('game', this)">VTC Game</button>
+<button class="home-unit-tab" type="button" data-unit="mobile" onclick="selectHomeUnit('mobile', this)">VTC Mobile</button>
+<button class="home-unit-tab" type="button" data-unit="digital" onclick="selectHomeUnit('digital', this)">VTC Digital</button>
+<button class="home-unit-tab" type="button" data-unit="studio" onclick="selectHomeUnit('studio', this)">VTC Studio</button>
+<button class="home-unit-tab" type="button" data-unit="academy" onclick="selectHomeUnit('academy', this)">VTC Academy</button>
+</div>
+<a class="home-unit-view-all" href="Service.html">Xem tất cả <i class="fas fa-arrow-right"></i></a>
+</div>
+<div class="home-unit-slider">
+<div class="home-unit-services" id="home-unit-services"></div>
+</div>
+<div class="home-unit-pagination" id="home-unit-pagination" aria-label="Phân trang dịch vụ"></div>
 </div>
 </section>
