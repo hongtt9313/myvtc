@@ -1043,7 +1043,7 @@ color:#333;
   }
 }
 
-/* Loyalty > Quản trị sự kiện ưu đãi */
+/* Loyalty > Quản trị nhiệm vụ */
 .loyalty-event-filter-grid{
   grid-template-columns:repeat(2,minmax(260px,1fr));
   max-width:80%;
@@ -1661,7 +1661,7 @@ color:#333;
   }
 }
 
-/* Đồng bộ màn Thêm mới/Cập nhật theo mẫu Quản trị sự kiện ưu đãi */
+/* Đồng bộ màn Thêm mới/Cập nhật theo mẫu Quản trị nhiệm vụ */
 .standard-entry-panel,
 #screen-loyalty-config-form .payment-panel,
 #screen-payment-rate-form .payment-panel,
@@ -1872,7 +1872,7 @@ color:#333;
 .texp-payment-multi .texp-payment-child{font-size:13px;padding-left:8px!important}
 .texp-payment-multi .texp-payment-root{font-weight:500}
 
-/* Loyalty > Thiết lập tỉ lệ T-EXP: làm mờ viền ô Tìm kiếm nhanh giống Quản trị sự kiện ưu đãi */
+/* Loyalty > Thiết lập tỉ lệ T-EXP: làm mờ viền ô Tìm kiếm nhanh giống Quản trị nhiệm vụ */
 #screen-loyalty-texp-rate .toolbar-search{
   border:1px solid #ccc!important;
   border-radius:3px!important;
@@ -2475,7 +2475,7 @@ color:#333;
 @media(max-width:1280px){#screen-loyalty-event-benefit .event-benefit-filter-grid{grid-template-columns:repeat(2,minmax(0,1fr))!important}}
 @media(max-width:700px){#screen-loyalty-event-benefit .event-benefit-filter-grid{grid-template-columns:1fr!important}#screen-loyalty-event-benefit .toolbar-search{width:100%!important}#screen-loyalty-event-benefit-form .texp-entry-row{grid-template-columns:1fr!important}#screen-loyalty-event-benefit-form .texp-entry-row>.form-label-text{text-align:left!important}#screen-loyalty-event-benefit-form .texp-entry-row .field-error{grid-column:1!important}.event-benefit-inline-fields{grid-template-columns:1fr!important}}
 
-/* Fix Loyalty > Thiết lập ưu đãi sự kiện theo đúng mẫu A-EXP */
+/* Fix Loyalty > Thiết lập phần thưởng nhiệm vụ theo đúng mẫu A-EXP */
 #screen-loyalty-event-benefit .cms-content{
   padding:14px!important;
 }
@@ -5777,3 +5777,6 @@ section[id^="screen-support-"] .status-text,
 section[id^="screen-support-"] td[data-column="status"] {
   font-weight:400!important;
 }
+
+/* Loyalty task reward display configuration */
+.event-benefit-display-config{display:flex;flex-direction:column;gap:10px;width:100%;max-width:620px}.event-benefit-display-item{display:grid;grid-template-columns:120px 160px 140px;gap:10px;align-items:center}.event-benefit-display-item>span:first-child{font-weight:500}.event-benefit-display-item .field-error{grid-column:2/4}.event-benefit-image-upload{display:flex;align-items:center;gap:16px;flex-wrap:wrap}.event-benefit-image-preview{width:120px;height:72px;border:1px solid #d9e1ec;border-radius:8px;display:flex;align-items:center;justify-content:center;overflow:hidden;background:#f8fafc;color:#7a8798;font-size:12px}.event-benefit-image-preview img{width:100%;height:100%;object-fit:cover}@media(max-width:768px){.event-benefit-display-item{grid-template-columns:1fr}.event-benefit-display-item .field-error{grid-column:auto}}
