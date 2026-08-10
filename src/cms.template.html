@@ -49,13 +49,13 @@
 <div class="cms-menu-item">
 <button class="cms-nav-btn" type="button"><i class="fa fa-gem"></i> Loyalty <i class="fa fa-caret-down"></i></button>
 <div class="cms-dropdown cms-dropdown-wide">
-<button onclick="showScreen('loyalty-offer-events',this)" type="button"><i class="fa fa-gift"></i> Quản trị sự kiện ưu đãi</button>
+<button onclick="showScreen('loyalty-offer-events',this)" type="button"><i class="fa fa-gift"></i> Quản trị nhiệm vụ</button>
 <button onclick="showScreen('loyalty-texp-rate',this)" type="button"><i class="fa fa-exchange-alt"></i> Thiết lập tỉ lệ T-EXP</button>
 <button onclick="showScreen('loyalty-aexp-rate',this)" type="button"><i class="fa fa-star"></i> Thiết lập tỉ lệ A-EXP</button>
 <button onclick="showScreen('loyalty-rank-setting',this)" type="button"><i class="fa fa-medal"></i> Thiết lập hạng thành viên</button>
 <button onclick="showScreen('loyalty-cycle-setting',this)" type="button"><i class="fa fa-calendar"></i> Thiết lập chu kỳ xét hạng</button>
 <button onclick="showScreen('loyalty-rank-benefit',this)" type="button"><i class="fa fa-award"></i> Thiết lập ưu đãi hạng thành viên</button>
-<button onclick="showScreen('loyalty-event-benefit',this)" type="button"><i class="fa fa-bolt"></i> Thiết lập ưu đãi sự kiện</button>
+<button onclick="showScreen('loyalty-event-benefit',this)" type="button"><i class="fa fa-bolt"></i> Thiết lập phần thưởng nhiệm vụ</button>
 <button onclick="showScreen('loyalty-voucher-setting',this)" type="button"><i class="fa fa-ticket"></i> Thiết lập Voucher</button>
 <button onclick="showScreen('loyalty-voucher-manage',this)" type="button"><i class="fa fa-tags"></i> Quản lý Voucher</button>
 <button onclick="showScreen('loyalty-exp-transaction',this)" type="button"><i class="fa fa-history"></i> Tra cứu giao dịch EXP</button>
@@ -826,7 +826,7 @@
 </div>
 </section>
 <section class="screen hidden" id="screen-loyalty-offer-events">
-<div class="cms-screen-title"><i class="fa fa-gift"></i> Loyalty &gt; Quản trị sự kiện ưu đãi</div>
+<div class="cms-screen-title"><i class="fa fa-gift"></i> Loyalty &gt; Quản trị nhiệm vụ</div>
 <div class="cms-content">
 <div class="loyalty-admin-shell">
 <div class="account-alert" id="loyaltyEventAlert"></div>
@@ -849,8 +849,8 @@
 <thead>
 <tr>
 <th>STT</th>
-<th>Mã sự kiện</th>
-<th>Tên sự kiện</th>
+<th>Mã nhiệm vụ</th>
+<th>Tên nhiệm vụ</th>
 <th>Mô tả</th>
 <th>Trạng thái</th>
 <th>Chức năng</th>
@@ -871,18 +871,18 @@
 </div>
 </section>
 <section class="screen hidden" id="screen-loyalty-offer-event-form">
-<div class="cms-screen-title" id="loyaltyEventBreadcrumb"><i class="fa fa-edit"></i> Loyalty &gt; Quản trị sự kiện ưu đãi</div>
+<div class="cms-screen-title" id="loyaltyEventBreadcrumb"><i class="fa fa-edit"></i> Loyalty &gt; Quản trị nhiệm vụ</div>
 <div class="cms-content">
 <div class="loyalty-admin-shell">
 <div class="payment-panel loyalty-event-form-panel">
 <div class="payment-panel-title"><i class="fa fa-edit"></i> <span id="loyaltyEventFormTitle">Thêm mới sự kiện</span></div>
 <div class="loyalty-event-entry-form">
 <div class="loyalty-event-entry-row loyalty-event-code-row hidden" id="loyaltyEventCodeRow">
-<label>Mã sự kiện</label>
+<label>Mã nhiệm vụ</label>
 <div class="loyalty-event-code-text" id="loyaltyEventCode"></div>
 </div>
 <div class="loyalty-event-entry-row loyalty-event-name-row">
-<label for="loyaltyEventName">Tên sự kiện <span class="required">*</span></label>
+<label for="loyaltyEventName">Tên nhiệm vụ <span class="required">*</span></label>
 <input id="loyaltyEventName" maxlength="100" placeholder="Nhập tên sự kiện" type="text"/>
 </div>
 <div class="loyalty-event-entry-row loyalty-event-description-row">
@@ -962,13 +962,13 @@
 <div class="aexp-filter-grid">
 <label>Từ khóa <input class="input" id="aexpKeyword" placeholder="Tìm thiết lập theo từ khóa" type="text"/></label>
 <div id="aexpUnitFilter"></div><div id="aexpProductFilter"></div>
-<label>Loại sự kiện <select class="select" id="aexpEventFilter"></select></label>
+<label>Tên nhiệm vụ <select class="select" id="aexpEventFilter"></select></label>
 <label>Trạng thái <select class="select" id="aexpStatusFilter"><option value="">Tất cả</option><option>Hiệu lực</option><option>Chờ áp dụng</option><option>Hết hiệu lực</option><option>Tạm dừng</option></select></label>
 </div>
 <div class="cms-actions-center"><button class="btn info" onclick="cmsAexpSearch()" type="button"><i class="fa fa-search"></i> Tra cứu</button><button class="btn green" onclick="cmsAexpOpenForm()" type="button"><i class="fa fa-plus"></i> Thêm mới</button></div>
 </div>
 <div class="module-toolbar aexp-toolbar"><div class="toolbar-left"><button class="btn gray" onclick="cmsAexpToggleColumns(this)" type="button"><i class="fa fa-columns"></i> Ẩn hiện cột</button></div><div class="toolbar-right"><input class="toolbar-search" id="aexpQuickSearch" oninput="cmsAexpSearch()" placeholder="Tìm kiếm nhanh"/></div></div>
-<div class="table-wrap"><table class="data-table" id="aexpTable"><thead><tr><th>STT</th><th>Tên thiết lập</th><th>Đơn vị</th><th>Sản phẩm</th><th>Loại sự kiện</th><th>A-EXP nhận</th><th>Giới hạn</th><th>Ngày áp dụng</th><th>Ngày kết thúc</th><th>Trạng thái</th><th>Thao tác</th></tr></thead><tbody id="aexpTableBody"></tbody></table></div>
+<div class="table-wrap"><table class="data-table" id="aexpTable"><thead><tr><th>STT</th><th>Tên thiết lập</th><th>Đơn vị</th><th>Sản phẩm</th><th>Tên nhiệm vụ</th><th>A-EXP nhận</th><th>Giới hạn</th><th>Ngày áp dụng</th><th>Ngày kết thúc</th><th>Trạng thái</th><th>Thao tác</th></tr></thead><tbody id="aexpTableBody"></tbody></table></div>
 <div class="page-foot"><span id="aexpPageInfo"></span><div class="pager" id="aexpPager"></div></div>
 </div></div>
 </section>
@@ -979,7 +979,7 @@
 <div class="account-alert" id="aexpFormAlert"></div>
 <div class="texp-entry-form">
 <div class="texp-entry-row"><label class="form-label-text" for="aexpName">Tên gọi <span class="required">*</span></label><input id="aexpName" placeholder="Nhập tên thiết lập" type="text"/><span class="field-error" id="err-aexpName"></span></div>
-<div class="texp-entry-row"><label class="form-label-text" for="aexpEventForm">Loại sự kiện <span class="required">*</span></label><select id="aexpEventForm"></select><span class="field-error" id="err-aexpEventForm"></span></div>
+<div class="texp-entry-row"><label class="form-label-text" for="aexpEventForm">Tên nhiệm vụ <span class="required">*</span></label><select id="aexpEventForm"></select><span class="field-error" id="err-aexpEventForm"></span></div>
 <div class="texp-entry-row"><label class="form-label-text">Đơn vị <span class="required">*</span></label><div class="texp-multi-control" id="aexpUnitControl"></div><span class="field-error" id="err-aexpUnitForm"></span></div>
 <div class="texp-entry-row"><label class="form-label-text">Sản phẩm <span class="required">*</span></label><div class="texp-multi-control" id="aexpProductControl"></div><span class="field-error" id="err-aexpProductForm"></span></div>
 <div class="texp-entry-row texp-value-row"><label class="form-label-text" for="aexpValue">Giá trị quy đổi <span class="required">*</span></label><div><input id="aexpValue" min="1" placeholder="Nhập số A-EXP" step="1" type="number"/><div class="field-hint">Nhập số A-EXP nhận được cho mỗi sự kiện được ghi nhận</div><span class="field-error" id="err-aexpValue"></span></div></div>
@@ -1088,7 +1088,7 @@
 </div></div></div>
 </section>
 <section class="screen hidden" id="screen-loyalty-event-benefit">
-<div class="cms-screen-title"><i class="fa fa-bolt"></i> Loyalty &gt; Thiết lập ưu đãi sự kiện</div>
+<div class="cms-screen-title"><i class="fa fa-bolt"></i> Loyalty &gt; Thiết lập phần thưởng nhiệm vụ</div>
 <div class="cms-content"><div class="loyalty-admin-shell">
 <div class="loyalty-reference-filter">
 <div class="event-benefit-filter-grid">
@@ -1100,17 +1100,19 @@
 <div class="cms-actions-center"><button class="btn info" onclick="cmsEventBenefitSearch()" type="button"><i class="fa fa-search"></i> Tra cứu</button><button class="btn green" onclick="cmsEventBenefitOpenForm()" type="button"><i class="fa fa-plus"></i> Thêm mới</button></div>
 </div>
 <div class="module-toolbar aexp-toolbar"><div class="toolbar-left"><button class="btn gray" onclick="cmsEventBenefitToggleColumns(this)" type="button"><i class="fa fa-columns"></i> Ẩn/hiện cột</button></div><div class="toolbar-right"><input class="toolbar-search" id="eventBenefitQuickSearch" oninput="cmsEventBenefitSearch()" placeholder="Tìm kiếm nhanh"/></div></div>
-<div class="table-wrap"><table class="data-table" id="eventBenefitTable"><thead><tr><th>STT</th><th>Mã sự kiện</th><th>Tên sự kiện</th><th>Loại thưởng</th><th>Giá trị thưởng</th><th>Lượt nhận tối đa</th><th>Giới hạn khác</th><th>Ngày áp dụng</th><th>Ngày kết thúc</th><th>Trạng thái</th><th>Thao tác</th></tr></thead><tbody id="eventBenefitTableBody"></tbody></table></div>
+<div class="table-wrap"><table class="data-table" id="eventBenefitTable"><thead><tr><th>STT</th><th>Mã nhiệm vụ</th><th>Tên nhiệm vụ</th><th>Tên phần thưởng</th><th>Ảnh đại diện</th><th>Loại thưởng</th><th>Giá trị thưởng</th><th>Lượt nhận tối đa</th><th>Giới hạn khác</th><th>Ngày áp dụng</th><th>Ngày kết thúc</th><th>Hiển thị</th><th>Trạng thái</th><th>Thao tác</th></tr></thead><tbody id="eventBenefitTableBody"></tbody></table></div>
 <div class="page-foot"><span id="eventBenefitPageInfo"></span><div class="pager" id="eventBenefitPager"></div></div>
 </div></div>
 </section>
 <section class="screen hidden" id="screen-loyalty-event-benefit-form">
-<div class="cms-screen-title"><i class="fa fa-bolt"></i> Loyalty &gt; Thiết lập ưu đãi sự kiện</div>
+<div class="cms-screen-title"><i class="fa fa-bolt"></i> Loyalty &gt; Thiết lập phần thưởng nhiệm vụ</div>
 <div class="cms-content"><div class="loyalty-admin-shell"><div class="payment-panel texp-form-panel event-benefit-form-panel">
 <div class="payment-panel-title"><i class="fa fa-edit"></i> <span id="eventBenefitFormTitle">Thêm mới thiết lập</span></div>
 <div class="account-alert" id="eventBenefitFormAlert"></div>
 <div class="texp-entry-form event-benefit-entry-form">
-<div class="texp-entry-row"><label class="form-label-text" for="eventBenefitEvent">Tên sự kiện <span class="required">*</span></label><select id="eventBenefitEvent"></select><span class="field-error" id="err-eventBenefitEvent"></span></div>
+<div class="texp-entry-row"><label class="form-label-text" for="eventBenefitEvent">Tên nhiệm vụ <span class="required">*</span></label><select id="eventBenefitEvent"></select><span class="field-error" id="err-eventBenefitEvent"></span></div>
+<div class="texp-entry-row"><label class="form-label-text" for="eventBenefitRewardName">Tên phần thưởng <span class="required">*</span></label><input id="eventBenefitRewardName" maxlength="150" placeholder="Nhập tên phần thưởng" type="text"/><span class="field-error" id="err-eventBenefitRewardName"></span></div>
+<div class="texp-entry-row"><label class="form-label-text" for="eventBenefitImage">Ảnh đại diện</label><div class="event-benefit-image-upload"><input accept="image/*" id="eventBenefitImage" onchange="cmsEventBenefitPreviewImage(this)" type="file"/><div class="event-benefit-image-preview" id="eventBenefitImagePreview"><span>Chưa có ảnh</span></div></div><span class="field-error" id="err-eventBenefitImage"></span></div>
 <div class="texp-entry-row"><label class="form-label-text" for="eventBenefitCondition">Điều kiện <span class="required">*</span></label><select id="eventBenefitCondition" onchange="cmsEventBenefitToggleTransaction()"><option>Đã xác thực SĐT</option><option>Đã xác thực Email</option><option>Đã liên kết Google</option><option>Đã liên kết Facebook</option><option>Đã liên kết Apple</option><option>Đã xác thực CCCD</option><option>Phát sinh giao dịch</option></select><span class="field-error" id="err-eventBenefitCondition"></span></div>
 <div class="texp-entry-row hidden" id="eventBenefitTransactionRow"><label class="form-label-text">Chi tiết giao dịch <span class="required">*</span></label><div class="event-benefit-inline-fields"><select id="eventBenefitTransactionType"><option>Nạp Point</option><option>Thanh toán</option></select><input id="eventBenefitTransactionValue" min="1" placeholder="Nhập giá trị giao dịch" step="1" type="number"/></div><span class="field-error" id="err-eventBenefitTransactionValue"></span></div>
 <div class="texp-entry-row"><label class="form-label-text" for="eventBenefitRewardType">Loại thưởng <span class="required">*</span></label><select id="eventBenefitRewardType" onchange="cmsEventBenefitRewardChanged()"><option>Voucher</option><option>Point</option><option>EXP</option></select><span class="field-error" id="err-eventBenefitRewardType"></span></div>
@@ -1120,6 +1122,11 @@
 <div class="texp-entry-row"><label class="form-label-text">Giới hạn khác <span class="required">*</span></label><div class="event-benefit-inline-fields"><select id="eventBenefitOtherLimitType"><option>Tài khoản</option><option>Thiết bị</option><option>IP</option></select><input id="eventBenefitOtherLimitValue" min="1" placeholder="Nhập giá trị giới hạn" step="1" type="number"/></div><span class="field-error" id="err-eventBenefitOtherLimitValue"></span></div>
 <div class="texp-entry-row"><label class="form-label-text" for="eventBenefitStart">Ngày áp dụng <span class="required">*</span></label><input id="eventBenefitStart" step="1" type="datetime-local"/><span class="field-error" id="err-eventBenefitStart"></span></div>
 <div class="texp-entry-row"><label class="form-label-text" for="eventBenefitEnd">Ngày kết thúc <span class="required">*</span></label><input id="eventBenefitEnd" step="1" type="datetime-local"/><span class="field-error" id="err-eventBenefitEnd"></span></div>
+<div class="texp-entry-row event-benefit-display-row"><label class="form-label-text">Hiển thị</label><div class="event-benefit-display-config">
+<div class="event-benefit-display-item"><span>Trang chủ</span><select id="eventBenefitHomeVisible" onchange="cmsEventBenefitToggleDisplayOrder('Home')"><option value="show">Hiển thị</option><option value="hide">Ẩn</option></select><input id="eventBenefitHomeOrder" min="1" placeholder="Vị trí" step="1" type="number"/><span class="field-error" id="err-eventBenefitHomeOrder"></span></div>
+<div class="event-benefit-display-item"><span>Dịch vụ</span><select id="eventBenefitServiceVisible" onchange="cmsEventBenefitToggleDisplayOrder('Service')"><option value="show">Hiển thị</option><option value="hide">Ẩn</option></select><input id="eventBenefitServiceOrder" min="1" placeholder="Vị trí" step="1" type="number"/><span class="field-error" id="err-eventBenefitServiceOrder"></span></div>
+<div class="event-benefit-display-item"><span>Cửa hàng</span><select id="eventBenefitShopVisible" onchange="cmsEventBenefitToggleDisplayOrder('Shop')"><option value="show">Hiển thị</option><option value="hide">Ẩn</option></select><input id="eventBenefitShopOrder" min="1" placeholder="Vị trí" step="1" type="number"/><span class="field-error" id="err-eventBenefitShopOrder"></span></div>
+</div></div>
 </div>
 <div class="form-bottom payment-form-actions"><button class="btn blue" onclick="cmsEventBenefitSave()" type="button"><i class="fa fa-save"></i> Lưu lại</button><button class="btn green" onclick="cmsEventBenefitResetForm()" type="button"><i class="fa fa-refresh"></i> Làm mới</button><button class="btn gray" onclick="showScreen('loyalty-event-benefit')" type="button"><i class="fa fa-arrow-left"></i> Quay lại</button></div>
 </div></div></div>
