@@ -5162,7 +5162,11 @@ font-size: 16px;
 .support-faq-card li {
     margin-bottom: 10px;
     line-height: 1.55;
-    font-weight: 700;
+    font-weight: 400;
+}
+
+.support-faq-card p {
+    font-weight: 400;
 }
 
 /* ===== ACCOUNT NOTIFICATIONS ===== */
@@ -6888,4 +6892,114 @@ body.loyalty-page {
   padding: 0 !important;
   background: #ffffff;
   overflow-x: hidden;
+}
+
+/* Service card text alignment and two-line limits */
+.service-info {
+    display: flex;
+    flex-direction: column;
+    align-self: stretch;
+    justify-content: flex-start;
+}
+
+.service-info h3 {
+    display: -webkit-box;
+    min-height: 45px;
+    overflow: hidden;
+    -webkit-box-orient: vertical;
+    -webkit-line-clamp: 2;
+    line-clamp: 2;
+}
+
+.service-info p {
+    display: -webkit-box;
+    min-height: 39px;
+    overflow: hidden;
+    -webkit-box-orient: vertical;
+    -webkit-line-clamp: 2;
+    line-clamp: 2;
+}
+
+.home-service-item > div {
+    display: flex;
+    flex: 1;
+    flex-direction: column;
+    align-items: flex-start;
+    justify-content: flex-start;
+}
+
+.home-service-item h3 {
+    display: -webkit-box;
+    min-height: 46px;
+    overflow: hidden;
+    -webkit-box-orient: vertical;
+    -webkit-line-clamp: 2;
+    line-clamp: 2;
+}
+
+.home-service-item p {
+    display: -webkit-box;
+    min-height: 40px;
+    overflow: hidden;
+    -webkit-box-orient: vertical;
+    -webkit-line-clamp: 2;
+    line-clamp: 2;
+}
+
+/* ===== SUPPORT RELATED ARTICLES ===== */
+.support-related {
+    margin-top: 28px;
+    padding-top: 24px;
+    border-top: 1px solid #e2e8f0;
+}
+
+.support-related h3 {
+    margin: 0 0 12px;
+    color: #0f172a;
+    font-size: 18px;
+    font-weight: 800;
+}
+
+.support-related-list {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 4px;
+}
+
+.support-related-item {
+    width: auto;
+    min-height: 36px;
+    display: inline-flex;
+    align-items: center;
+    justify-content: flex-start;
+    gap: 8px;
+    padding: 6px 0;
+    border: 0;
+    border-radius: 0;
+    background: transparent;
+    color: #0b63ce;
+    text-align: left;
+    font: inherit;
+    font-size: 14px;
+    font-weight: 400;
+    line-height: 1.5;
+    cursor: pointer;
+    transition: color .2s ease;
+}
+
+.support-related-item:hover {
+    color: #084c9e;
+    text-decoration: underline;
+}
+
+.support-related-item:focus-visible {
+    outline: 2px solid #0b63ce;
+    outline-offset: 3px;
+}
+
+.support-related-item i {
+    flex: 0 0 auto;
+    color: currentColor;
+    font-size: 11px;
 }
