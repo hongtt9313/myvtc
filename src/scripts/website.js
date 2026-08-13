@@ -4196,106 +4196,135 @@ function submitRechargeOrder() {
 const supportFaqData = {
     login: {
         title: 'Cách đăng nhập tài khoản MyVTC',
-        intro: 'Bạn đăng nhập bằng mật khẩu, OTP hoặc tài khoản Google, Apple, Facebook đã liên kết.',
+        intro: 'MyVTC hỗ trợ đăng nhập bằng mật khẩu, OTP hoặc tài khoản mạng xã hội đã liên kết.',
         steps: [
-            'Chọn Đăng nhập trên header.',
-            'Nhập SĐT, Email hoặc tên tài khoản.',
-            'Chọn đăng nhập bằng mật khẩu hoặc OTP.',
-            'Hoàn tất xác thực và kiểm tra lại thông tin tài khoản.'
-        ]
+            'Tại Website MyVTC, chọn Đăng nhập.',
+            'Nhập SĐT, Email hoặc tên tài khoản đã đăng ký.',
+            'Đăng nhập bằng mật khẩu. Nếu muốn dùng OTP, chọn Đăng nhập bằng OTP và chọn phương thức nhận mã.',
+            'Nhập OTP khi hệ thống yêu cầu xác thực thiết bị hoặc phiên đăng nhập.',
+            'Sau khi đăng nhập thành công, bạn được chuyển về trang trước đó hoặc Trang chủ MyVTC.'
+        ],
+        related: ['forgot', 'security', 'profile']
     },
     forgot: {
         title: 'Tôi quên mật khẩu thì làm gì?',
-        intro: 'Bạn đặt lại mật khẩu bằng SĐT, Email hoặc tên tài khoản đã đăng ký.',
+        intro: 'Bạn đặt lại mật khẩu theo luồng xác thực tài khoản và OTP của MyVTC.',
         steps: [
-            'Chọn Quên mật khẩu.',
-            'Nhập thông tin tài khoản cần khôi phục.',
-            'Nhận OTP qua phương thức còn hiệu lực.',
-            'Nhập mật khẩu mới và đăng nhập lại.'
-        ]
+            'Tại màn Đăng nhập, chọn Quên mật khẩu.',
+            'Nhập SĐT, Email hoặc tên tài khoản cần khôi phục.',
+            'Chọn phương thức nhận OTP đang còn hiệu lực trên tài khoản.',
+            'Nhập OTP để xác thực yêu cầu đặt lại mật khẩu.',
+            'Nhập mật khẩu mới, xác nhận mật khẩu và hoàn tất.',
+            'Quay lại màn Đăng nhập và đăng nhập bằng mật khẩu mới.'
+        ],
+        related: ['login', 'security', 'profile']
     },
     link: {
         title: 'Liên kết tài khoản dịch vụ',
-        intro: 'Tính năng này giúp đồng bộ tài khoản chơi dịch vụ với tài khoản MyVTC.',
+        intro: 'Bạn liên kết tài khoản của dịch vụ VTC với MyVTC để quản lý tập trung trong một tài khoản.',
         steps: [
-            'Vào Tài khoản, chọn Tài khoản liên kết.',
+            'Đăng nhập MyVTC và vào Tài khoản.',
+            'Chọn Tài khoản liên kết.',
             'Chọn dịch vụ cần liên kết.',
-            'Nhập tài khoản đang chơi hoặc tạo tài khoản mới.',
-            'Kiểm tra thông tin và xác nhận liên kết.'
-        ]
+            'Nhập thông tin tài khoản dịch vụ theo yêu cầu của hệ thống.',
+            'Kiểm tra thông tin tài khoản tìm thấy và chọn Xác nhận liên kết.',
+            'Sau khi thành công, tài khoản dịch vụ xuất hiện trong danh sách tài khoản đã liên kết.'
+        ],
+        related: ['login', 'profile', 'security']
     },
     topup: {
         title: 'Cách nạp Point MyVTC',
-        intro: 'Bạn nạp Point bằng Thẻ Vcoin, chuyển khoản, VTC Pay, ngân hàng nội địa hoặc thẻ quốc tế.',
+        intro: 'Bạn nạp Point từ Cửa hàng bằng gói nạp và phương thức thanh toán phù hợp.',
         steps: [
-            'Vào Shop, chọn Nạp số dư MyVTC.',
-            'Chọn gói nạp.',
-            'Chọn phương thức thanh toán.',
-            'Kiểm tra đơn hàng và xác nhận thanh toán.'
-        ]
+            'Đăng nhập MyVTC và vào Cửa hàng.',
+            'Chọn Nạp số dư MyVTC.',
+            'Chọn gói nạp hoặc mệnh giá cần nạp.',
+            'Chọn phương thức thanh toán như VTC Pay, ngân hàng, thẻ quốc tế hoặc Thẻ Vcoin theo cấu hình.',
+            'Kiểm tra số Point nhận được và giá trị thanh toán.',
+            'Xác nhận thanh toán và hoàn tất bước xác thực của phương thức thanh toán.',
+            'Kiểm tra số dư Point và Lịch sử giao dịch sau khi giao dịch thành công.'
+        ],
+        related: ['payment', 'voucher', 'inventory']
     },
     payment: {
         title: 'Thanh toán gói dịch vụ không thành công',
-        intro: 'Giao dịch lỗi thường do số dư không đủ, thông tin thanh toán sai hoặc quá hạn xác thực.',
+        intro: 'Bạn kiểm tra trạng thái đơn và điều kiện thanh toán trước khi thực hiện lại.',
         steps: [
-            'Kiểm tra lại trạng thái trong Lịch sử giao dịch.',
-            'Kiểm tra số dư hoặc hạn mức thanh toán.',
-            'Thử lại bằng phương thức thanh toán khác.',
-            'Gửi yêu cầu hỗ trợ nếu tiền đã trừ nhưng đơn chưa ghi nhận.'
-        ]
+            'Vào Tài khoản và mở Lịch sử giao dịch để kiểm tra trạng thái giao dịch.',
+            'Nếu thanh toán bằng Point, kiểm tra số dư Point và hạn mức giao dịch.',
+            'Nếu thanh toán qua phương thức khác, kiểm tra trạng thái xác thực và kết quả trả về từ phương thức thanh toán.',
+            'Kiểm tra lại gói dịch vụ, mệnh giá và voucher đang áp dụng.',
+            'Nếu giao dịch chưa trừ tiền, thực hiện lại giao dịch hoặc chọn phương thức thanh toán khác.',
+            'Nếu tiền đã trừ nhưng đơn chưa ghi nhận thành công, gửi yêu cầu hỗ trợ kèm mã giao dịch.'
+        ],
+        related: ['topup', 'voucher', 'profile']
     },
     voucher: {
         title: 'Cách nhập voucher khi thanh toán',
-        intro: 'Voucher áp dụng theo điều kiện từng dịch vụ, từng phương thức thanh toán và thời hạn hiệu lực.',
+        intro: 'Voucher được áp dụng khi thỏa mãn dịch vụ, thời gian, đối tượng và điều kiện của chương trình.',
         steps: [
-            'Mở khu vực Voucher trong đơn hàng.',
-            'Nhập mã hoặc chọn mã có sẵn.',
-            'Bấm Dùng để kiểm tra ưu đãi.',
-            'Kiểm tra số tiền giảm trước khi thanh toán.'
-        ]
+            'Chọn dịch vụ hoặc gói nạp cần thanh toán.',
+            'Tại bước xác nhận đơn hàng, mở khu vực Voucher.',
+            'Chọn voucher có trong tài khoản hoặc nhập mã voucher.',
+            'Chọn Dùng để hệ thống kiểm tra điều kiện áp dụng.',
+            'Kiểm tra giá trị ưu đãi và số tiền hoặc Point cần thanh toán sau giảm.',
+            'Xác nhận thanh toán để hoàn tất đơn hàng.'
+        ],
+        related: ['inventory', 'topup', 'payment']
     },
     security: {
         title: 'Thiết lập bảo mật OTP và 2FA',
-        intro: 'Bảo mật 2 bước giúp bảo vệ đăng nhập và giao dịch quan trọng.',
+        intro: 'Bạn quản lý phương thức bảo mật trong phần Bảo mật tài khoản của MyVTC.',
         steps: [
-            'Vào Tài khoản, chọn Bảo mật.',
-            'Chọn phương thức OTP hoặc 2FA.',
-            'Xác thực thông tin liên hệ.',
-            'Bật bảo mật và lưu thay đổi.'
-        ]
+            'Đăng nhập MyVTC và vào Tài khoản.',
+            'Chọn Bảo mật tài khoản.',
+            'Chọn phương thức bảo mật muốn thiết lập.',
+            'Thực hiện xác thực OTP theo phương thức đang hoạt động trên tài khoản.',
+            'Xác nhận thiết lập và kiểm tra trạng thái bảo mật sau khi hoàn tất.',
+            'Khi đăng nhập thiết bị mới hoặc thực hiện nghiệp vụ cần bảo mật, làm theo yêu cầu OTP của hệ thống.'
+        ],
+        related: ['login', 'forgot', 'profile']
     },
     profile: {
         title: 'Cập nhật SĐT hoặc Email',
-        intro: 'Bạn cần xác thực OTP trước khi đổi SĐT hoặc Email cho tài khoản.',
+        intro: 'MyVTC yêu cầu xác thực trước khi cập nhật thông tin liên hệ của tài khoản.',
         steps: [
-            'Vào Tài khoản, chọn Thông tin cá nhân.',
+            'Đăng nhập MyVTC và vào Tài khoản.',
+            'Chọn Thông tin tài khoản.',
             'Chọn cập nhật SĐT hoặc Email.',
-            'Nhập thông tin mới.',
-            'Nhập OTP để xác nhận thay đổi.'
-        ]
+            'Nhập thông tin mới và gửi yêu cầu xác thực.',
+            'Nhập OTP theo phương thức hệ thống yêu cầu.',
+            'Xác nhận cập nhật và kiểm tra lại thông tin tài khoản.'
+        ],
+        related: ['security', 'forgot', 'login']
     },
     loyalty: {
         title: 'Điểm EXP và hạng thành viên',
-        intro: 'EXP dùng để xét hạng thành viên và mở quyền lợi Loyalty.',
+        intro: 'Bạn theo dõi nhiệm vụ, EXP, hạng thành viên và phần thưởng tại khu vực VTC Club.',
         steps: [
-            'Vào Thành viên để xem hạng hiện tại.',
-            'Kiểm tra tiến trình EXP trong chu kỳ.',
-            'Làm nhiệm vụ hoặc giao dịch để nhận EXP.',
-            'Nhận thưởng khi đạt điều kiện nâng hạng.'
-        ]
+            'Đăng nhập MyVTC và vào VTC Club.',
+            'Kiểm tra hạng thành viên, tổng EXP và tiến trình hạng hiện tại.',
+            'Mở danh sách nhiệm vụ để xem điều kiện nhận EXP hoặc phần thưởng.',
+            'Thực hiện nhiệm vụ theo điều kiện của từng chương trình.',
+            'Sau khi hệ thống ghi nhận hoàn thành, kiểm tra EXP hoặc phần thưởng được cộng.',
+            'Vào Túi đồ để xem voucher hoặc vật phẩm đã nhận.'
+        ],
+        related: ['inventory', 'topup', 'voucher']
     },
     inventory: {
         title: 'Kiểm tra Túi đồ, vật phẩm và voucher',
-        intro: 'Túi đồ lưu voucher, vật phẩm và quà tặng bạn đã nhận.',
+        intro: 'Túi đồ tập trung các voucher, vật phẩm và phần thưởng bạn đã nhận trên MyVTC.',
         steps: [
-            'Vào Tài khoản, chọn Túi đồ.',
-            'Chọn loại vật phẩm cần xem.',
-            'Kiểm tra hạn dùng và điều kiện áp dụng.',
-            'Dùng vật phẩm trong màn thanh toán hoặc sự kiện phù hợp.'
-        ]
+            'Đăng nhập MyVTC và vào Tài khoản.',
+            'Chọn Túi đồ.',
+            'Chọn nhóm voucher, vật phẩm hoặc phần thưởng cần xem.',
+            'Mở chi tiết để kiểm tra trạng thái, hạn dùng và điều kiện áp dụng.',
+            'Nếu phần thưởng hỗ trợ dùng trực tiếp, chọn Dùng ngay và chuyển đến luồng tương ứng.',
+            'Nếu dùng khi thanh toán, chọn voucher tại bước xác nhận đơn hàng.'
+        ],
+        related: ['loyalty', 'voucher', 'topup']
     }
 };
-
 function filterSupportArticles() {
     const input = document.getElementById('support-search-input');
     const list = document.getElementById('support-article-list');
@@ -4329,6 +4358,10 @@ function openSupportFaq(key) {
     if (empty) empty.classList.add('hidden');
     detail.classList.remove('hidden');
 
+    const relatedArticles = (faq.related || [])
+        .map(relatedKey => ({ key: relatedKey, ...supportFaqData[relatedKey] }))
+        .filter(item => item.title);
+
     content.innerHTML = `
         <article class="support-faq-card">
             <h2>${faq.title}</h2>
@@ -4336,6 +4369,20 @@ function openSupportFaq(key) {
             <ol>
                 ${faq.steps.map(step => `<li>${step}</li>`).join('')}
             </ol>
+
+            ${relatedArticles.length ? `
+                <div class="support-related">
+                    <h3>Bài viết liên quan</h3>
+                    <div class="support-related-list">
+                        ${relatedArticles.map(item => `
+                            <button type="button" class="support-related-item" onclick="openSupportFaq('${item.key}')">
+                                <span>${item.title}</span>
+                                <i class="fas fa-chevron-right"></i>
+                            </button>
+                        `).join('')}
+                    </div>
+                </div>
+            ` : ''}
         </article>
     `;
 
@@ -4593,7 +4640,7 @@ const homeUnitData = {
     ],
     mobile: [
         ['thumbnail/thumb_006.png', 'PUBG Mobile', 'Dịch vụ nhập vai hành động trên di động.'],
-        ['thumbnail/thumb_008.png', 'Arena of Valor', 'Dịch vụ MOBA trên di động.'],
+        ['thumbnail/thumb_010.png', 'Giang Hồ: Bát Phái Phân Tranh', 'Dịch vụ kiếm hiệp mobile với nhiều môn phái.'],
         ['thumbnail/thumb_009.png', 'Honor of Kings', 'Dịch vụ MOBA dành cho cộng đồng quốc tế.'],
         ['thumbnail/thumb_013.png', 'Brawl Stars', 'Dịch vụ đối kháng nhiều người chơi.']
     ],
