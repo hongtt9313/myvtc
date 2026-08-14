@@ -3008,3 +3008,144 @@ function cmsSupportBannerDelete(id){var x=cmsSupportBanners.find(function(v){ret
 function cmsSupportBannerApplyColumns(){var table=document.getElementById('supportBannerTable');if(!table)return;Array.from(table.rows).forEach(function(row){Array.from(row.cells).forEach(function(cell,i){cell.style.display=cmsSupportBannerState.hiddenColumns.has(i)?'none':''})})}
 function cmsSupportBannerToggleColumns(btn){var old=document.getElementById('supportBannerColumnPicker');if(old){old.remove();return}var panel=document.createElement('div');panel.id='supportBannerColumnPicker';panel.className='column-picker show';document.querySelectorAll('#supportBannerTable thead th').forEach(function(th,i){if(i===9)return;var label=document.createElement('label'),box=document.createElement('input');box.type='checkbox';box.checked=!cmsSupportBannerState.hiddenColumns.has(i);box.onchange=function(){if(box.checked)cmsSupportBannerState.hiddenColumns.delete(i);else cmsSupportBannerState.hiddenColumns.add(i);cmsSupportBannerApplyColumns()};label.append(box,document.createTextNode(th.textContent.trim()));panel.append(label)});document.body.append(panel);var r=btn.getBoundingClientRect();panel.style.left=Math.max(8,r.left)+'px';panel.style.top=(r.bottom+6)+'px';setTimeout(function(){document.addEventListener('click',function close(e){if(!panel.contains(e.target)&&e.target!==btn){panel.remove();document.removeEventListener('click',close)}},0)},0)}
 document.addEventListener('DOMContentLoaded',cmsSupportBannerRender);
+
+/* Support: Mẫu thông báo hệ thống, Thông báo Marketing, Quản lý email */
+(function(){
+  cmsSupportTemplates.forEach(function(x,i){
+    x.event=(x.event||'').replace('Xác minh','Xác thực');
+    x.channels=i%2===0?['Website','Mobile App']:['Website'];
+    x.navigation=x.navigation||(['Lịch sử giao dịch','Xác thực email','Xác thực Số điện thoại','Xác thực CCCD','Cài đặt bảo mật'][i%5]);
+    x.content=x.content||'Xin chào @username.';
+  });
+  cmsSupportNotifications.forEach(function(x,i){
+    x.channels=i%2===0?['Website','Mobile App']:['Mobile App'];
+    x.navigation=x.navigation||(['Lịch sử giao dịch','Xác thực email','Xác thực Số điện thoại','Xác thực CCCD','Cài đặt bảo mật'][i%5]);
+    x.htmlContent=x.htmlContent||'<p>'+cmsSupportEsc(x.content||'')+'</p>';
+    x.bannerName=x.bannerName||'';
+    x.bannerData=x.bannerData||'';
+  });
+
+  var _supportRenderFinal=cmsSupportRender,
+      _supportOpenFormFinal=cmsSupportOpenForm,
+      _supportSaveFinal=cmsSupportSave,
+      _supportNextFinal=cmsSupportNext;
+
+  function supportCustomFiltered(type){
+    var p=type==='template'?'supportTemplate':'supportNotification';
+    var q=((document.getElementById(p+'Quick')||{}).value||'').toLowerCase();
+    if(type==='template'){
+      var title=((document.getElementById(p+'TitleFilter')||{}).value||'').toLowerCase();
+      var task=(document.getElementById(p+'EventFilter')||{}).value||'';
+      var status=(document.getElementById(p+'StatusFilter')||{}).value||'';
+      return cmsSupportTemplates.filter(function(x){return(!title||x.title.toLowerCase().indexOf(title)>=0)&&(!task||x.event===task)&&(!status||x.status===status)&&(!q||JSON.stringify(x).toLowerCase().indexOf(q)>=0)});
+    }
+    var from=(document.getElementById(p+'FromFilter')||{}).value||'';
+    var to=(document.getElementById(p+'ToFilter')||{}).value||'';
+    var ntitle=((document.getElementById(p+'TitleFilter')||{}).value||'').toLowerCase();
+    var channel=(document.getElementById(p+'ChannelFilter')||{}).value||'';
+    var nstatus=(document.getElementById(p+'StatusFilter')||{}).value||'';
+    return cmsSupportNotifications.filter(function(x){return(!from||x.sendTime>=from)&&(!to||x.sendTime<=to)&&(!ntitle||x.title.toLowerCase().indexOf(ntitle)>=0)&&(!channel||x.channels.indexOf(channel)>=0)&&(!nstatus||x.status===nstatus)&&(!q||JSON.stringify(x).toLowerCase().indexOf(q)>=0)});
+  }
+
+  cmsSupportRender=function(type){
+    if(type!=='template'&&type!=='notification')return _supportRenderFinal(type);
+    var p=type==='template'?'supportTemplate':'supportNotification', list=supportCustomFiltered(type), pages=Math.max(1,Math.ceil(list.length/cmsSupportSize));
+    cmsSupportPage[type]=Math.min(Math.max(1,cmsSupportPage[type]||1),pages);
+    var start=(cmsSupportPage[type]-1)*cmsSupportSize, rows=list.slice(start,start+cmsSupportSize), html='';
+    rows.forEach(function(x,i){
+      if(type==='template'){
+        var actions='<button class="icon-square orange" title="Cập nhật" onclick="cmsSupportOpenForm(\'template\',\''+x.id+'\')"><i class="fa fa-edit"></i></button><button class="icon-square blue" title="Bật/Tắt trạng thái" onclick="cmsSupportToggleStatus(\'template\',\''+x.id+'\')"><i class="fa '+(x.status==='Hoạt động'?'fa-pause':'fa-play')+'"></i></button><button class="icon-square red" title="Xóa" onclick="cmsSupportDelete(\'template\',\''+x.id+'\')"><i class="fa fa-trash"></i></button>';
+        html+='<tr><td>'+(start+i+1)+'</td><td>'+cmsSupportEsc(x.id)+'</td><td>'+cmsSupportEsc(x.event)+'</td><td>'+cmsSupportEsc(x.title)+'</td><td>'+cmsSupportEsc(x.channels.join(', '))+'</td><td>'+cmsSupportEsc(x.navigation||'')+'</td><td>'+cmsSupportStatus(x.status)+'</td><td>'+actions+'</td></tr>';
+      }else{
+        var nactions='<button class="icon-square orange" title="Cập nhật" onclick="cmsSupportOpenForm(\'notification\',\''+x.id+'\')"><i class="fa fa-edit"></i></button><button class="icon-square blue" title="Hủy" '+(x.status!=='Chờ gửi'?'disabled':'')+' onclick="cmsSupportCancelNotification(\''+x.id+'\')"><i class="fa fa-ban"></i></button><button class="icon-square red" title="Xóa" onclick="cmsSupportDelete(\'notification\',\''+x.id+'\')"><i class="fa fa-trash"></i></button>';
+        html+='<tr><td>'+(start+i+1)+'</td><td>'+cmsSupportFormatDate(x.sendTime)+'</td><td>'+cmsSupportEsc(x.title)+'</td><td>'+cmsSupportEsc(x.channels.join(', '))+'</td><td>'+cmsSupportEsc(x.recipientDetail||x.recipient)+'</td><td>'+cmsSupportEsc(x.navigation||'')+'</td><td>'+cmsSupportEsc(x.updatedAt)+'</td><td>'+cmsSupportStatus(x.status)+'</td><td>'+nactions+'</td></tr>';
+      }
+    });
+    var colspan=type==='template'?8:9;
+    var body=document.getElementById(p+'Rows'); if(body)body.innerHTML=html||'<tr><td colspan="'+colspan+'" class="empty-cell">Không có dữ liệu phù hợp.</td></tr>';
+    var count=document.getElementById(p+'Count'); if(count)count.textContent=list.length?'Hiển thị '+(start+1)+' đến '+Math.min(start+rows.length,list.length)+' trong '+list.length+' bản ghi':'0 bản ghi';
+    var pager=document.getElementById(p+'Pager'); if(pager){var ph='<button '+(cmsSupportPage[type]===1?'disabled':'')+' onclick="cmsSupportSetPage(\''+type+'\','+(cmsSupportPage[type]-1)+')">‹</button>';for(var n=1;n<=pages;n++)ph+='<button class="'+(n===cmsSupportPage[type]?'active':'')+'" onclick="cmsSupportSetPage(\''+type+'\','+n+')">'+n+'</button>';ph+='<button '+(cmsSupportPage[type]===pages?'disabled':'')+' onclick="cmsSupportSetPage(\''+type+'\','+(cmsSupportPage[type]+1)+')">›</button>';pager.innerHTML=ph;}
+    cmsSupportApplyColumns(type);
+  };
+
+  cmsSupportOpenForm=function(type,id){
+    if(type!=='template'&&type!=='notification')return _supportOpenFormFinal(type,id);
+    var x=id?(type==='template'?cmsSupportTemplates:cmsSupportNotifications).find(function(v){return v.id===id}):null;
+    if(type==='template'){
+      document.getElementById('supportTemplateEditId').value=x?x.id:'';
+      document.getElementById('supportTemplateFormTitle').textContent=x?'Cập nhật':'Thêm mới';
+      document.getElementById('supportTemplateEvent').value=x?x.event:'Đăng nhập hàng ngày';
+      document.getElementById('supportTemplateTitle').value=x?x.title:'';
+      document.getElementById('supportTemplateContent').value=x?x.content:'';
+      document.getElementById('supportTemplateNavigation').value=x?x.navigation:'';
+      document.getElementById('supportTemplateStatus').checked=!x||x.status==='Hoạt động';
+      document.querySelectorAll('#screen-support-notification-template-form .support-channel input').forEach(function(c){c.checked=!!(x&&x.channels.indexOf(c.value)>=0)});
+      showScreen('support-notification-template-form');return;
+    }
+    document.getElementById('supportNotificationEditId').value=x?x.id:'';
+    document.getElementById('supportNotificationFormTitle').textContent=x?'Cập nhật':'Thêm mới';
+    document.getElementById('supportNotificationTitle').value=x?x.title:'';
+    document.getElementById('supportNotificationContent').value=x?x.content:'';
+    document.getElementById('supportNotificationHtmlContent').innerHTML=x?x.htmlContent:'';
+    document.getElementById('supportNotificationRecipient').value=x?x.recipient:'Tất cả';
+    document.getElementById('supportNotificationTier').value=x&&x.recipient==='Theo hạng'?(x.recipientDetail||'Đồng'):'Đồng';
+    document.getElementById('supportNotificationGroup').value=x&&x.recipient==='Theo nhóm tài khoản'?(x.recipientDetail||'Khách hàng mới'):'Khách hàng mới';
+    document.getElementById('supportNotificationFile').value='';
+    document.getElementById('supportNotificationFileName').textContent=x&&x.recipient==='Danh sách tài khoản'?(x.recipientDetail||'Chưa chọn file'):'Chưa chọn file';
+    document.getElementById('supportNotificationNavigation').value=x?x.navigation:'';
+    document.getElementById('supportNotificationSendTime').value=x?x.sendTime:'';
+    document.getElementById('supportNotificationBanner').value='';
+    document.getElementById('supportNotificationBannerName').textContent=x&&x.bannerName?x.bannerName:'Chưa chọn ảnh';
+    var preview=document.getElementById('supportNotificationBannerPreview');
+    if(x&&x.bannerData){preview.src=x.bannerData;preview.classList.remove('hidden')}else{preview.removeAttribute('src');preview.classList.add('hidden')}
+    document.querySelectorAll('#screen-support-notification-form .support-notification-channel input').forEach(function(c){c.checked=!!(x&&x.channels.indexOf(c.value)>=0)});
+    cmsSupportRecipientChange();showScreen('support-notification-form');
+  };
+
+  cmsSupportSave=function(type){
+    if(type!=='template'&&type!=='notification')return _supportSaveFinal(type);
+    if(type==='template'){
+      var id=document.getElementById('supportTemplateEditId').value,x=id?cmsSupportTemplates.find(function(v){return v.id===id}):null;
+      var task=document.getElementById('supportTemplateEvent').value,title=document.getElementById('supportTemplateTitle').value.trim(),content=document.getElementById('supportTemplateContent').value.trim(),navigation=document.getElementById('supportTemplateNavigation').value,channels=Array.from(document.querySelectorAll('#screen-support-notification-template-form .support-channel input:checked')).map(function(c){return c.value});
+      if(!task||!title||!content||!navigation||!channels.length){alert('Vui lòng nhập đủ thông tin bắt buộc và chọn ít nhất một kênh gửi.');return;}
+      var obj={id:id||_supportNextFinal('template'),event:task,title:title,content:content,navigation:navigation,channels:channels,status:document.getElementById('supportTemplateStatus').checked?'Hoạt động':'Tạm dừng'};
+      if(x)Object.assign(x,obj);else cmsSupportTemplates.unshift(obj);showScreen('support-notification-template');cmsSupportRender('template');return;
+    }
+    var nid=document.getElementById('supportNotificationEditId').value,nx=nid?cmsSupportNotifications.find(function(v){return v.id===nid}):null;
+    var ntitle=document.getElementById('supportNotificationTitle').value.trim(),desc=document.getElementById('supportNotificationContent').value.trim(),editor=document.getElementById('supportNotificationHtmlContent'),htmlContent=editor.innerHTML.trim(),plain=editor.textContent.trim(),recipient=document.getElementById('supportNotificationRecipient').value,sendTime=document.getElementById('supportNotificationSendTime').value,navigation=document.getElementById('supportNotificationNavigation').value,channels=Array.from(document.querySelectorAll('#screen-support-notification-form .support-notification-channel input:checked')).map(function(c){return c.value});
+    var detail=recipient==='Theo hạng'?document.getElementById('supportNotificationTier').value:recipient==='Theo nhóm tài khoản'?document.getElementById('supportNotificationGroup').value:recipient==='Danh sách tài khoản'?(document.getElementById('supportNotificationFile').files[0]?document.getElementById('supportNotificationFile').files[0].name:(nx?nx.recipientDetail:'')):'Tất cả tài khoản';
+    if(!ntitle||!desc||!plain||!recipient||!sendTime||!navigation||!channels.length||(recipient==='Danh sách tài khoản'&&!detail)){alert('Vui lòng nhập đủ thông tin bắt buộc, chọn kênh gửi và khai báo đối tượng nhận.');return;}
+    var file=document.getElementById('supportNotificationBanner').files[0];
+    var finish=function(bannerData){var obj={id:nid||_supportNextFinal('notification'),title:ntitle,content:desc,htmlContent:htmlContent,recipient:recipient,recipientDetail:detail,sendTime:sendTime,navigation:navigation,channels:channels,bannerName:file?file.name:(nx?nx.bannerName:''),bannerData:bannerData!==undefined?bannerData:(nx?nx.bannerData:''),updatedAt:new Date().toLocaleString('vi-VN',{hour12:false}),status:nx?nx.status:'Chờ gửi'};if(nx)Object.assign(nx,obj);else cmsSupportNotifications.unshift(obj);showScreen('support-notification');cmsSupportRender('notification')};
+    if(file){var reader=new FileReader();reader.onload=function(e){finish(e.target.result)};reader.readAsDataURL(file)}else finish();
+  };
+})();
+
+function cmsSupportInsertVariable(id,token){var el=document.getElementById(id);if(!el)return;var start=el.selectionStart==null?el.value.length:el.selectionStart,end=el.selectionEnd==null?start:el.selectionEnd;el.value=el.value.slice(0,start)+token+el.value.slice(end);el.focus();el.selectionStart=el.selectionEnd=start+token.length;}
+function cmsSupportMarketingEditorCommand(command,value){var editor=document.getElementById('supportNotificationHtmlContent');if(!editor)return;editor.focus();document.execCommand(command,false,value||null)}
+function cmsSupportMarketingInsertLink(){var url=prompt('Nhập đường dẫn liên kết:','https://');if(url)cmsSupportMarketingEditorCommand('createLink',url)}
+function cmsSupportNotificationBannerSelected(input){var file=input.files&&input.files[0],name=document.getElementById('supportNotificationBannerName'),preview=document.getElementById('supportNotificationBannerPreview');name.textContent=file?file.name:'Chưa chọn ảnh';if(!file){preview.classList.add('hidden');return}var reader=new FileReader();reader.onload=function(e){preview.src=e.target.result;preview.classList.remove('hidden')};reader.readAsDataURL(file)}
+
+var cmsSupportEmails=[
+{id:'EMAIL-001',name:'verify-email',title:'[MyVTC] Xác thực email',status:'Hoạt động',creator:'quyen.nguyen',createdAt:'25/02/2026 08:48:08',content:'<h2>Xác thực email</h2><p>Xin chào @username, vui lòng xác thực email của bạn.</p>'},
+{id:'EMAIL-002',name:'otp_email',title:'[MyVTC] Mã xác thực',status:'Hoạt động',creator:'quyen.nguyen',createdAt:'25/02/2026 08:48:08',content:'<p>Mã OTP của bạn là <strong>@otp</strong>.</p>'},
+{id:'EMAIL-003',name:'forgot-password',title:'[MyVTC] Quên mật khẩu',status:'Hoạt động',creator:'admin.hong',createdAt:'06/04/2026 11:02:15',content:'<p>Yêu cầu đặt lại mật khẩu cho tài khoản @username.</p>'},
+{id:'EMAIL-004',name:'payment-success',title:'[MyVTC] Thanh toán thành công',status:'Hoạt động',creator:'admin.payment',createdAt:'14/08/2026 09:15:20',content:'<p>Giao dịch @transaction_code đã thanh toán thành công.</p>'},
+{id:'EMAIL-005',name:'account-security',title:'[MyVTC] Cảnh báo bảo mật tài khoản',status:'Tạm dừng',creator:'admin.security',createdAt:'14/08/2026 10:25:04',content:'<p>Phát hiện hoạt động mới trên tài khoản @username.</p>'}
+];
+var cmsSupportEmailState={page:1,size:25,hidden:new Set()};
+function cmsSupportEmailFiltered(){var name=((document.getElementById('supportEmailNameFilter')||{}).value||'').toLowerCase(),title=((document.getElementById('supportEmailTitleFilter')||{}).value||'').toLowerCase(),status=(document.getElementById('supportEmailStatusFilter')||{}).value||'',q=((document.getElementById('supportEmailQuick')||{}).value||'').toLowerCase();return cmsSupportEmails.filter(function(x){return(!name||x.name.toLowerCase().indexOf(name)>=0)&&(!title||x.title.toLowerCase().indexOf(title)>=0)&&(!status||x.status===status)&&(!q||JSON.stringify(x).toLowerCase().indexOf(q)>=0)})}
+function cmsSupportEmailSearch(){cmsSupportEmailState.page=1;cmsSupportEmailRender()}
+function cmsSupportEmailRender(){var body=document.getElementById('supportEmailRows');if(!body)return;var list=cmsSupportEmailFiltered(),pages=Math.max(1,Math.ceil(list.length/cmsSupportEmailState.size));cmsSupportEmailState.page=Math.min(cmsSupportEmailState.page,pages);var start=(cmsSupportEmailState.page-1)*cmsSupportEmailState.size,rows=list.slice(start,start+cmsSupportEmailState.size);body.innerHTML=rows.map(function(x,i){return '<tr><td>'+(start+i+1)+'</td><td>'+cmsSupportEsc(x.id)+'</td><td>'+cmsSupportEsc(x.name)+'</td><td>'+cmsSupportEsc(x.title)+'</td><td>'+cmsSupportStatus(x.status)+'</td><td>'+cmsSupportEsc(x.creator)+'</td><td>'+cmsSupportEsc(x.createdAt)+'</td><td><button class="icon-square orange" title="Cập nhật" onclick="cmsSupportEmailOpenForm(\''+x.id+'\')"><i class="fa fa-edit"></i></button><button class="icon-square blue" title="Bật/Tắt trạng thái" onclick="cmsSupportEmailToggleStatus(\''+x.id+'\')"><i class="fa '+(x.status==='Hoạt động'?'fa-pause':'fa-play')+'"></i></button><button class="icon-square red" title="Xóa" onclick="cmsSupportEmailDelete(\''+x.id+'\')"><i class="fa fa-trash"></i></button></td></tr>'}).join('')||'<tr><td colspan="8" class="empty-cell">Không có dữ liệu phù hợp.</td></tr>';document.getElementById('supportEmailCount').textContent=list.length?'Hiển thị '+(start+1)+' đến '+Math.min(start+rows.length,list.length)+' trong '+list.length+' bản ghi':'0 bản ghi';var p='<button '+(cmsSupportEmailState.page===1?'disabled':'')+' onclick="cmsSupportEmailSetPage('+(cmsSupportEmailState.page-1)+')">‹</button>';for(var n=1;n<=pages;n++)p+='<button class="'+(n===cmsSupportEmailState.page?'active':'')+'" onclick="cmsSupportEmailSetPage('+n+')">'+n+'</button>';p+='<button '+(cmsSupportEmailState.page===pages?'disabled':'')+' onclick="cmsSupportEmailSetPage('+(cmsSupportEmailState.page+1)+')">›</button>';document.getElementById('supportEmailPager').innerHTML=p;cmsSupportEmailApplyColumns()}
+function cmsSupportEmailSetPage(p){if(p<1)return;cmsSupportEmailState.page=p;cmsSupportEmailRender()}
+function cmsSupportEmailOpenForm(id){var x=id?cmsSupportEmails.find(function(v){return v.id===id}):null;document.getElementById('supportEmailEditId').value=x?x.id:'';document.getElementById('supportEmailFormTitle').textContent=x?'Cập nhật':'Thêm mới';document.getElementById('supportEmailName').value=x?x.name:'';document.getElementById('supportEmailTitle').value=x?x.title:'';document.getElementById('supportEmailContent').innerHTML=x?x.content:'';document.getElementById('supportEmailStatus').checked=!x||x.status==='Hoạt động';showScreen('support-email-form')}
+function cmsSupportEmailResetForm(){cmsSupportEmailOpenForm(document.getElementById('supportEmailEditId').value||null)}
+function cmsSupportEmailSave(){var id=document.getElementById('supportEmailEditId').value,x=id?cmsSupportEmails.find(function(v){return v.id===id}):null,name=document.getElementById('supportEmailName').value.trim(),title=document.getElementById('supportEmailTitle').value.trim(),editor=document.getElementById('supportEmailContent'),content=editor.innerHTML.trim(),plain=editor.textContent.trim();if(!name||!title||!plain){alert('Vui lòng nhập đủ thông tin bắt buộc.');return}if(cmsSupportEmails.some(function(v){return v.name.toLowerCase()===name.toLowerCase()&&v.id!==id})){alert('Tên Email đã tồn tại.');return}var obj={id:id||'EMAIL-'+String(cmsSupportEmails.length+1).padStart(3,'0'),name:name,title:title,content:content,status:document.getElementById('supportEmailStatus').checked?'Hoạt động':'Tạm dừng',creator:x?x.creator:'admin.hong',createdAt:x?x.createdAt:new Date().toLocaleString('vi-VN',{hour12:false})};if(x)Object.assign(x,obj);else cmsSupportEmails.unshift(obj);showScreen('support-email');cmsSupportEmailRender()}
+function cmsSupportEmailToggleStatus(id){var x=cmsSupportEmails.find(function(v){return v.id===id});if(x){x.status=x.status==='Hoạt động'?'Tạm dừng':'Hoạt động';cmsSupportEmailRender()}}
+function cmsSupportEmailDelete(id){var x=cmsSupportEmails.find(function(v){return v.id===id});if(x&&confirm('Bạn xác nhận xóa Email "'+x.name+'"?')){cmsSupportEmails=cmsSupportEmails.filter(function(v){return v.id!==id});cmsSupportEmailRender()}}
+function cmsSupportEmailEditorCommand(command,value){var editor=document.getElementById('supportEmailContent');if(!editor)return;editor.focus();document.execCommand(command,false,value||null)}
+function cmsSupportEmailInsertLink(){var url=prompt('Nhập đường dẫn liên kết:','https://');if(url)cmsSupportEmailEditorCommand('createLink',url)}
+function cmsSupportEmailInsertImage(input){var file=input.files&&input.files[0];if(!file)return;var reader=new FileReader();reader.onload=function(e){cmsSupportEmailEditorCommand('insertImage',e.target.result);input.value=''};reader.readAsDataURL(file)}
+function cmsSupportEmailApplyColumns(){var table=document.getElementById('supportEmailTable');if(!table)return;Array.from(table.rows).forEach(function(r){Array.from(r.cells).forEach(function(c,i){c.style.display=cmsSupportEmailState.hidden.has(i)?'none':''})})}
+function cmsSupportEmailToggleColumns(btn){var old=document.getElementById('supportEmailColumnPicker');if(old){old.remove();return}var table=document.getElementById('supportEmailTable'),box=document.createElement('div');box.id='supportEmailColumnPicker';box.className='support-column-picker';Array.from(table.tHead.rows[0].cells).forEach(function(th,i){if(i===0||i===table.tHead.rows[0].cells.length-1)return;var l=document.createElement('label'),c=document.createElement('input');c.type='checkbox';c.checked=!cmsSupportEmailState.hidden.has(i);c.onchange=function(){c.checked?cmsSupportEmailState.hidden.delete(i):cmsSupportEmailState.hidden.add(i);cmsSupportEmailApplyColumns()};l.append(c,document.createTextNode(th.textContent));box.append(l)});document.body.append(box);var r=btn.getBoundingClientRect();box.style.left=r.left+'px';box.style.top=(r.bottom+5+scrollY)+'px'}
+document.addEventListener('DOMContentLoaded',cmsSupportEmailRender);
