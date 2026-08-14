@@ -4196,135 +4196,106 @@ function submitRechargeOrder() {
 const supportFaqData = {
     login: {
         title: 'Cách đăng nhập tài khoản MyVTC',
-        intro: 'MyVTC hỗ trợ đăng nhập bằng mật khẩu, OTP hoặc tài khoản mạng xã hội đã liên kết.',
+        intro: 'Bạn đăng nhập bằng mật khẩu, OTP hoặc tài khoản Google, Apple, Facebook đã liên kết.',
         steps: [
-            'Tại Website MyVTC, chọn Đăng nhập.',
-            'Nhập SĐT, Email hoặc tên tài khoản đã đăng ký.',
-            'Đăng nhập bằng mật khẩu. Nếu muốn dùng OTP, chọn Đăng nhập bằng OTP và chọn phương thức nhận mã.',
-            'Nhập OTP khi hệ thống yêu cầu xác thực thiết bị hoặc phiên đăng nhập.',
-            'Sau khi đăng nhập thành công, bạn được chuyển về trang trước đó hoặc Trang chủ MyVTC.'
-        ],
-        related: ['forgot', 'security', 'profile']
+            'Chọn Đăng nhập trên header.',
+            'Nhập SĐT, Email hoặc tên tài khoản.',
+            'Chọn đăng nhập bằng mật khẩu hoặc OTP.',
+            'Hoàn tất xác thực và kiểm tra lại thông tin tài khoản.'
+        ]
     },
     forgot: {
         title: 'Tôi quên mật khẩu thì làm gì?',
-        intro: 'Bạn đặt lại mật khẩu theo luồng xác thực tài khoản và OTP của MyVTC.',
+        intro: 'Bạn đặt lại mật khẩu bằng SĐT, Email hoặc tên tài khoản đã đăng ký.',
         steps: [
-            'Tại màn Đăng nhập, chọn Quên mật khẩu.',
-            'Nhập SĐT, Email hoặc tên tài khoản cần khôi phục.',
-            'Chọn phương thức nhận OTP đang còn hiệu lực trên tài khoản.',
-            'Nhập OTP để xác thực yêu cầu đặt lại mật khẩu.',
-            'Nhập mật khẩu mới, xác nhận mật khẩu và hoàn tất.',
-            'Quay lại màn Đăng nhập và đăng nhập bằng mật khẩu mới.'
-        ],
-        related: ['login', 'security', 'profile']
+            'Chọn Quên mật khẩu.',
+            'Nhập thông tin tài khoản cần khôi phục.',
+            'Nhận OTP qua phương thức còn hiệu lực.',
+            'Nhập mật khẩu mới và đăng nhập lại.'
+        ]
     },
     link: {
         title: 'Liên kết tài khoản dịch vụ',
-        intro: 'Bạn liên kết tài khoản của dịch vụ VTC với MyVTC để quản lý tập trung trong một tài khoản.',
+        intro: 'Tính năng này giúp đồng bộ tài khoản chơi dịch vụ với tài khoản MyVTC.',
         steps: [
-            'Đăng nhập MyVTC và vào Tài khoản.',
-            'Chọn Tài khoản liên kết.',
+            'Vào Tài khoản, chọn Tài khoản liên kết.',
             'Chọn dịch vụ cần liên kết.',
-            'Nhập thông tin tài khoản dịch vụ theo yêu cầu của hệ thống.',
-            'Kiểm tra thông tin tài khoản tìm thấy và chọn Xác nhận liên kết.',
-            'Sau khi thành công, tài khoản dịch vụ xuất hiện trong danh sách tài khoản đã liên kết.'
-        ],
-        related: ['login', 'profile', 'security']
+            'Nhập tài khoản đang chơi hoặc tạo tài khoản mới.',
+            'Kiểm tra thông tin và xác nhận liên kết.'
+        ]
     },
     topup: {
         title: 'Cách nạp Point MyVTC',
-        intro: 'Bạn nạp Point từ Cửa hàng bằng gói nạp và phương thức thanh toán phù hợp.',
+        intro: 'Bạn nạp Point bằng Thẻ Vcoin, chuyển khoản, VTC Pay, ngân hàng nội địa hoặc thẻ quốc tế.',
         steps: [
-            'Đăng nhập MyVTC và vào Cửa hàng.',
-            'Chọn Nạp số dư MyVTC.',
-            'Chọn gói nạp hoặc mệnh giá cần nạp.',
-            'Chọn phương thức thanh toán như VTC Pay, ngân hàng, thẻ quốc tế hoặc Thẻ Vcoin theo cấu hình.',
-            'Kiểm tra số Point nhận được và giá trị thanh toán.',
-            'Xác nhận thanh toán và hoàn tất bước xác thực của phương thức thanh toán.',
-            'Kiểm tra số dư Point và Lịch sử giao dịch sau khi giao dịch thành công.'
-        ],
-        related: ['payment', 'voucher', 'inventory']
+            'Vào Shop, chọn Nạp số dư MyVTC.',
+            'Chọn gói nạp.',
+            'Chọn phương thức thanh toán.',
+            'Kiểm tra đơn hàng và xác nhận thanh toán.'
+        ]
     },
     payment: {
         title: 'Thanh toán gói dịch vụ không thành công',
-        intro: 'Bạn kiểm tra trạng thái đơn và điều kiện thanh toán trước khi thực hiện lại.',
+        intro: 'Giao dịch lỗi thường do số dư không đủ, thông tin thanh toán sai hoặc quá hạn xác thực.',
         steps: [
-            'Vào Tài khoản và mở Lịch sử giao dịch để kiểm tra trạng thái giao dịch.',
-            'Nếu thanh toán bằng Point, kiểm tra số dư Point và hạn mức giao dịch.',
-            'Nếu thanh toán qua phương thức khác, kiểm tra trạng thái xác thực và kết quả trả về từ phương thức thanh toán.',
-            'Kiểm tra lại gói dịch vụ, mệnh giá và voucher đang áp dụng.',
-            'Nếu giao dịch chưa trừ tiền, thực hiện lại giao dịch hoặc chọn phương thức thanh toán khác.',
-            'Nếu tiền đã trừ nhưng đơn chưa ghi nhận thành công, gửi yêu cầu hỗ trợ kèm mã giao dịch.'
-        ],
-        related: ['topup', 'voucher', 'profile']
+            'Kiểm tra lại trạng thái trong Lịch sử giao dịch.',
+            'Kiểm tra số dư hoặc hạn mức thanh toán.',
+            'Thử lại bằng phương thức thanh toán khác.',
+            'Gửi yêu cầu hỗ trợ nếu tiền đã trừ nhưng đơn chưa ghi nhận.'
+        ]
     },
     voucher: {
         title: 'Cách nhập voucher khi thanh toán',
-        intro: 'Voucher được áp dụng khi thỏa mãn dịch vụ, thời gian, đối tượng và điều kiện của chương trình.',
+        intro: 'Voucher áp dụng theo điều kiện từng dịch vụ, từng phương thức thanh toán và thời hạn hiệu lực.',
         steps: [
-            'Chọn dịch vụ hoặc gói nạp cần thanh toán.',
-            'Tại bước xác nhận đơn hàng, mở khu vực Voucher.',
-            'Chọn voucher có trong tài khoản hoặc nhập mã voucher.',
-            'Chọn Dùng để hệ thống kiểm tra điều kiện áp dụng.',
-            'Kiểm tra giá trị ưu đãi và số tiền hoặc Point cần thanh toán sau giảm.',
-            'Xác nhận thanh toán để hoàn tất đơn hàng.'
-        ],
-        related: ['inventory', 'topup', 'payment']
+            'Mở khu vực Voucher trong đơn hàng.',
+            'Nhập mã hoặc chọn mã có sẵn.',
+            'Bấm Dùng để kiểm tra ưu đãi.',
+            'Kiểm tra số tiền giảm trước khi thanh toán.'
+        ]
     },
     security: {
         title: 'Thiết lập bảo mật OTP và 2FA',
-        intro: 'Bạn quản lý phương thức bảo mật trong phần Bảo mật tài khoản của MyVTC.',
+        intro: 'Bảo mật 2 bước giúp bảo vệ đăng nhập và giao dịch quan trọng.',
         steps: [
-            'Đăng nhập MyVTC và vào Tài khoản.',
-            'Chọn Bảo mật tài khoản.',
-            'Chọn phương thức bảo mật muốn thiết lập.',
-            'Thực hiện xác thực OTP theo phương thức đang hoạt động trên tài khoản.',
-            'Xác nhận thiết lập và kiểm tra trạng thái bảo mật sau khi hoàn tất.',
-            'Khi đăng nhập thiết bị mới hoặc thực hiện nghiệp vụ cần bảo mật, làm theo yêu cầu OTP của hệ thống.'
-        ],
-        related: ['login', 'forgot', 'profile']
+            'Vào Tài khoản, chọn Bảo mật.',
+            'Chọn phương thức OTP hoặc 2FA.',
+            'Xác thực thông tin liên hệ.',
+            'Bật bảo mật và lưu thay đổi.'
+        ]
     },
     profile: {
         title: 'Cập nhật SĐT hoặc Email',
-        intro: 'MyVTC yêu cầu xác thực trước khi cập nhật thông tin liên hệ của tài khoản.',
+        intro: 'Bạn cần xác thực OTP trước khi đổi SĐT hoặc Email cho tài khoản.',
         steps: [
-            'Đăng nhập MyVTC và vào Tài khoản.',
-            'Chọn Thông tin tài khoản.',
+            'Vào Tài khoản, chọn Thông tin cá nhân.',
             'Chọn cập nhật SĐT hoặc Email.',
-            'Nhập thông tin mới và gửi yêu cầu xác thực.',
-            'Nhập OTP theo phương thức hệ thống yêu cầu.',
-            'Xác nhận cập nhật và kiểm tra lại thông tin tài khoản.'
-        ],
-        related: ['security', 'forgot', 'login']
+            'Nhập thông tin mới.',
+            'Nhập OTP để xác nhận thay đổi.'
+        ]
     },
     loyalty: {
         title: 'Điểm EXP và hạng thành viên',
-        intro: 'Bạn theo dõi nhiệm vụ, EXP, hạng thành viên và phần thưởng tại khu vực VTC Club.',
+        intro: 'EXP dùng để xét hạng thành viên và mở quyền lợi Loyalty.',
         steps: [
-            'Đăng nhập MyVTC và vào VTC Club.',
-            'Kiểm tra hạng thành viên, tổng EXP và tiến trình hạng hiện tại.',
-            'Mở danh sách nhiệm vụ để xem điều kiện nhận EXP hoặc phần thưởng.',
-            'Thực hiện nhiệm vụ theo điều kiện của từng chương trình.',
-            'Sau khi hệ thống ghi nhận hoàn thành, kiểm tra EXP hoặc phần thưởng được cộng.',
-            'Vào Túi đồ để xem voucher hoặc vật phẩm đã nhận.'
-        ],
-        related: ['inventory', 'topup', 'voucher']
+            'Vào Thành viên để xem hạng hiện tại.',
+            'Kiểm tra tiến trình EXP trong chu kỳ.',
+            'Làm nhiệm vụ hoặc giao dịch để nhận EXP.',
+            'Nhận thưởng khi đạt điều kiện nâng hạng.'
+        ]
     },
     inventory: {
         title: 'Kiểm tra Túi đồ, vật phẩm và voucher',
-        intro: 'Túi đồ tập trung các voucher, vật phẩm và phần thưởng bạn đã nhận trên MyVTC.',
+        intro: 'Túi đồ lưu voucher, vật phẩm và quà tặng bạn đã nhận.',
         steps: [
-            'Đăng nhập MyVTC và vào Tài khoản.',
-            'Chọn Túi đồ.',
-            'Chọn nhóm voucher, vật phẩm hoặc phần thưởng cần xem.',
-            'Mở chi tiết để kiểm tra trạng thái, hạn dùng và điều kiện áp dụng.',
-            'Nếu phần thưởng hỗ trợ dùng trực tiếp, chọn Dùng ngay và chuyển đến luồng tương ứng.',
-            'Nếu dùng khi thanh toán, chọn voucher tại bước xác nhận đơn hàng.'
-        ],
-        related: ['loyalty', 'voucher', 'topup']
+            'Vào Tài khoản, chọn Túi đồ.',
+            'Chọn loại vật phẩm cần xem.',
+            'Kiểm tra hạn dùng và điều kiện áp dụng.',
+            'Dùng vật phẩm trong màn thanh toán hoặc sự kiện phù hợp.'
+        ]
     }
 };
+
 function filterSupportArticles() {
     const input = document.getElementById('support-search-input');
     const list = document.getElementById('support-article-list');
@@ -4358,10 +4329,6 @@ function openSupportFaq(key) {
     if (empty) empty.classList.add('hidden');
     detail.classList.remove('hidden');
 
-    const relatedArticles = (faq.related || [])
-        .map(relatedKey => ({ key: relatedKey, ...supportFaqData[relatedKey] }))
-        .filter(item => item.title);
-
     content.innerHTML = `
         <article class="support-faq-card">
             <h2>${faq.title}</h2>
@@ -4369,20 +4336,6 @@ function openSupportFaq(key) {
             <ol>
                 ${faq.steps.map(step => `<li>${step}</li>`).join('')}
             </ol>
-
-            ${relatedArticles.length ? `
-                <div class="support-related">
-                    <h3>Bài viết liên quan</h3>
-                    <div class="support-related-list">
-                        ${relatedArticles.map(item => `
-                            <button type="button" class="support-related-item" onclick="openSupportFaq('${item.key}')">
-                                <span>${item.title}</span>
-                                <i class="fas fa-chevron-right"></i>
-                            </button>
-                        `).join('')}
-                    </div>
-                </div>
-            ` : ''}
         </article>
     `;
 
@@ -4415,47 +4368,162 @@ document.addEventListener('DOMContentLoaded', function () {
 //  ACCOUNT NOTIFICATIONS
 // ================================================================
 const mockAccountNotifications = [
-    { id: 'noti_1', icon: 'fa-shield-alt', title: 'Bật bảo mật 2 bước', body: 'Tài khoản của bạn chưa bật 2FA. Bật 2FA để bảo vệ giao dịch và thông tin đăng nhập.', time: 'Hôm nay', read: false },
-    { id: 'noti_2', icon: 'fa-coins', title: 'Nạp Point thành công', body: 'Bạn đã nạp 1.000 Point vào số dư MyVTC.', time: 'Hôm qua', read: false },
-    { id: 'noti_3', icon: 'fa-gift', title: 'Voucher mới trong Túi đồ', body: 'Bạn nhận được voucher giảm 10% khi nạp dịch vụ trong Shop.', time: '2 ngày trước', read: true },
-    { id: 'noti_4', icon: 'fa-crown', title: 'Cập nhật hạng thành viên', body: 'Bạn cần thêm 480 EXP để đạt hạng Bạc trong chu kỳ hiện tại.', time: '3 ngày trước', read: true }
+    {
+        id: 'noti_1', icon: 'fa-shield-alt', title: 'Bật bảo mật 2 bước',
+        body: 'Tài khoản của bạn chưa bật 2FA. Bật 2FA để bảo vệ giao dịch và thông tin đăng nhập.',
+        date: '14/08/2026', time: 'Hôm nay', read: false, type: 'system', banner: '',
+        content: '<p>Hãy cập nhật lớp bảo mật cho tài khoản MyVTC của bạn.</p><p>Bảo mật 2 bước giúp xác nhận thêm một lớp khi đăng nhập và thực hiện các thao tác quan trọng.</p><p><strong>Thao tác:</strong> Tài khoản → Bảo mật tài khoản → Bảo mật 2 bước.</p>'
+    },
+    {
+        id: 'noti_2', icon: 'fa-coins', title: 'Nạp Point thành công',
+        body: 'Bạn đã nạp 1.000 Point vào số dư MyVTC.',
+        date: '13/08/2026', time: 'Hôm qua', read: false, type: 'system', banner: 'thumbnail/home-banner/payment-cartoon.svg',
+        content: '<p>Giao dịch nạp Point của bạn đã hoàn tất.</p><p><strong>Số Point:</strong> 1.000 Point</p><p><strong>Trạng thái:</strong> Thành công</p><p>Bạn xem chi tiết tại Lịch sử giao dịch.</p>'
+    },
+    {
+        id: 'noti_3', icon: 'fa-gift', title: 'Ưu đãi dành cho thành viên MyVTC',
+        body: 'Nhận ưu đãi mới khi nạp dịch vụ và mua hàng trong hệ sinh thái MyVTC.',
+        date: '12/08/2026', time: '2 ngày trước', read: true, type: 'promotion', banner: 'thumbnail/home-banner/loyalty-cartoon.svg',
+        content: '<p><strong>Bạn thân mến,</strong></p><p>MyVTC gửi đến bạn chương trình ưu đãi dành cho thành viên. Ưu đãi áp dụng khi thực hiện giao dịch trên các dịch vụ đủ điều kiện.</p><p><strong>Thời gian áp dụng:</strong> 12/08/2026 - 31/08/2026.</p>'
+    },
+    {
+        id: 'noti_4', icon: 'fa-crown', title: 'Cập nhật hạng thành viên',
+        body: 'Bạn cần thêm 480 EXP để đạt hạng Bạc trong chu kỳ hiện tại.',
+        date: '11/08/2026', time: '3 ngày trước', read: true, type: 'system', banner: '',
+        content: '<p>Tiến độ hạng thành viên của bạn vừa được cập nhật.</p><p>Bạn cần thêm <strong>480 EXP</strong> để đạt hạng Bạc trong chu kỳ hiện tại.</p>'
+    }
 ];
 
+function normalizeAccountNotifications(items) {
+    return items.map((item, index) => {
+        const sample = mockAccountNotifications[index % mockAccountNotifications.length];
+        return { ...sample, ...item, date: item.date || sample.date, banner: typeof item.banner === 'string' ? item.banner : sample.banner, content: item.content || sample.content };
+    });
+}
+
 function getAccountNotifications() {
-    const saved = localStorage.getItem('myvtc_account_notifications');
-    if (saved) {
+    const storageKey = 'myvtc_account_notifications';
+    const dataVersionKey = 'myvtc_account_notifications_version';
+    const currentVersion = '2';
+    const saved = localStorage.getItem(storageKey);
+    const savedVersion = localStorage.getItem(dataVersionKey);
+
+    if (saved && savedVersion === currentVersion) {
         try {
-            return JSON.parse(saved);
+            const raw = JSON.parse(saved);
+            if (Array.isArray(raw) && raw.length > 0) {
+                const parsed = normalizeAccountNotifications(raw);
+                localStorage.setItem(storageKey, JSON.stringify(parsed));
+                return parsed;
+            }
         } catch (e) {}
     }
-    localStorage.setItem('myvtc_account_notifications', JSON.stringify(mockAccountNotifications));
-    return mockAccountNotifications;
+
+    const initialItems = mockAccountNotifications.map(item => ({ ...item }));
+    localStorage.setItem(storageKey, JSON.stringify(initialItems));
+    localStorage.setItem(dataVersionKey, currentVersion);
+    return initialItems;
 }
 
 function saveAccountNotifications(items) {
     localStorage.setItem('myvtc_account_notifications', JSON.stringify(items));
+    updateAccountNotificationCount();
+}
+
+function updateAccountNotificationCount() {
+    const badge = document.getElementById('account-notification-count');
+    if (!badge) return;
+    const count = getAccountNotifications().filter(item => !item.read).length;
+    badge.textContent = count > 99 ? '99+' : String(count);
+    badge.classList.toggle('hidden', count === 0);
+}
+
+let accountNotificationFilter = 'all';
+let accountNotificationPage = 1;
+const accountNotificationPageSize = 3;
+
+function setNotificationFilter(filter) {
+    accountNotificationFilter = ['all', 'system', 'promotion'].includes(filter) ? filter : 'all';
+    accountNotificationPage = 1;
+    document.querySelectorAll('.notification-filter-btn').forEach(button => {
+        button.classList.toggle('active', button.dataset.filter === accountNotificationFilter);
+    });
+    renderAccountNotifications();
+}
+
+function changeNotificationPage(page) {
+    accountNotificationPage = Math.max(1, Number(page) || 1);
+    renderAccountNotifications();
+    const list = document.getElementById('account-notification-list');
+    if (list) list.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+}
+
+function renderNotificationPagination(totalItems) {
+    const pagination = document.getElementById('account-notification-pagination');
+    if (!pagination) return;
+    const totalPages = Math.ceil(totalItems / accountNotificationPageSize);
+    if (totalPages <= 1) {
+        pagination.innerHTML = '';
+        pagination.classList.add('hidden');
+        return;
+    }
+
+    accountNotificationPage = Math.min(accountNotificationPage, totalPages);
+    pagination.classList.remove('hidden');
+    let html = `<button type="button" class="notification-page-arrow" ${accountNotificationPage === 1 ? 'disabled' : ''} onclick="changeNotificationPage(${accountNotificationPage - 1})" aria-label="Trang trước"><i class="fas fa-chevron-left"></i></button>`;
+    for (let page = 1; page <= totalPages; page++) {
+        html += `<button type="button" class="notification-page-number ${page === accountNotificationPage ? 'active' : ''}" onclick="changeNotificationPage(${page})" aria-current="${page === accountNotificationPage ? 'page' : 'false'}">${page}</button>`;
+    }
+    html += `<button type="button" class="notification-page-arrow" ${accountNotificationPage === totalPages ? 'disabled' : ''} onclick="changeNotificationPage(${accountNotificationPage + 1})" aria-label="Trang sau"><i class="fas fa-chevron-right"></i></button>`;
+    pagination.innerHTML = html;
 }
 
 function renderAccountNotifications() {
     const list = document.getElementById('account-notification-list');
     if (!list) return;
+    const overview = document.getElementById('account-notification-overview');
+    const detail = document.getElementById('account-notification-detail');
+    if (overview) overview.classList.remove('hidden');
+    if (detail) detail.classList.add('hidden');
 
     const items = getAccountNotifications();
-    if (!items.length) {
-        list.innerHTML = '<div class="notification-empty">Không có thông báo mới.</div>';
+    updateAccountNotificationCount();
+    document.querySelectorAll('.notification-filter-btn').forEach(button => {
+        button.classList.toggle('active', button.dataset.filter === accountNotificationFilter);
+    });
+    const filteredItems = accountNotificationFilter === 'all'
+        ? items
+        : items.filter(item => (item.type || 'system') === accountNotificationFilter);
+    if (!filteredItems.length) {
+        list.innerHTML = '<div class="notification-empty">Không có thông báo.</div>';
+        renderNotificationPagination(0);
         return;
     }
 
-    list.innerHTML = items.map(item => `
-        <article class="notification-item ${item.read ? '' : 'unread'}">
-            <div class="notification-icon"><i class="fas ${item.icon}"></i></div>
-            <div>
-                <h3>${item.title}</h3>
+    const totalPages = Math.ceil(filteredItems.length / accountNotificationPageSize);
+    accountNotificationPage = Math.min(accountNotificationPage, totalPages);
+    const startIndex = (accountNotificationPage - 1) * accountNotificationPageSize;
+    const pageItems = filteredItems.slice(startIndex, startIndex + accountNotificationPageSize);
+
+    list.innerHTML = pageItems.map(item => `
+        <article class="notification-item ${item.read ? 'is-read' : 'unread'}">
+            ${item.banner ? `<div class="notification-banner-thumb"><img src="${item.banner}" alt="Banner ${item.title}"></div>` : `<div class="notification-icon"><i class="fas ${item.icon}"></i></div>`}
+            <div class="notification-main">
+                <div class="notification-title-row">
+                    <h3>${item.title}</h3>
+                </div>
                 <p>${item.body}</p>
             </div>
-            <time>${item.time}</time>
+            <div class="notification-actions">
+                <time>${item.time}</time>
+                <div class="notification-action-buttons">
+                    <button type="button" class="notification-unread-btn" title="Đánh dấu chưa đọc" aria-label="Đánh dấu thông báo chưa đọc" onclick="markNotificationUnread('${item.id}')"><i class="fas fa-bookmark"></i></button>
+                    <button type="button" class="notification-view-btn" title="Xem" aria-label="Xem thông báo" onclick="viewAccountNotification('${item.id}')"><i class="fas fa-eye"></i></button>
+                </div>
+            </div>
         </article>
     `).join('');
+    renderNotificationPagination(filteredItems.length);
 }
 
 function markAllNotificationsRead() {
@@ -4465,13 +4533,46 @@ function markAllNotificationsRead() {
     showToast('Đã đánh dấu tất cả thông báo là đã đọc', 'success');
 }
 
-function clearReadNotifications() {
-    const items = getAccountNotifications().filter(item => !item.read);
+function markNotificationUnread(id) {
+    const items = getAccountNotifications();
+    const index = items.findIndex(item => item.id === id);
+    if (index < 0) return;
+    items[index] = { ...items[index], read: false };
     saveAccountNotifications(items);
     renderAccountNotifications();
-    showToast('Đã ẩn thông báo đã đọc', 'success');
+    showToast('Đã đánh dấu thông báo là chưa đọc', 'success');
 }
 
+function viewAccountNotification(id) {
+    const items = getAccountNotifications();
+    const index = items.findIndex(item => item.id === id);
+    if (index < 0) return;
+    items[index] = { ...items[index], read: true };
+    saveAccountNotifications(items);
+    const item = items[index];
+
+    const overview = document.getElementById('account-notification-overview');
+    const detail = document.getElementById('account-notification-detail');
+    if (!detail) return;
+    if (overview) overview.classList.add('hidden');
+    detail.classList.remove('hidden');
+    detail.innerHTML = `
+        <button type="button" class="notification-detail-back" onclick="renderAccountNotifications()"><i class="fas fa-arrow-left"></i> Quay lại</button>
+        <article class="notification-detail-article">
+            <h2>${item.title}</h2>
+            <div class="notification-detail-date">${item.date || item.time}</div>
+            ${item.banner ? `<div class="notification-detail-banner"><img src="${item.banner}" alt="Banner ${item.title}"></div>` : ''}
+            <div class="notification-detail-content">${item.content || `<p>${item.body}</p>`}</div>
+        </article>
+    `;
+    detail.scrollIntoView({ behavior: 'smooth', block: 'start' });
+}
+
+if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', updateAccountNotificationCount);
+} else {
+    updateAccountNotificationCount();
+}
 
 // ================================================================
 //  LINKED VTC SERVICES
