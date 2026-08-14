@@ -29,7 +29,7 @@
                 <button class="account-tab-btn" data-tab="linked" onclick="showAccountTab('linked')">Tài khoản liên kết</button>
                 <button class="account-tab-btn" data-tab="security" onclick="showAccountTab('security')">Bảo mật tài khoản</button>
                 <button class="account-tab-btn" data-tab="transactions" onclick="showAccountTab('transactions')">Lịch sử giao dịch</button>
-                <button class="account-tab-btn" data-tab="notifications" onclick="showAccountTab('notifications')">Thông báo</button>
+                <button class="account-tab-btn account-tab-notification" data-tab="notifications" onclick="showAccountTab('notifications')">Thông báo <span class="notification-count-badge hidden" id="account-notification-count">0</span></button>
                 <button class="account-tab-btn" data-tab="terms" onclick="showAccountTab('terms')">Điều khoản sử dụng</button>
             </div>
         </aside>
@@ -355,12 +355,19 @@
         <p>Cập nhật bảo mật, giao dịch và ưu đãi dành cho tài khoản của bạn</p>
     </div>
 
-    <div class="notification-toolbar">
-        <button type="button" class="linked-btn" onclick="markAllNotificationsRead()">Đánh dấu đã đọc</button>
-        <button type="button" class="linked-btn secondary" onclick="clearReadNotifications()">Ẩn thông báo đã đọc</button>
+    <div id="account-notification-overview">
+        <div class="notification-toolbar">
+            <div class="notification-filter-tabs" role="tablist" aria-label="Lọc thông báo">
+                <button type="button" class="notification-filter-btn active" data-filter="all" onclick="setNotificationFilter('all')">Tất cả</button>
+                <button type="button" class="notification-filter-btn" data-filter="system" onclick="setNotificationFilter('system')">Hệ thống</button>
+                <button type="button" class="notification-filter-btn" data-filter="promotion" onclick="setNotificationFilter('promotion')">Khuyến mãi</button>
+            </div>
+            <button type="button" class="linked-btn" onclick="markAllNotificationsRead()">Đánh dấu đã đọc</button>
+        </div>
+        <div class="notification-list" id="account-notification-list"></div>
+        <div class="notification-pagination" id="account-notification-pagination" aria-label="Phân trang thông báo"></div>
     </div>
-
-    <div class="notification-list" id="account-notification-list"></div>
+    <div class="notification-detail hidden" id="account-notification-detail"></div>
 </div>
 
 <div class="account-tab-panel hidden" data-panel="terms">
