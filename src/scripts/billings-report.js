@@ -287,13 +287,108 @@ var userOverviewGroups = [
   ]}
 ];
 
-var newAccountStatRows = [
-  ['01/07/2026',420,170,92,70,88,208,142,70,'+8,4%','App 40,5%','Android 49,5%'],
-  ['02/07/2026',388,158,86,64,80,190,136,62,'-7,6%','App 40,7%','Android 49,0%'],
-  ['03/07/2026',470,184,110,78,98,235,156,79,'+21,1%','App 39,1%','Android 50,0%'],
-  ['04/07/2026',506,202,116,82,106,246,172,88,'+7,7%','App 39,9%','Android 48,6%'],
-  ['05/07/2026',560,224,130,90,116,280,185,95,'+10,7%','App 40,0%','Android 50,0%']
+var newAccountStatDimensionOptions = {
+  accountType:['Username','SĐT','Email','Google','Facebook','Apple','Guest'],
+  channel:['SSO','API','SDK'],
+  product:['MyVTC','Silkroad Origin VTC','Football Pro VTC','Audition'],
+  device:['Android','iOS','Web']
+};
+
+var newAccountStatDimensionLabels = {
+  accountType:'Loại tài khoản',
+  channel:'Kênh tạo tài khoản',
+  product:'Sản phẩm phát sinh',
+  device:'Thiết bị'
+};
+
+var newAccountStatDailyTotals = [
+  ['01/07/2026',2860],
+  ['02/07/2026',3240],
+  ['03/07/2026',3680],
+  ['04/07/2026',4120],
+  ['05/07/2026',4760],
+  ['06/07/2026',4820],
+  ['07/07/2026',5240]
 ];
+
+var newAccountStatSource = null;
+var newAccountStatLastState = null;
+
+function billingDateDisplayToISO(value){
+  var parts = String(value || '').split('/');
+  if(parts.length !== 3) return value;
+  return parts[2] + '-' + parts[1] + '-' + parts[0];
+}
+
+function billingDateISOToDisplay(value){
+  var parts = String(value || '').split('-');
+  if(parts.length !== 3) return value;
+  return parts[2] + '/' + parts[1] + '/' + parts[0];
+}
+
+function billingNewAccountBuildSource(){
+  if(newAccountStatSource) return newAccountStatSource;
+  var typeWeight = {'Username':30,'SĐT':22,'Email':14,'Google':12,'Facebook':10,'Apple':6,'Guest':6};
+  var channelWeight = {'SSO':40,'API':25,'SDK':35};
+  var productWeight = {'MyVTC':46,'Silkroad Origin VTC':24,'Football Pro VTC':18,'Audition':12};
+  var deviceWeight = {'Android':48,'iOS':30,'Web':22};
+  var rows = [];
+
+  newAccountStatDailyTotals.forEach(function(dayRow,dayIndex){
+    var target = dayRow[1];
+    var dayCells = [];
+    var weightTotal = 0;
+    newAccountStatDimensionOptions.accountType.forEach(function(accountType,typeIndex){
+      newAccountStatDimensionOptions.channel.forEach(function(channel,channelIndex){
+        newAccountStatDimensionOptions.product.forEach(function(product,productIndex){
+          newAccountStatDimensionOptions.device.forEach(function(device,deviceIndex){
+            var compatibility = 1;
+            if(channel === 'SDK' && device === 'Web') compatibility = 0.12;
+            if(channel === 'API' && device !== 'Web') compatibility *= 0.45;
+            if(channel === 'API' && device === 'Web') compatibility *= 1.35;
+            if(channel === 'SSO' && ['Google','Facebook','Apple'].indexOf(accountType) >= 0) compatibility *= 1.55;
+            if(accountType === 'Guest' && channel === 'SDK') compatibility *= 1.35;
+            if(product === 'MyVTC') compatibility *= 1.08;
+            var dayVariation = 1 + (((dayIndex + typeIndex * 2 + channelIndex + productIndex * 3 + deviceIndex) % 7) - 3) * 0.012;
+            var weight = typeWeight[accountType] * channelWeight[channel] * productWeight[product] * deviceWeight[device] * compatibility * dayVariation;
+            var cell = {date:dayRow[0],accountType:accountType,channel:channel,product:product,device:device,weight:weight,count:0,fraction:0};
+            dayCells.push(cell);
+            weightTotal += weight;
+          });
+        });
+      });
+    });
+
+    var allocated = 0;
+    dayCells.forEach(function(cell){
+      var exact = target * cell.weight / weightTotal;
+      cell.count = Math.floor(exact);
+      cell.fraction = exact - cell.count;
+      allocated += cell.count;
+    });
+    dayCells.sort(function(a,b){return b.fraction - a.fraction;});
+    for(var i=0;i<target-allocated;i++) dayCells[i % dayCells.length].count += 1;
+    dayCells.forEach(function(cell){
+      delete cell.weight;
+      delete cell.fraction;
+      if(cell.count > 0) rows.push(cell);
+    });
+  });
+  newAccountStatSource = rows;
+  return rows;
+}
+
+function billingNewAccountDefaultState(){
+  return {
+    from:'2026-07-01',
+    to:'2026-07-07',
+    accountType:[],
+    channel:[],
+    product:[],
+    device:[],
+    statistic:'accountType'
+  };
+}
 
 var newAccountDetailRows = [
   ['ACC-00012881','namnguyen91','0912345678','namnguyen91@vtc.vn','05/07/2026 10:22','App','Android','Hoạt động','Chưa xác thực'],
@@ -470,24 +565,297 @@ function billingBuildUserOverviewReport(){
     + '</div></div>';
 }
 
-function billingBuildNewAccountStatReport(){
-  var displayRows = newAccountStatRows.map(function(row){return row.slice(0,9);});
-  var tableRows = displayRows.map(function(row){
-    return '<tr>' + row.map(function(cell,index){return '<td' + (typeof cell === 'number' ? ' class="number"' : '') + '>' + (typeof cell === 'number' ? billingNumber(cell) : billingSafe(cell)) + '</td>';}).join('') + '</tr>';
+function billingNewAccountMultiSelect(key,label,options){
+  var optionHtml = '<label class="report-multi-option all-option"><input type="checkbox" value="__all__" checked onchange="billingNewAccountMultiChange(this)"><span>Tất cả</span></label>'
+    + options.map(function(option){
+      return '<label class="report-multi-option"><input type="checkbox" value="' + billingSafe(option) + '" onchange="billingNewAccountMultiChange(this)"><span>' + billingSafe(option) + '</span></label>';
+    }).join('');
+  return '<div class="new-account-field"><span class="new-account-field-label">' + billingSafe(label) + '</span>'
+    + '<details class="report-multi" data-key="' + billingSafe(key) + '"><summary><span class="report-multi-text">Tất cả</span><i class="fa fa-chevron-down"></i></summary><div class="report-multi-menu">' + optionHtml + '</div></details></div>';
+}
+
+function billingNewAccountMultiChange(input){
+  var details = input.closest('.report-multi');
+  if(!details) return;
+  var all = details.querySelector('input[value="__all__"]');
+  var items = Array.prototype.slice.call(details.querySelectorAll('input:not([value="__all__"])'));
+  if(input.value === '__all__'){
+    if(input.checked) items.forEach(function(item){item.checked = false;});
+  }else if(input.checked){
+    all.checked = false;
+  }
+  if(!all.checked && !items.some(function(item){return item.checked;})) all.checked = true;
+  var selected = items.filter(function(item){return item.checked;}).map(function(item){return item.value;});
+  var text = details.querySelector('.report-multi-text');
+  if(text){
+    if(all.checked || !selected.length) text.textContent = 'Tất cả';
+    else if(selected.length <= 2) text.textContent = selected.join(', ');
+    else text.textContent = 'Đã chọn ' + selected.length + ' giá trị';
+  }
+}
+
+function billingNewAccountGetMultiValues(key){
+  var details = document.querySelector('#newAccountStatReport .report-multi[data-key="' + key + '"]');
+  if(!details) return [];
+  var all = details.querySelector('input[value="__all__"]');
+  if(all && all.checked) return [];
+  return Array.prototype.slice.call(details.querySelectorAll('input:not([value="__all__"]):checked')).map(function(input){return input.value;});
+}
+
+function billingNewAccountReadState(){
+  var defaults = billingNewAccountDefaultState();
+  var stat = document.getElementById('newAccountStatistic');
+  var from = document.getElementById('newAccountFrom');
+  var to = document.getElementById('newAccountTo');
+  return {
+    from:from ? from.value : defaults.from,
+    to:to ? to.value : defaults.to,
+    accountType:billingNewAccountGetMultiValues('accountType'),
+    channel:billingNewAccountGetMultiValues('channel'),
+    product:billingNewAccountGetMultiValues('product'),
+    device:billingNewAccountGetMultiValues('device'),
+    statistic:stat ? stat.value : defaults.statistic
+  };
+}
+
+function billingNewAccountFilterRows(state){
+  var from = state.from || '0000-01-01';
+  var to = state.to || '9999-12-31';
+  if(from > to){
+    var temp = from; from = to; to = temp;
+  }
+  return billingNewAccountBuildSource().filter(function(row){
+    var iso = billingDateDisplayToISO(row.date);
+    if(iso < from || iso > to) return false;
+    if(state.accountType.length && state.accountType.indexOf(row.accountType) < 0) return false;
+    if(state.channel.length && state.channel.indexOf(row.channel) < 0) return false;
+    if(state.product.length && state.product.indexOf(row.product) < 0) return false;
+    if(state.device.length && state.device.indexOf(row.device) < 0) return false;
+    return true;
+  });
+}
+
+function billingNewAccountOrderedValues(key,rows){
+  if(key === 'time'){
+    return rows.map(function(row){return row.date;}).filter(function(value,index,self){return self.indexOf(value) === index;}).sort(function(a,b){return billingDateDisplayToISO(a).localeCompare(billingDateDisplayToISO(b));});
+  }
+  var canonical = newAccountStatDimensionOptions[key] || [];
+  var found = {};
+  rows.forEach(function(row){found[row[key]] = true;});
+  return canonical.filter(function(value){return found[value];});
+}
+
+function billingNewAccountGroupRows(rows,state){
+  var dimension = state.statistic || 'accountType';
+  var dimensionValues = billingNewAccountOrderedValues(dimension,rows);
+  var dates = rows.map(function(row){return row.date;}).filter(function(value,index,self){return self.indexOf(value) === index;});
+  dates.sort(function(a,b){return billingDateDisplayToISO(a).localeCompare(billingDateDisplayToISO(b));});
+
+  var map = {};
+  dates.forEach(function(date){
+    var breakdown = {};
+    dimensionValues.forEach(function(value){breakdown[value] = 0;});
+    map[date] = {label:date,total:0,breakdown:breakdown};
+  });
+
+  rows.forEach(function(row){
+    var date = row.date;
+    var value = row[dimension];
+    if(!map[date]){
+      var breakdown = {};
+      dimensionValues.forEach(function(item){breakdown[item] = 0;});
+      map[date] = {label:date,total:0,breakdown:breakdown};
+      dates.push(date);
+    }
+    if(dimensionValues.indexOf(value) < 0){
+      dimensionValues.push(value);
+      dates.forEach(function(itemDate){if(map[itemDate]) map[itemDate].breakdown[value] = map[itemDate].breakdown[value] || 0;});
+    }
+    map[date].total += row.count;
+    map[date].breakdown[value] = (map[date].breakdown[value] || 0) + row.count;
+  });
+
+  dates = dates.filter(function(value,index,self){return self.indexOf(value) === index;});
+  dates.sort(function(a,b){return billingDateDisplayToISO(a).localeCompare(billingDateDisplayToISO(b));});
+  var groups = dates.map(function(date){return map[date];});
+  var totalBreakdown = {};
+  dimensionValues.forEach(function(value){totalBreakdown[value] = 0;});
+  var total = 0;
+  groups.forEach(function(group){
+    total += group.total;
+    dimensionValues.forEach(function(value){totalBreakdown[value] += group.breakdown[value] || 0;});
+  });
+
+  return {
+    groups:groups,
+    dimensionValues:dimensionValues,
+    totalGroup:{label:'Tổng',total:total,breakdown:totalBreakdown}
+  };
+}
+
+function billingNewAccountDaysInRange(state){
+  var start = new Date((state.from || '2026-07-01') + 'T00:00:00');
+  var end = new Date((state.to || '2026-07-07') + 'T00:00:00');
+  if(isNaN(start.getTime()) || isNaN(end.getTime())) return 1;
+  if(start > end){var tmp=start;start=end;end=tmp;}
+  return Math.max(1,Math.round((end-start)/86400000)+1);
+}
+
+function billingNewAccountKpis(rows,grouped,state){
+  var total = rows.reduce(function(sum,row){return sum + row.count;},0);
+  var average = Math.round(total / billingNewAccountDaysInRange(state));
+  var days = grouped.groups;
+  var max = days.length ? days.reduce(function(best,row){return row.total > best.total ? row : best;},days[0]) : {total:0,label:'—'};
+  var min = days.length ? days.reduce(function(best,row){return row.total < best.total ? row : best;},days[0]) : {total:0,label:'—'};
+  return '<div class="new-account-kpi-grid">'
+    + '<div class="new-account-kpi"><div class="new-account-kpi-icon blue"><i class="fa fa-user-plus"></i></div><div><span>Tổng tài khoản mới</span><strong>' + billingNumber(total) + '</strong></div></div>'
+    + '<div class="new-account-kpi"><div class="new-account-kpi-icon green"><i class="fa fa-chart-column"></i></div><div><span>Trung bình/ngày</span><strong>' + billingNumber(average) + '</strong></div></div>'
+    + '<div class="new-account-kpi"><div class="new-account-kpi-icon orange"><i class="fa fa-arrow-trend-up"></i></div><div><span>Cao nhất</span><strong>' + billingNumber(max.total) + '</strong><small>' + billingSafe(max.label) + '</small></div></div>'
+    + '<div class="new-account-kpi"><div class="new-account-kpi-icon red"><i class="fa fa-arrow-trend-down"></i></div><div><span>Thấp nhất</span><strong>' + billingNumber(min.total) + '</strong><small>' + billingSafe(min.label) + '</small></div></div>'
+    + '</div>';
+}
+
+function billingNewAccountSeriesColor(index){
+  return ['#1a73e8','#34a853','#f9ab00','#8e44ad','#00acc1','#e8710a','#d93025','#5f6368','#7cb342','#3949ab'][index % 10];
+}
+
+function billingNewAccountLineChart(grouped,state){
+  var groups = grouped.groups;
+  if(!groups.length) return '<div class="new-account-empty-chart">Không có dữ liệu phù hợp với điều kiện lọc.</div>';
+  var dimensionValues = grouped.dimensionValues;
+  if(!dimensionValues.length) return '<div class="new-account-empty-chart">Không có dữ liệu phù hợp với tiêu chí thống kê.</div>';
+
+  var series = dimensionValues.map(function(value){
+    return {
+      label:value,
+      values:groups.map(function(row){return row.breakdown[value] || 0;}),
+      total:grouped.totalGroup.breakdown[value] || 0
+    };
+  });
+
+  var width = 980, height = 320, left = 62, right = 24, top = 28, bottom = 58;
+  var allValues = [];
+  series.forEach(function(item){allValues = allValues.concat(item.values);});
+  var max = Math.max.apply(null,allValues.concat([1]));
+  var stepBase = max > 5000 ? 1000 : (max > 1000 ? 500 : (max > 300 ? 100 : 50));
+  var maxAxis = Math.ceil(max / stepBase) * stepBase;
+  if(maxAxis < stepBase) maxAxis = stepBase;
+  var plotW = width-left-right, plotH = height-top-bottom;
+  var xAt = function(index){return groups.length === 1 ? left + plotW/2 : left + index * plotW/(groups.length-1);};
+  var yAt = function(value){return top + plotH - (value/maxAxis)*plotH;};
+  var grid = '';
+  for(var i=0;i<=4;i++){
+    var value = Math.round(maxAxis*(4-i)/4);
+    var y = top + plotH*i/4;
+    grid += '<line x1="' + left + '" y1="' + y + '" x2="' + (width-right) + '" y2="' + y + '" class="na-chart-grid"/><text x="' + (left-10) + '" y="' + (y+4) + '" class="na-chart-axis" text-anchor="end">' + billingNumber(value) + '</text>';
+  }
+  var xLabels = groups.map(function(row,index){
+    return '<text x="' + xAt(index) + '" y="' + (height-18) + '" class="na-chart-label" text-anchor="middle">' + billingSafe(row.label.slice(0,5)) + '</text>';
   }).join('');
+  var lines = series.map(function(item,index){
+    var color = billingNewAccountSeriesColor(index);
+    var points = item.values.map(function(value,i){return xAt(i) + ',' + yAt(value);}).join(' ');
+    var dots = item.values.map(function(value,i){
+      return '<circle cx="' + xAt(i) + '" cy="' + yAt(value) + '" r="4" fill="#fff" stroke="' + color + '" stroke-width="3"><title>' + billingSafe(groups[i].label) + ' · ' + billingSafe(item.label) + ': ' + billingNumber(value) + '</title></circle>';
+    }).join('');
+    return '<polyline points="' + points + '" fill="none" stroke="' + color + '" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/>' + dots;
+  }).join('');
+  var legend = '<div class="new-account-chart-legend">' + series.map(function(item,index){
+    return '<span title="Tổng trong khoảng thời gian"><i style="background:' + billingNewAccountSeriesColor(index) + '"></i>' + billingSafe(item.label) + ': ' + billingNumber(item.total) + '</span>';
+  }).join('') + '</div>';
+  return '<div class="new-account-chart-svg"><svg viewBox="0 0 ' + width + ' ' + height + '" role="img" aria-label="Biểu đồ tài khoản mới theo thời gian và ' + billingSafe(newAccountStatDimensionLabels[state.statistic] || 'tiêu chí') + '">' + grid + xLabels + lines + '</svg></div>' + legend;
+}
+
+function billingNewAccountBarChart(grouped,state){
+  var groups = grouped.groups;
+  if(!groups.length) return '<div class="new-account-empty-chart">Không có dữ liệu phù hợp với điều kiện lọc.</div>';
+  var max = Math.max.apply(null,groups.map(function(row){return row.total;}).concat([1]));
+  var rows = groups.map(function(row){
+    return '<div class="na-bar-row"><span title="' + billingSafe(row.label) + '">' + billingSafe(row.label) + '</span><div class="na-bar-track"><span class="na-bar-single" style="width:' + Math.max(2,row.total/max*100) + '%"></span></div><b>' + billingNumber(row.total) + '</b></div>';
+  }).join('');
+  return '<div class="new-account-bar-chart">' + rows + '</div>';
+}
+
+function billingNewAccountTable(grouped,state){
+  var dimensionLabel = newAccountStatDimensionLabels[state.statistic] || 'Tiêu chí';
+  var headers = ['Thời gian','Tổng tài khoản mới'].concat(grouped.dimensionValues);
+  var rows = grouped.groups.map(function(row){
+    var cells = ['<td>' + billingSafe(row.label) + '</td>','<td class="number"><strong>' + billingNumber(row.total) + '</strong></td>'];
+    grouped.dimensionValues.forEach(function(value){cells.push('<td class="number">' + billingNumber(row.breakdown[value] || 0) + '</td>');});
+    return '<tr>' + cells.join('') + '</tr>';
+  }).join('');
+
+  var totalLabel = 'Tổng ' + (state.from ? billingDateISOToDisplay(state.from) : '') + ' - ' + (state.to ? billingDateISOToDisplay(state.to) : '');
+  var totalCells = ['<td><strong>' + billingSafe(totalLabel) + '</strong></td>','<td class="number"><strong>' + billingNumber(grouped.totalGroup.total) + '</strong></td>'];
+  grouped.dimensionValues.forEach(function(value){totalCells.push('<td class="number"><strong>' + billingNumber(grouped.totalGroup.breakdown[value] || 0) + '</strong></td>');});
+  var totalRow = '<tr class="new-account-total-row">' + totalCells.join('') + '</tr>';
+
+  return '<div class="report-title-row new-account-table-title"><h3><i class="fa fa-table"></i> Bảng thống kê</h3><span>Theo từng ngày · Thống kê theo ' + billingSafe(dimensionLabel.toLowerCase()) + '</span></div>'
+    + '<div class="table-wrap"><table class="data-table new-account-stat-table"><thead><tr>' + headers.map(function(header){return '<th>' + billingSafe(header) + '</th>';}).join('') + '</tr></thead><tbody>' + rows + totalRow + '</tbody></table></div>'
+    + '<div class="page-foot"><span>' + grouped.groups.length + ' ngày · Có tổng toàn khoảng thời gian</span><div class="pager"><button class="active">1</button></div></div>';
+}
+
+function billingBuildNewAccountStatResult(state){
+  var rows = billingNewAccountFilterRows(state);
+  var grouped = billingNewAccountGroupRows(rows,state);
+  var dimensionLabel = newAccountStatDimensionLabels[state.statistic] || 'tiêu chí';
+  var chartTitle = 'Xu hướng tài khoản mới theo ' + dimensionLabel.toLowerCase();
+  var chart = billingNewAccountLineChart(grouped,state);
+  return billingNewAccountKpis(rows,grouped,state)
+    + '<section class="new-account-chart-card"><div class="new-account-chart-head"><h3><i class="fa fa-chart-line"></i> ' + billingSafe(chartTitle) + '</h3><span>Theo ngày · ' + billingSafe(state.from ? billingDateISOToDisplay(state.from) : '') + ' - ' + billingSafe(state.to ? billingDateISOToDisplay(state.to) : '') + '</span></div>' + chart + '</section>'
+    + billingNewAccountTable(grouped,state);
+}
+
+function billingBuildNewAccountStatReport(){
+  var state = billingNewAccountDefaultState();
+  newAccountStatLastState = state;
   return '<div class="report-filter new-account-filter">'
-    + '<label>Theo thời gian<select class="select"><option>Ngày</option><option>Tuần</option><option>Tháng</option><option>Năm</option><option>Chọn khoảng thời gian</option></select></label>'
-    + '<label>Từ ngày<input class="input" type="date" value="2026-07-01"></label>'
-    + '<label>Đến ngày<input class="input" type="date" value="2026-07-05"></label>'
-    + '<label>Kênh đăng ký<select class="select"><option>Tất cả</option><option>App</option><option>Web</option><option>API đối tác</option><option>SSO đối tác</option></select></label>'
-    + '<label>Nền tảng<select class="select"><option>Tất cả</option><option>Android</option><option>iOS</option><option>Web</option></select></label>'
-    + '<label>Nguồn người dùng<select class="select"><option>Tất cả</option><option>Organic</option><option>Campaign</option><option>Đối tác</option></select></label>'
-    + '<div class="report-actions"><button class="btn green" type="button" onclick="billingSearchReport()"><i class="fa fa-search"></i> Tìm kiếm</button><button class="btn orange" type="button" onclick="billingExportReport()"><i class="fa fa-file-excel"></i> Xuất Excel</button></div></div>'
-    + '<div class="table-wrap"><table class="data-table new-account-stat-table"><thead>'
-    + '<tr><th rowspan="2">Thời gian</th><th rowspan="2">Tổng tài khoản mới</th><th colspan="4">Kênh đăng ký</th><th colspan="3">Nền tảng</th></tr>'
-    + '<tr><th>App</th><th>Web</th><th>API đối tác</th><th>SSO đối tác</th><th>Android</th><th>iOS</th><th>Web</th></tr>'
-    + '</thead><tbody>' + tableRows + '</tbody></table></div>'
-    + '<div class="page-foot"><span>Hiển thị ' + newAccountStatRows.length + ' dòng dữ liệu mẫu</span><div class="pager"><button class="active">1</button></div></div>';
+    + '<label class="new-account-field new-account-time-field">Thời gian tạo<div class="new-account-time-control"><input class="input" id="newAccountFrom" type="date" value="' + state.from + '"><span>đến</span><input class="input" id="newAccountTo" type="date" value="' + state.to + '"></div></label>'
+    + billingNewAccountMultiSelect('accountType','Loại tài khoản',newAccountStatDimensionOptions.accountType)
+    + billingNewAccountMultiSelect('channel','Kênh tạo tài khoản',newAccountStatDimensionOptions.channel)
+    + billingNewAccountMultiSelect('product','Sản phẩm phát sinh',newAccountStatDimensionOptions.product)
+    + billingNewAccountMultiSelect('device','Thiết bị',newAccountStatDimensionOptions.device)
+    + '<label class="new-account-field">Thống kê theo<select class="select" id="newAccountStatistic"><option value="accountType" selected>Loại tài khoản</option><option value="channel">Kênh tạo tài khoản</option><option value="product">Sản phẩm phát sinh</option><option value="device">Thiết bị</option></select></label>'
+    + '<div class="report-actions new-account-actions"><button class="btn green" type="button" onclick="billingSearchNewAccountReport()"><i class="fa fa-search"></i> Tìm kiếm</button><button class="btn orange" type="button" onclick="billingExportNewAccountReport()"><i class="fa fa-file-excel"></i> Xuất Excel</button></div></div>'
+    + '<div id="newAccountStatResult">' + billingBuildNewAccountStatResult(state) + '</div>';
+}
+
+function billingSearchNewAccountReport(){
+  var state = billingNewAccountReadState();
+  if(state.from && state.to && state.from > state.to){
+    alert('Từ ngày không được lớn hơn Đến ngày.');
+    return;
+  }
+  newAccountStatLastState = state;
+  var result = document.getElementById('newAccountStatResult');
+  if(result) result.innerHTML = billingBuildNewAccountStatResult(state);
+}
+
+function billingExportNewAccountReport(){
+  var state = billingNewAccountReadState();
+  var rows = billingNewAccountFilterRows(state);
+  var grouped = billingNewAccountGroupRows(rows,state);
+  var headers = ['Thời gian','Tổng tài khoản mới'].concat(grouped.dimensionValues);
+  var csvRows = [headers];
+  grouped.groups.forEach(function(row){
+    var line = [row.label,row.total];
+    grouped.dimensionValues.forEach(function(value){line.push(row.breakdown[value] || 0);});
+    csvRows.push(line);
+  });
+  var totalLine = ['Tổng ' + (state.from ? billingDateISOToDisplay(state.from) : '') + ' - ' + (state.to ? billingDateISOToDisplay(state.to) : ''),grouped.totalGroup.total];
+  grouped.dimensionValues.forEach(function(value){totalLine.push(grouped.totalGroup.breakdown[value] || 0);});
+  csvRows.push(totalLine);
+  var escapeCsv = function(value){var text=String(value == null ? '' : value);return '"' + text.replace(/"/g,'""') + '"';};
+  var content = '\ufeff' + csvRows.map(function(row){return row.map(escapeCsv).join(',');}).join('\r\n');
+  var blob = new Blob([content],{type:'text/csv;charset=utf-8;'});
+  var url = URL.createObjectURL(blob);
+  var a = document.createElement('a');
+  a.href = url;
+  a.download = 'MyVTC_Thong_ke_tai_khoan_moi_' + state.statistic + '_' + (state.from || '') + '_' + (state.to || '') + '.csv';
+  document.body.appendChild(a);
+  a.click();
+  document.body.removeChild(a);
+  URL.revokeObjectURL(url);
 }
 
 function billingBuildNewAccountDetailReport(){
@@ -586,6 +954,9 @@ function billingBindMenuClose(){
   document.addEventListener('click',function(e){
     if(!e.target.closest('.cms-menu-item')){
       document.querySelectorAll('.cms-menu-item').forEach(function(item){item.classList.remove('open');});
+    }
+    if(!e.target.closest('.report-multi')){
+      document.querySelectorAll('.report-multi[open]').forEach(function(item){item.removeAttribute('open');});
     }
   });
 }
