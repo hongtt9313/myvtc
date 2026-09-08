@@ -1043,7 +1043,7 @@ color:#333;
   }
 }
 
-/* Loyalty > Quản trị nhiệm vụ */
+/* Loyalty > Quản trị sự kiện ưu đãi */
 .loyalty-event-filter-grid{
   grid-template-columns:repeat(2,minmax(260px,1fr));
   max-width:80%;
@@ -1661,7 +1661,7 @@ color:#333;
   }
 }
 
-/* Đồng bộ màn Thêm mới/Cập nhật theo mẫu Quản trị nhiệm vụ */
+/* Đồng bộ màn Thêm mới/Cập nhật theo mẫu Quản trị sự kiện ưu đãi */
 .standard-entry-panel,
 #screen-loyalty-config-form .payment-panel,
 #screen-payment-rate-form .payment-panel,
@@ -1872,7 +1872,7 @@ color:#333;
 .texp-payment-multi .texp-payment-child{font-size:13px;padding-left:8px!important}
 .texp-payment-multi .texp-payment-root{font-weight:500}
 
-/* Loyalty > Thiết lập tỉ lệ T-EXP: làm mờ viền ô Tìm kiếm nhanh giống Quản trị nhiệm vụ */
+/* Loyalty > Thiết lập tỉ lệ T-EXP: làm mờ viền ô Tìm kiếm nhanh giống Quản trị sự kiện ưu đãi */
 #screen-loyalty-texp-rate .toolbar-search{
   border:1px solid #ccc!important;
   border-radius:3px!important;
@@ -2475,7 +2475,7 @@ color:#333;
 @media(max-width:1280px){#screen-loyalty-event-benefit .event-benefit-filter-grid{grid-template-columns:repeat(2,minmax(0,1fr))!important}}
 @media(max-width:700px){#screen-loyalty-event-benefit .event-benefit-filter-grid{grid-template-columns:1fr!important}#screen-loyalty-event-benefit .toolbar-search{width:100%!important}#screen-loyalty-event-benefit-form .texp-entry-row{grid-template-columns:1fr!important}#screen-loyalty-event-benefit-form .texp-entry-row>.form-label-text{text-align:left!important}#screen-loyalty-event-benefit-form .texp-entry-row .field-error{grid-column:1!important}.event-benefit-inline-fields{grid-template-columns:1fr!important}}
 
-/* Fix Loyalty > Thiết lập phần thưởng nhiệm vụ theo đúng mẫu A-EXP */
+/* Fix Loyalty > Thiết lập ưu đãi sự kiện theo đúng mẫu A-EXP */
 #screen-loyalty-event-benefit .cms-content{
   padding:14px!important;
 }
@@ -5778,49 +5778,228 @@ section[id^="screen-support-"] td[data-column="status"] {
   font-weight:400!important;
 }
 
-/* Loyalty task reward display configuration */
-.event-benefit-display-config{display:flex;flex-direction:column;gap:10px;width:100%;max-width:620px}.event-benefit-display-item{display:grid;grid-template-columns:120px 160px 140px;gap:10px;align-items:center}.event-benefit-display-item>span:first-child{font-weight:500}.event-benefit-display-item .field-error{grid-column:2/4}.event-benefit-image-upload{display:flex;align-items:center;gap:16px;flex-wrap:wrap}.event-benefit-image-preview{width:120px;height:72px;border:1px solid #d9e1ec;border-radius:8px;display:flex;align-items:center;justify-content:center;overflow:hidden;background:#f8fafc;color:#7a8798;font-size:12px}.event-benefit-image-preview img{width:100%;height:100%;object-fit:cover}@media(max-width:768px){.event-benefit-display-item{grid-template-columns:1fr}.event-benefit-display-item .field-error{grid-column:auto}}
 
-/* Support notification/email enhancements */
-.support-variable-hint{display:flex;align-items:center;gap:6px;flex-wrap:wrap;margin-top:7px;color:#667085;font-size:12px}
-.support-variable-hint button{border:1px solid #d0d5dd;background:#fff;border-radius:4px;padding:3px 7px;color:#175cd3;cursor:pointer;font-size:12px}
-.support-variable-hint button:hover{background:#f2f4f7}
-.support-editor-compact{min-height:180px}
-.support-email-editor{min-height:320px}
-.support-upload-preview{display:block;max-width:420px;max-height:180px;object-fit:cover;border:1px solid #d0d5dd;border-radius:6px;margin-top:10px}
-.support-upload-preview.hidden{display:none}
-#screen-support-email .data-table td:nth-child(3),#screen-support-email .data-table td:nth-child(4){text-align:left}
+/* Payment > Quản trị chiết khấu */
+#screen-payment-discount .cms-content{padding:14px!important}
+#screen-payment-discount .payment-discount-filter-box{background:#eaf4fb;border:1px solid #c9e0f2;border-radius:4px;padding:20px 20px 16px;margin-bottom:14px}
+#screen-payment-discount .payment-discount-filter-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:16px 24px;max-width:900px}
+#screen-payment-discount .payment-discount-filter-grid label{display:grid;grid-template-columns:145px minmax(0,1fr);align-items:center;gap:10px;min-width:0;font-size:13px;font-weight:600;color:#303846}
+#screen-payment-discount .payment-discount-filter-grid label>span{white-space:nowrap}
+#screen-payment-discount .payment-discount-filter-grid select{width:100%;min-width:0;height:36px;border:1px solid #d9dfe8;border-radius:3px;background:#fff;padding:0 10px}
+#screen-payment-discount .payment-discount-filter-box .cms-actions-center{margin:16px 0 0;gap:8px}
+#screen-payment-discount .payment-discount-toolbar{display:flex;align-items:center;justify-content:space-between;gap:16px;margin:0 0 12px}
+#screen-payment-discount .payment-discount-quick-search{position:relative;display:flex;align-items:center}
+#screen-payment-discount .payment-discount-quick-search i{position:absolute;left:11px;color:#8493a5}
+#screen-payment-discount .payment-discount-quick-search .toolbar-search{height:36px;width:260px;padding:0 12px 0 32px;border:1px solid #ccd6e2;border-radius:3px;box-sizing:border-box}
+#screen-payment-discount .table-wrap{border:1px solid #9bc8e8!important;border-radius:8px!important;overflow:auto!important}
+#screen-payment-discount .data-table{min-width:1380px!important;margin:0!important}
+#screen-payment-discount .data-table thead th{background:#d9edf7!important;color:#123!important;vertical-align:middle!important;white-space:nowrap}
+#screen-payment-discount .data-table td{vertical-align:middle;white-space:nowrap}
+#screen-payment-discount .data-table td.text-left{text-align:left;max-width:260px;white-space:normal}
+#screen-payment-discount .page-foot{border:1px solid #e1e6ee;border-top:0;background:#fff;border-radius:0 0 4px 4px;padding:10px 12px}
+#screen-payment-discount-form .payment-discount-form-content{padding:18px 20px 22px}
+#screen-payment-discount-form .payment-discount-entry-grid{width:min(100%,780px)!important;max-width:780px!important;padding:24px 24px 18px!important;box-sizing:border-box!important}
+#screen-payment-discount-form .payment-discount-entry-grid>label,#screen-payment-discount-form .discount-form-row{display:grid!important;grid-template-columns:200px minmax(0,500px)!important;align-items:center!important;gap:16px!important;min-height:38px!important;margin:0 0 14px!important;color:#222!important;font-weight:600!important}
+#screen-payment-discount-form .payment-discount-entry-grid .form-label-text{text-align:right!important}
+#screen-payment-discount-form .payment-discount-entry-grid input,#screen-payment-discount-form .payment-discount-entry-grid select{width:100%!important;height:36px!important;min-width:0!important;max-width:none!important;box-sizing:border-box!important;border:1px solid #ccc!important;border-radius:3px!important;background:#fff!important;padding:0 10px!important;font-size:14px!important;color:#222!important}
+#screen-payment-discount-form .payment-discount-form-actions{margin:0!important;padding:13px!important;border-top:1px solid #eee!important;background:#f5f5f5!important;display:flex!important;justify-content:center!important;gap:6px!important}
+#screen-payment-discount-form .discount-account-box{min-width:0}
+#screen-payment-discount-form .discount-account-add{display:grid;grid-template-columns:minmax(0,1fr) auto;gap:8px;align-items:center}
+#screen-payment-discount-form .discount-account-add .btn{height:36px;white-space:nowrap}
+#screen-payment-discount-form .discount-account-list{display:flex;flex-wrap:wrap;gap:7px;margin-top:8px;min-height:26px}
+#screen-payment-discount-form .discount-account-chip{display:inline-flex;align-items:center;gap:7px;max-width:100%;padding:5px 8px 5px 10px;border:1px solid #bad7ee;border-radius:14px;background:#edf6fd;color:#245b82;font-size:12px;font-weight:600;overflow-wrap:anywhere}
+#screen-payment-discount-form .discount-account-chip button{border:0;background:transparent;color:#6e8293;padding:0;cursor:pointer}
+#screen-payment-discount-form .discount-account-empty{color:#8a97a6;font-size:12px;font-weight:400}
+#screen-payment-discount-form .discount-percent-input{display:grid;grid-template-columns:minmax(0,1fr) 42px;align-items:center}
+#screen-payment-discount-form .discount-percent-input input{border-radius:3px 0 0 3px!important}
+#screen-payment-discount-form .discount-percent-input span{height:36px;display:flex;align-items:center;justify-content:center;border:1px solid #ccc;border-left:0;border-radius:0 3px 3px 0;background:#f5f5f5;box-sizing:border-box;color:#555}
+@media(max-width:900px){#screen-payment-discount .payment-discount-filter-grid{grid-template-columns:1fr}}
+@media(max-width:760px){#screen-payment-discount .payment-discount-toolbar{align-items:stretch;flex-direction:column}#screen-payment-discount .payment-discount-quick-search .toolbar-search{width:100%}#screen-payment-discount-form .payment-discount-entry-grid>label,#screen-payment-discount-form .discount-form-row{grid-template-columns:1fr!important;gap:6px!important}#screen-payment-discount-form .payment-discount-entry-grid .form-label-text{text-align:left!important}#screen-payment-discount .payment-discount-filter-grid label{grid-template-columns:1fr;gap:6px}}
 
-/* Support notification variables: separate aligned row below short description */
-section[id^="screen-support-"][id$="-form"] .support-variable-row{
-  display:grid;
-  grid-template-columns:190px 498px;
-  gap:12px;
-  align-items:start;
-  margin: -4px 0 16px;
+
+/* Account > Quản trị nhóm tài khoản */
+#screen-account-group-management .cms-content{padding:14px!important}
+#screen-account-group-management .account-group-filter-box{background:#eaf4fb;border:1px solid #c9e0f2;border-radius:4px;padding:20px 20px 16px;margin-bottom:14px}
+#screen-account-group-management .account-group-filter-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:16px 24px;max-width:1000px}
+#screen-account-group-management .account-group-filter-grid label{display:grid;grid-template-columns:165px minmax(0,1fr);align-items:center;gap:10px;font-size:13px;font-weight:600;color:#303846}
+#screen-account-group-management .account-group-filter-grid .input{width:100%;min-width:0;height:36px;box-sizing:border-box}
+#screen-account-group-management .account-group-filter-box .cms-actions-center{margin:16px 0 0;gap:8px}
+#screen-account-group-management .account-group-toolbar{display:flex;align-items:center;justify-content:space-between;gap:16px;margin:0 0 12px}
+#screen-account-group-management .account-group-quick-search{position:relative;display:flex;align-items:center}
+#screen-account-group-management .account-group-quick-search i{position:absolute;left:11px;color:#8493a5}
+#screen-account-group-management .account-group-quick-search .toolbar-search{height:36px;width:260px;padding:0 12px 0 32px;border:1px solid #ccd6e2;border-radius:3px;box-sizing:border-box}
+#screen-account-group-management .account-group-table-wrap{border:1px solid #9bc8e8!important;border-radius:8px!important;overflow:auto!important}
+#screen-account-group-management .account-group-table{min-width:1080px!important;margin:0!important}
+#screen-account-group-management .account-group-table thead th{background:#d9edf7!important;color:#123!important;white-space:nowrap}
+#screen-account-group-management .account-group-table td{vertical-align:middle;white-space:nowrap}
+#screen-account-group-management .account-group-table td.text-left{text-align:left;white-space:normal}
+#screen-account-group-management .account-group-account-preview{min-width:310px;max-width:430px;line-height:1.45}
+#screen-account-group-management .page-foot{border:1px solid #e1e6ee;border-top:0;background:#fff;border-radius:0 0 4px 4px;padding:10px 12px}
+#screen-account-group-form .account-group-form-content{padding:18px 20px 22px}
+#screen-account-group-form .account-group-form-panel{border:1px solid #b9d8f2;border-radius:8px;background:#fff;overflow:hidden}
+#screen-account-group-form .account-group-form-title{padding:11px 14px;background:#d9edf7;border-bottom:1px solid #b9d8f2;font-size:14px;font-weight:700;color:#244a67}
+#screen-account-group-form .account-group-form-grid{width:min(100%,820px);margin:0 auto;padding:26px 24px 18px;box-sizing:border-box}
+#screen-account-group-form .account-group-form-grid>label,#screen-account-group-form .account-group-form-row{display:grid;grid-template-columns:210px minmax(0,520px);align-items:start;gap:16px;min-height:38px;margin:0 0 15px;color:#222;font-weight:600}
+#screen-account-group-form .form-label-text{text-align:right;padding-top:9px}
+#screen-account-group-form .account-group-form-grid input{width:100%;height:36px;box-sizing:border-box;border:1px solid #ccc;border-radius:3px;background:#fff;padding:0 10px;font-size:14px}
+#screen-account-group-form .account-group-account-add{display:grid;grid-template-columns:minmax(0,1fr) auto;gap:8px;align-items:center}
+#screen-account-group-form .account-group-account-add .btn{height:36px;white-space:nowrap}
+#screen-account-group-form .account-group-account-list{display:flex;flex-wrap:wrap;gap:7px;margin-top:9px;min-height:28px}
+#screen-account-group-form .account-group-chip{display:inline-flex;align-items:center;gap:7px;max-width:100%;padding:5px 8px 5px 10px;border:1px solid #bad7ee;border-radius:14px;background:#edf6fd;color:#245b82;font-size:12px;font-weight:600;overflow-wrap:anywhere}
+#screen-account-group-form .account-group-chip button{border:0;background:transparent;color:#6e8293;padding:0;cursor:pointer}
+#screen-account-group-form .account-group-empty{color:#8a97a6;font-size:12px;font-weight:400;padding-top:4px}
+#screen-account-group-form .account-group-form-actions{margin:0;padding:13px;border-top:1px solid #eee;background:#f5f5f5;display:flex;justify-content:center;gap:6px}
+.account-group-modal-dialog{width:min(92vw,560px)!important}
+.account-group-modal-body{padding:18px 20px!important}
+.account-group-modal-body .account-group-modal-name{padding:10px 12px;margin-bottom:14px;background:#f5f9fc;border:1px solid #dceaf5;border-radius:4px;color:#425466}
+.account-group-modal-body label{display:grid;grid-template-columns:110px minmax(0,1fr);align-items:center;gap:10px;font-weight:600}
+.account-group-modal-body label input{height:38px;border:1px solid #ccd6e2;border-radius:4px;padding:0 10px;box-sizing:border-box;width:100%}
+#accountGroupAddAccountError{display:block;color:#d92d20;margin:7px 0 0 120px;min-height:16px}
+#screen-payment-discount-form #discountGroupRow.hidden,#screen-payment-discount-form #discountAccountRow.hidden{display:none!important}
+@media(max-width:900px){#screen-account-group-management .account-group-filter-grid{grid-template-columns:1fr}}
+@media(max-width:760px){#screen-account-group-management .account-group-filter-grid label{grid-template-columns:1fr;gap:6px}#screen-account-group-management .account-group-toolbar{align-items:stretch;flex-direction:column}#screen-account-group-management .account-group-quick-search .toolbar-search{width:100%}#screen-account-group-form .account-group-form-grid>label,#screen-account-group-form .account-group-form-row{grid-template-columns:1fr;gap:6px}#screen-account-group-form .form-label-text{text-align:left;padding-top:0}.account-group-modal-body label{grid-template-columns:1fr}#accountGroupAddAccountError{margin-left:0}}
+
+/* Payment target detail: Hệ thống / Nhóm tài khoản / Tài khoản */
+#screen-payment-rate-form .payment-target-detail-row.hidden,
+#screen-payment-limit-form .payment-target-detail-row.hidden{
+  display:none!important;
 }
-section[id^="screen-support-"][id$="-form"] .support-variable-title{
-  padding-top:4px;
-  color:#111;
-  font-weight:600;
-  line-height:1.35;
-  text-align:right;
+#screen-payment-rate-form .payment-target-account-row,
+#screen-payment-limit-form .payment-target-account-row{
+  grid-template-columns:170px minmax(0,500px)!important;
+  justify-content:center!important;
+  align-items:start!important;
+  gap:10px!important;
+  width:100%!important;
+  min-height:38px!important;
+  margin:0 0 14px!important;
+  box-sizing:border-box!important;
+}
+#screen-payment-limit-form .payment-target-account-row{
+  margin-bottom:16px!important;
+}
+#screen-payment-rate-form .payment-target-account-row>.form-label-text,
+#screen-payment-limit-form .payment-target-account-row>.form-label-text{
+  text-align:right!important;
+  white-space:nowrap!important;
+  font-weight:600!important;
+  line-height:38px!important;
+}
+.payment-target-account-box{
+  width:100%;
+  min-width:0;
+}
+.payment-target-account-add{
+  display:grid;
+  grid-template-columns:minmax(0,1fr) auto;
+  gap:8px;
+  align-items:center;
+}
+.payment-target-account-add input{
+  width:100%!important;
+  max-width:none!important;
+  min-width:0!important;
+  height:38px!important;
+  box-sizing:border-box!important;
+}
+.payment-target-account-add .btn{
+  height:38px;
   white-space:nowrap;
 }
-section[id^="screen-support-"][id$="-form"] .support-variable-hint{
+.payment-target-account-list{
   display:flex;
+  flex-wrap:wrap;
+  gap:7px;
+  min-height:30px;
+  margin-top:8px;
+}
+.payment-target-account-chip{
+  display:inline-flex;
   align-items:center;
   gap:6px;
-  flex-wrap:wrap;
-  margin:0;
-  min-width:0;
-  color:#667085;
+  min-height:28px;
+  padding:3px 7px 3px 10px;
+  border:1px solid #c9dff2;
+  border-radius:14px;
+  background:#f2f8fd;
+  color:#24445d;
   font-size:12px;
+  box-sizing:border-box;
 }
-@media(max-width:820px){
-  section[id^="screen-support-"][id$="-form"] .support-variable-row{grid-template-columns:160px minmax(0,1fr);}
+.payment-target-account-chip small{
+  color:#667085;
+  font-size:11px;
 }
-@media(max-width:700px){
-  section[id^="screen-support-"][id$="-form"] .support-variable-row{grid-template-columns:1fr;gap:6px;}
-  section[id^="screen-support-"][id$="-form"] .support-variable-title{text-align:left;white-space:normal;padding-top:0;}
+.payment-target-account-chip button{
+  display:inline-flex;
+  align-items:center;
+  justify-content:center;
+  width:20px;
+  height:20px;
+  padding:0;
+  border:0;
+  border-radius:50%;
+  background:transparent;
+  color:#667085;
+  cursor:pointer;
+}
+.payment-target-account-chip button:hover{
+  background:#e2edf6;
+  color:#d92d20;
+}
+.payment-target-account-empty{
+  color:#8a94a3;
+  font-size:12px;
+  line-height:28px;
+}
+@media(max-width:760px){
+  #screen-payment-rate-form .payment-target-account-row,
+  #screen-payment-limit-form .payment-target-account-row{
+    grid-template-columns:1fr!important;
+    gap:7px!important;
+  }
+  #screen-payment-rate-form .payment-target-account-row>.form-label-text,
+  #screen-payment-limit-form .payment-target-account-row>.form-label-text{
+    text-align:left!important;
+    line-height:normal!important;
+  }
+}
+
+
+/* 2026-09-08: Fix label Điều kiện ràng buộc và bổ sung chu kỳ hạn mức */
+#screen-payment-limit #paymentLimitTable{min-width:1240px!important}
+#screen-payment-limit #paymentLimitTable th:nth-child(7){width:125px!important}
+#screen-payment-limit #paymentLimitTable th:nth-child(8),
+#screen-payment-limit #paymentLimitTable th:nth-child(9){width:128px!important}
+#screen-payment-limit #paymentLimitTable th:nth-child(10){width:92px!important}
+#screen-payment-limit #paymentLimitTable th:nth-child(11){width:104px!important}
+#screen-payment-limit-form .payment-limit-entry-grid{
+  width:min(100%,880px)!important;
+  max-width:880px!important;
+}
+#screen-payment-limit-form .payment-limit-entry-grid>label,
+#screen-payment-limit-form .payment-limit-entry-grid>.payment-limit-multi-field{
+  grid-template-columns:250px minmax(0,500px)!important;
+}
+#screen-payment-limit-form .payment-limit-entry-grid .form-label-text{
+  white-space:normal!important;
+  line-height:1.3!important;
+}
+#screen-payment-limit-form .payment-limit-condition-row .form-label-text{
+  min-width:0!important;
+  overflow:visible!important;
+}
+#screen-payment-limit-form .payment-limit-form-actions{
+  width:100%!important;
+  max-width:none!important;
+  margin:0!important;
+  padding:13px 20px!important;
+  box-sizing:border-box!important;
+  justify-content:center!important;
+}
+@media(max-width:760px){
+  #screen-payment-limit-form .payment-limit-entry-grid>label,
+  #screen-payment-limit-form .payment-limit-entry-grid>.payment-limit-multi-field{
+    grid-template-columns:1fr!important;
+  }
 }
