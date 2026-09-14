@@ -3,59 +3,77 @@
 ## Quy tắc chỉnh sửa
 - Chỉ chỉnh sửa mã nguồn trong thư mục `src`.
 - Sau khi chỉnh sửa, build lại thư mục `dist` bằng `python build.py`.
-- Không chỉnh sửa trực tiếp các file trong `dist` nếu thay đổi có nguồn tương ứng trong `src`.
+- Không chỉnh sửa trực tiếp file trong `dist` nếu có file nguồn tương ứng trong `src`.
 - Toàn bộ ghi chú cập nhật của dự án được duy trì trong duy nhất file `README.md` này.
-- Không tạo thêm các file `README_UPDATE_*.md`, `README_FIX_*.md` hoặc file README riêng cho từng lần sửa.
+- Không tạo thêm README riêng cho từng lần sửa.
 
-## Cập nhật CMS Quản trị sản phẩm
+## CMS Sản phẩm
 
-### Danh sách sản phẩm
-- Không hiển thị cột `Cấu hình hiển thị`.
-- Giữ các thông tin nghiệp vụ của sản phẩm gồm:
-  - Mã sản phẩm.
-  - Tên sản phẩm.
-  - Loại sản phẩm.
-  - Đơn vị phân phối.
-  - Nhà cung cấp.
-  - Loại tài khoản.
-  - Loại hồ sơ.
-  - Trạng thái.
-  - Chức năng.
-- Cột `Đơn vị phân phối` và `Nhà cung cấp` được tăng độ rộng.
-- Cột `Trạng thái` được thu hẹp.
+### Quản trị sản phẩm
+- Quản lý thông tin nghiệp vụ của sản phẩm.
+- Danh sách gồm: Mã sản phẩm, Tên sản phẩm, Loại sản phẩm, Đơn vị phân phối, Nhà cung cấp, Loại tài khoản, Loại hồ sơ, Trạng thái, Chức năng.
+- Không hiển thị cấu hình tích hợp hoặc cấu hình hiển thị trong danh sách.
+- Đã bỏ icon con mắt dùng để mở popup cấu hình.
+- Form Thêm mới/Cập nhật không có ReturnURL và không có cấu hình hiển thị.
 
-### Icon con mắt tại cột Chức năng
-- Icon con mắt mở popup thông tin sản phẩm gồm 2 tab:
-  1. `Thông tin tích hợp`.
-  2. `Thông tin hiển thị`.
-- Popup mặc định mở tab `Thông tin hiển thị`.
+### Quản trị tích hợp sản phẩm
+- Là CMS riêng trong tab Sản phẩm.
+- Toàn bộ cấu hình được đặt trên một màn hình, không dùng popup.
+- Chọn sản phẩm ở đầu màn hình để tải cấu hình tương ứng.
 
-### Tab Thông tin tích hợp
-Hiển thị các thông tin tích hợp của sản phẩm như Service ID, Service Key, Return URL và các dữ liệu tích hợp liên quan đang có trong demo.
+#### Thông tin tích hợp
+- Hiển thị thông tin sản phẩm tham chiếu từ Quản trị sản phẩm.
+- Service ID lấy theo Mã sản phẩm và ở trạng thái chỉ đọc.
+- Service Key cho phép cập nhật.
 
-### Tab Thông tin hiển thị
-Cho phép cấu hình sản phẩm trên 3 trang:
+#### Redirect URLs
+- Cho phép khai báo nhiều URL cho một sản phẩm.
+- Có nút Thêm URI và xóa từng URI.
+- URL phải bắt đầu bằng `http://` hoặc `https://`.
+- Không cho khai báo trùng URL trong cùng sản phẩm.
+
+#### Đăng nhập MXH
+Cấu hình theo cấu trúc:
+```json
+{
+  "Authentication": {
+    "Google": {
+      "ClientID": "",
+      "ClientSecret": ""
+    },
+    "Facebook": {
+      "AppID": "",
+      "AppSecret": ""
+    },
+    "Apple": {
+      "ClientID": "",
+      "TeamID": "",
+      "KeyID": "",
+      "PrivateKey": "",
+      "RedirectUri": ""
+    }
+  }
+}
+```
+
+#### Thông tin hiển thị
+Cấu hình trên 3 trang:
 - Trang chủ.
 - Trang Dịch vụ.
 - Trang Cửa hàng.
 
-Mỗi trang cấu hình:
-- Kênh hiển thị: `Website`, `App`.
-- Thứ tự ưu tiên: từ `1` đến `20`.
+Mỗi trang gồm:
+- Kênh hiển thị: Website, App.
+- Thứ tự ưu tiên: 1 đến 20.
 
 Quy ước:
-- Không có trường `Cho phép hiển thị`.
-- Không có trường `Nhóm hiển thị`.
-- Nếu cả `Website` và `App` đều không được chọn thì sản phẩm không hiển thị tại trang tương ứng.
+- Không có trường Cho phép hiển thị.
+- Không có trường Nhóm hiển thị.
+- Nếu Website và App đều không được chọn thì sản phẩm không hiển thị tại trang tương ứng.
 - Số ưu tiên nhỏ hơn được xếp trước.
-- Nút lưu cấu hình trong popup hiển thị là `Cập nhật`.
-
-### Thêm mới/Cập nhật sản phẩm
-- Không hiển thị khối `Cấu hình hiển thị của sản phẩm` trong form Thêm mới/Cập nhật.
-- Cấu hình hiển thị được thực hiện tại popup của icon con mắt trên danh sách sản phẩm.
 
 ## Rule Dịch vụ của tôi
-Rule này nằm trong code, không cấu hình riêng trong CMS.
+Rule nằm trong code, không cấu hình riêng trong CMS.
 
 ### Khách chưa đăng nhập
 - Lấy tối đa 6 dịch vụ từ Danh sách dịch vụ.
@@ -70,7 +88,7 @@ Hiển thị tối đa 6 dịch vụ theo thứ tự:
 5. Dịch vụ đã xem nhiều lần.
 6. Nếu chưa đủ 6, bổ sung các dịch vụ còn lại trong Danh sách dịch vụ theo thứ tự ưu tiên.
 
-## File nguồn liên quan đã chỉnh sửa
+## File nguồn liên quan
 - `src/cms.template.html`
 - `src/scripts/cms.js`
 - `src/styles/cms.css`
@@ -79,3 +97,16 @@ Hiển thị tối đa 6 dịch vụ theo thứ tự:
 - `dist/CMS.html`
 - `dist/scripts/cms.js`
 - `dist/styles/cms.css`
+
+## Cập nhật Quản trị tích hợp sản phẩm 2026-09-14
+- Không tạo mục CMS Quản trị tích hợp sản phẩm riêng trong menu Sản phẩm.
+- Từ icon con mắt tại cột Chức năng của Quản trị sản phẩm, chuyển sang màn hình Quản trị tích hợp sản phẩm của đúng sản phẩm được chọn.
+- Màn hình cấu hình là trang riêng, không dùng popup, bố cục theo kiểu Thêm mới/Cập nhật sản phẩm.
+- Thông tin tích hợp gồm Service ID và Service Key tự sinh, hiển thị dạng chỉ đọc.
+- Redirect URLs cho phép khai báo nhiều URL, thêm/xóa từng dòng và kiểm tra trùng/định dạng.
+- Thông tin hiển thị cấu hình Website/App và thứ tự ưu tiên cho Trang chủ, Trang Dịch vụ, Trang Cửa hàng.
+- Đăng nhập MXH gồm Google (ClientID, ClientSecret), Facebook (AppID, AppSecret), Apple (ClientID, TeamID, KeyID, RedirectUri, PrivateKey).
+- Có các nút Quay lại, Làm mới và Cập nhật ở cuối màn hình.
+- Fix giao diện màn Quản trị tích hợp sản phẩm: bỏ chiều cao tối thiểu gây khoảng trắng lớn giữa các khối, mở rộng nội dung theo chiều ngang, căn lại Redirect URLs, Thông tin hiển thị và Đăng nhập MXH theo cùng bố cục form Thêm mới/Cập nhật sản phẩm.
+
+- Bổ sung khung viền cho từng phần cấu hình trên màn Quản trị tích hợp sản phẩm để giao diện đồng nhất với màn Thêm mới/Cập nhật sản phẩm.
