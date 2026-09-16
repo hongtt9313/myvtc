@@ -438,7 +438,7 @@
 <label>Đơn vị phân phối: <select class="select"><option>Tất cả</option><option>VTCID</option><option>VTC Mobile</option><option>VTC Edu</option></select></label>
 <label>Trạng thái: <select class="select"><option>Tất cả</option><option>Hoạt động</option><option>Không hoạt động</option></select></label>
 </div>
-<div class="cms-actions-center"><button class="btn gray"><i class="fa fa-search"></i> Tra Cứu</button><button class="btn green" onclick="cmsOpenProductAdd()"><i class="fa fa-user-plus"></i> Thêm mới</button></div>
+<div class="cms-actions-center"><button class="btn gray"><i class="fa fa-search"></i> Tra Cứu</button><button class="btn green" onclick="cmsOpenProductAdd()"><i class="fa fa-user-plus"></i> Thêm mới</button><button class="btn blue" onclick="cmsOpenProductDisplaySetup()"><i class="fa fa-sort-amount-down"></i> Thiết lập hiển thị</button></div>
 <div class="tools-row"><button class="btn gray"><i class="fa fa-eye-slash"></i> Ẩn/hiện cột</button><label>Tìm Kiếm:<input class="input"/></label></div>
 <div class="table-wrap"><table class="data-table product-unified-table"><thead><tr><th>STT</th><th>Mã sản phẩm</th><th>Tên sản phẩm</th><th>Loại sản phẩm</th><th>Đơn vị phân phối</th><th>Nhà cung cấp</th><th>Loại tài khoản</th><th>Loại hồ sơ</th><th>Trạng thái</th><th>Chức năng</th></tr></thead><tbody>
 <tr><td>1</td><td>8</td><td class="text-left">Đào tạo số edu.vtc.vn</td><td>Website</td><td>VTC Edu</td><td>VTC Edu</td><td>VNĐ</td><td>Hồ sơ cơ bản 1</td><td>Hoạt động</td><td><button class="icon-square blue" title="Xem ID Service và Key Service" onclick="cmsOpenProductInfo(8)"><i class="fa fa-eye"></i></button><button class="icon-square red" title="Tạm dừng"><i class="fa fa-ban"></i></button><button class="icon-square orange" title="Cập nhật" onclick="cmsOpenProductEdit(8)"><i class="fa fa-edit"></i></button><button class="icon-square red" title="Xóa"><i class="fa fa-trash"></i></button></td></tr>
@@ -448,16 +448,35 @@
 <div class="page-foot"><span>Hiển thị từ 1 tới 20 của 42 bản ghi</span><div class="pager"><button class="active">1</button><button>2</button><button>3</button><button>›</button><button>»</button></div></div>
 </div>
 </section>
+<section class="screen hidden" id="screen-product-display-setup">
+<div class="cms-screen-title"><i class="fa fa-sort-amount-down"></i> CMS quản trị sản phẩm/ Thiết lập hiển thị</div>
+<div class="cms-content product-display-setup-content">
+<div class="product-display-page-tabs">
+<button type="button" class="active" data-display-page-tab="home" onclick="cmsSwitchProductDisplayPage('home',this)"><i class="fa fa-home"></i> Trang chủ</button>
+<button type="button" data-display-page-tab="service" onclick="cmsSwitchProductDisplayPage('service',this)"><i class="fa fa-th-large"></i> Trang Dịch vụ</button>
+<button type="button" data-display-page-tab="shop" onclick="cmsSwitchProductDisplayPage('shop',this)"><i class="fa fa-shopping-cart"></i> Trang Cửa hàng</button>
+</div>
+<div class="product-display-sort-card">
+<div class="product-display-sort-head">
+<div><strong id="productDisplayPageTitle">Trang chủ</strong><span>Kéo thả sản phẩm để sắp xếp thứ tự hiển thị.</span></div>
+<div class="product-display-sort-legend"><span>Website</span><span>App</span></div>
+</div>
+<div id="productDisplaySortList" class="product-display-sort-list"></div>
+</div>
+<div id="productDisplaySetupAlert" class="product-display-setup-alert hidden"></div>
+<div class="form-bottom"><button class="btn gray" onclick="showScreen('product-list')"><i class="fa fa-backward"></i> Quay lại</button><button class="btn green" onclick="cmsRenderProductDisplaySetup()"><i class="fa fa-refresh"></i> Làm mới</button><button class="btn blue" onclick="cmsSaveProductDisplaySetup()"><i class="fa fa-save"></i> Lưu lại</button></div>
+</div>
+</section>
 <section class="screen hidden" id="screen-product-form-add">
 <div class="cms-warning"><span>Chú ý!</span> Hãy chắc chắn nhập vào đầy đủ thông tin tại các mục bắt buộc đánh dấu (*)</div>
 <div class="cms-screen-title"><i class="fa fa-user-plus"></i> Thêm mới Sản phẩm</div>
 <div class="cms-content compact product-form-content">
 <div class="product-form-tabs">
-<button type="button" class="active" onclick="cmsSwitchProductFormTab('product-form-add','basic',this)"><i class="fa fa-info-circle"></i> Thông tin cơ bản</button>
+<button type="button" class="active" onclick="cmsSwitchProductFormTab('product-form-add','basic',this)"><i class="fa fa-info-circle"></i> Thông tin sản phẩm</button>
 <button type="button" onclick="cmsSwitchProductFormTab('product-form-add','integration',this)"><i class="fa fa-plug"></i> Thông tin tích hợp</button>
 </div>
 <div class="product-form-tab-panel active" data-product-tab="basic">
-<div class="form-section"><i class="fa fa-wrench"></i> Thông Tin Cơ Bản</div><div class="form-shell"><div class="cms-form-wide">
+<div class="form-section"><i class="fa fa-wrench"></i> Thông Tin Sản Phẩm</div><div class="form-shell"><div class="cms-form-wide">
 <div class="cms-form-row"><label>Tên sản phẩm:<span class="required">*</span></label><input data-product-field="name"/></div>
 <div class="cms-form-row"><label>Loại sản phẩm:<span class="required">*</span></label><select data-product-field="type"><option>Tùy chọn</option><option>WebGame</option><option>Game Mobile</option><option>Game PC</option><option>Website</option></select></div>
 <div class="cms-form-row"><label>Đơn vị phân phối:<span class="required">*</span></label><select data-product-field="distributor"><option>Tùy chọn</option><option>VTCID</option><option>VTC Mobile</option><option>VTC Edu</option></select></div>
@@ -474,7 +493,6 @@
 <div class="cms-form-row"><label>Link IOS</label><input data-product-field="iosUrl"/></div>
 <div class="cms-form-row"><label>Trạng thái hoạt động:</label><input checked class="cms-status-checkbox" type="checkbox" data-product-field="active"/></div>
 </div></div>
-</div>
 <div class="product-form-tab-panel" data-product-tab="integration">
 <div class="product-integration-unified-card">
 <div class="product-integration-group">
@@ -484,14 +502,6 @@
 <div class="product-form-redirect-list product-redirect-list"></div>
 <button type="button" class="btn blue product-add-uri" onclick="cmsAddProductFormRedirect('product-form-add')"><i class="fa fa-plus"></i> Thêm URL</button>
 </div>
-</div>
-</div>
-<div class="product-integration-group">
-<div class="product-integration-group-title"><i class="fa fa-eye"></i> Hiển thị</div>
-<div class="product-integration-group-body cms-form-wide product-integration-form-wide">
-<div class="cms-form-row product-integration-block-row" data-display-page="home"><label>Trang chủ:</label><div class="product-display-inline"><label><input type="checkbox" data-channel="web"> Website</label><label><input type="checkbox" data-channel="app"> App</label><span>Thứ tự ưu tiên</span><select data-channel="priority"></select></div></div>
-<div class="cms-form-row product-integration-block-row" data-display-page="service"><label>Trang Dịch vụ:</label><div class="product-display-inline"><label><input type="checkbox" data-channel="web"> Website</label><label><input type="checkbox" data-channel="app"> App</label><span>Thứ tự ưu tiên</span><select data-channel="priority"></select></div></div>
-<div class="cms-form-row product-integration-block-row" data-display-page="shop"><label>Trang Cửa hàng:</label><div class="product-display-inline"><label><input type="checkbox" data-channel="web"> Website</label><label><input type="checkbox" data-channel="app"> App</label><span>Thứ tự ưu tiên</span><select data-channel="priority"></select></div></div>
 </div>
 </div>
 <div class="product-integration-group">
@@ -521,11 +531,11 @@
 <div class="cms-screen-title"><i class="fa fa-user"></i> Cập nhật Sản phẩm</div>
 <div class="cms-content compact product-form-content">
 <div class="product-form-tabs">
-<button type="button" class="active" onclick="cmsSwitchProductFormTab('product-form-edit','basic',this)"><i class="fa fa-info-circle"></i> Thông tin cơ bản</button>
+<button type="button" class="active" onclick="cmsSwitchProductFormTab('product-form-edit','basic',this)"><i class="fa fa-info-circle"></i> Thông tin sản phẩm</button>
 <button type="button" onclick="cmsSwitchProductFormTab('product-form-edit','integration',this)"><i class="fa fa-plug"></i> Thông tin tích hợp</button>
 </div>
 <div class="product-form-tab-panel active" data-product-tab="basic">
-<div class="form-section"><i class="fa fa-wrench"></i> Thông Tin Cơ Bản</div><div class="form-shell"><div class="cms-form-wide">
+<div class="form-section"><i class="fa fa-wrench"></i> Thông Tin Sản Phẩm</div><div class="form-shell"><div class="cms-form-wide">
 <div class="cms-form-row"><label>ID:<span class="required">*</span></label><div class="form-id-text" data-product-field="id">9</div></div>
 <div class="cms-form-row"><label>Tên sản phẩm:<span class="required">*</span></label><input data-product-field="name" value="Audition PC"/></div>
 <div class="cms-form-row"><label>Loại sản phẩm:<span class="required">*</span></label><select data-product-field="type"><option>Game PC</option><option>Website</option><option>WebGame</option><option>Game Mobile</option></select></div>
@@ -543,7 +553,6 @@
 <div class="cms-form-row"><label>Link IOS</label><input data-product-field="iosUrl"/></div>
 <div class="cms-form-row"><label>Trạng thái hoạt động:</label><input checked class="cms-status-checkbox" type="checkbox" data-product-field="active"/></div>
 </div></div>
-</div>
 <div class="product-form-tab-panel" data-product-tab="integration">
 <div class="product-integration-unified-card">
 <div class="product-integration-group">
@@ -553,14 +562,6 @@
 <div class="product-form-redirect-list product-redirect-list"></div>
 <button type="button" class="btn blue product-add-uri" onclick="cmsAddProductFormRedirect('product-form-edit')"><i class="fa fa-plus"></i> Thêm URL</button>
 </div>
-</div>
-</div>
-<div class="product-integration-group">
-<div class="product-integration-group-title"><i class="fa fa-eye"></i> Hiển thị</div>
-<div class="product-integration-group-body cms-form-wide product-integration-form-wide">
-<div class="cms-form-row product-integration-block-row" data-display-page="home"><label>Trang chủ:</label><div class="product-display-inline"><label><input type="checkbox" data-channel="web"> Website</label><label><input type="checkbox" data-channel="app"> App</label><span>Thứ tự ưu tiên</span><select data-channel="priority"></select></div></div>
-<div class="cms-form-row product-integration-block-row" data-display-page="service"><label>Trang Dịch vụ:</label><div class="product-display-inline"><label><input type="checkbox" data-channel="web"> Website</label><label><input type="checkbox" data-channel="app"> App</label><span>Thứ tự ưu tiên</span><select data-channel="priority"></select></div></div>
-<div class="cms-form-row product-integration-block-row" data-display-page="shop"><label>Trang Cửa hàng:</label><div class="product-display-inline"><label><input type="checkbox" data-channel="web"> Website</label><label><input type="checkbox" data-channel="app"> App</label><span>Thứ tự ưu tiên</span><select data-channel="priority"></select></div></div>
 </div>
 </div>
 <div class="product-integration-group">
