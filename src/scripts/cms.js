@@ -2263,14 +2263,11 @@ function cmsBindProductRowActions(screen){
       btn.dataset.cmsHandled='true';
       if(btn.querySelector('.fa-eye')){
         btn.onclick=function(e){e.preventDefault();e.stopPropagation();
-          var serviceId=(cells[1] ? cells[1].textContent.trim() : '');
-          if(screen.id==='screen-product-list'){
-            cmsOpenProductIntegrationScreen(Number(serviceId));
-            return;
-          }
-          var key='MYVTC_'+serviceId.padStart(4,'0')+'_KEY';
-          var returnUrl=serviceId==='8'?'https://edu.vtc.vn/callback':'https://service.myvtc.vn/callback/'+serviceId;
-          cmsOpenProductModal('Thông tin tích hợp','<div class="integration-grid"><div>Service ID</div><div>'+serviceId+'</div><div>Service Key</div><div>'+key+'</div><div>Return URL</div><div>'+returnUrl+'</div></div>');
+          var serviceId=Number(cells[1] ? cells[1].textContent.trim() : 0);
+          if(screen.id==='screen-product-list' && cmsProductDetailData[serviceId]){cmsOpenProductInfo(serviceId);return;}
+          var key='MYVTC_'+String(serviceId).padStart(4,'0')+'_KEY';
+          cmsOpenProductModal('Thông tin tích hợp','<div class="product-credential-view"><div><span>ID Service</span><strong>'+serviceId+'</strong></div><div><span>Key Service</span><strong>'+key+'</strong></div></div>');
+          var viewModal=document.getElementById('cmsProductModal');if(viewModal){var closeBtn=viewModal.querySelector('.cms-modal-actions .btn.gray');if(closeBtn)closeBtn.textContent='Đóng';}
         };
       }else if(btn.querySelector('.fa-trash')){
         btn.onclick=function(e){e.preventDefault();e.stopPropagation();cmsOpenProductModal('Xác nhận xóa','Bạn có chắc chắn muốn xóa <b>'+name+'</b>?','Xóa',function(){row.remove();cmsApplyProductFilters(screen);},'red');};
@@ -2304,7 +2301,7 @@ function cmsInitProductAdmin(){
   ['product-form-add','product-form-edit'].forEach(function(id){
     var form=document.getElementById('screen-'+id); if(!form) return;
     var save=Array.prototype.slice.call(form.querySelectorAll('.form-bottom button')).pop();
-    if(save){ save.dataset.cmsHandled='true'; save.onclick=function(e){e.preventDefault();e.stopPropagation();cmsOpenProductModal('Thành công','Thông tin sản phẩm đã được kiểm tra và lưu.','Đóng',function(){showScreen('product-list');},'blue');}; }
+    if(save){ save.dataset.cmsHandled='true'; save.onclick=function(e){e.preventDefault();e.stopPropagation();if(cmsSaveProductForm(id)===false)return;cmsOpenProductModal('Thành công','Thông tin sản phẩm và cấu hình tích hợp đã được lưu.','Đóng',function(){showScreen('product-list');},'blue');}; }
   });
   var modal=document.getElementById('cmsProductModal'); if(modal) modal.onclick=function(e){if(e.target===modal) cmsCloseProductModal();};
 }
@@ -3249,9 +3246,9 @@ function cmsProductDisplayRow(key,label,cfg){
 }
 function cmsProductRedirectRow(value,index){
   return '<div class="product-redirect-row" data-index="'+index+'">'+
-    '<label>URI '+(index+1)+'</label>'+ 
+    '<label>URL '+(index+1)+'</label>'+ 
     '<input type="url" class="product-redirect-input" value="'+cmsSafeText(value||'')+'" placeholder="https://example.com/callback">'+
-    '<button type="button" class="product-redirect-remove" title="Xóa URI" onclick="cmsRemoveProductRedirect(this)"><i class="fa fa-trash"></i></button>'+ 
+    '<button type="button" class="product-redirect-remove" title="Xóa URL" onclick="cmsRemoveProductRedirect(this)"><i class="fa fa-trash"></i></button>'+ 
   '</div>';
 }
 function cmsRenderProductRedirectRows(values){
@@ -3260,10 +3257,10 @@ function cmsRenderProductRedirectRows(values){
   wrap.innerHTML=list.map(function(x,i){return cmsProductRedirectRow(x,i);}).join('');
   cmsRenumberProductRedirectRows();
 }
-function cmsRenumberProductRedirectRows(){
-  var wrap=document.getElementById('productIntegrationRedirectList')||document.getElementById('productRedirectList');
+function cmsRenumberProductRedirectRows(wrap){
+  wrap=wrap||document.getElementById('productIntegrationRedirectList')||document.getElementById('productRedirectList');
   var rows=wrap?wrap.querySelectorAll('.product-redirect-row'):[];
-  rows.forEach(function(row,i){row.setAttribute('data-index',i);var label=row.querySelector('label');if(label)label.textContent='URI '+(i+1);});
+  rows.forEach(function(row,i){row.setAttribute('data-index',i);var label=row.querySelector('label');if(label)label.textContent='URL '+(i+1);});
 }
 function cmsAddProductRedirect(){
   var wrap=document.getElementById('productIntegrationRedirectList')||document.getElementById('productRedirectList'); if(!wrap)return;
@@ -3273,8 +3270,9 @@ function cmsAddProductRedirect(){
   var input=rows.length?rows[rows.length-1].querySelector('input'):null;if(input)input.focus();
 }
 function cmsRemoveProductRedirect(button){
-  var row=button&&button.closest('.product-redirect-row'); if(row)row.remove();
-  cmsRenumberProductRedirectRows();
+  var row=button&&button.closest('.product-redirect-row'); if(!row)return;
+  var wrap=row.closest('.product-redirect-list');row.remove();
+  cmsRenumberProductRedirectRows(wrap);
 }
 function cmsProductAuthField(id,label,value,type,wide){
   var tag=type==='textarea'
@@ -3284,6 +3282,120 @@ function cmsProductAuthField(id,label,value,type,wide){
 }
 function cmsProductAuthSection(provider,icon,fields){
   return '<div class="product-auth-section"><div class="product-auth-title"><i class="fa '+icon+'"></i> '+provider+'</div><div class="product-auth-grid">'+fields+'</div></div>';
+}
+
+function cmsGetProductForm(screenName){
+  return document.getElementById('screen-'+screenName);
+}
+function cmsSwitchProductFormTab(screenName,tab,button){
+  var form=cmsGetProductForm(screenName);if(!form)return;
+  form.querySelectorAll('.product-form-tab-panel').forEach(function(panel){panel.classList.toggle('active',panel.getAttribute('data-product-tab')===tab);});
+  form.querySelectorAll('.product-form-tabs button').forEach(function(btn){btn.classList.remove('active');});
+  if(button)button.classList.add('active');
+}
+function cmsActivateFirstProductFormTab(screenName){
+  var form=cmsGetProductForm(screenName);if(!form)return;
+  var button=form.querySelector('.product-form-tabs button');
+  cmsSwitchProductFormTab(screenName,'basic',button);
+}
+function cmsProductFormValue(form,selector,value){
+  var el=form?form.querySelector(selector):null;if(!el)return '';
+  if(arguments.length>2){if(el.type==='checkbox')el.checked=!!value;else if(el.tagName==='DIV')el.textContent=value==null?'':value;else el.value=value==null?'':value;}
+  return el.type==='checkbox'?!!el.checked:(el.tagName==='DIV'?el.textContent:String(el.value||''));
+}
+function cmsProductFormSetPriority(row,value){
+  var select=row&&row.querySelector('[data-channel="priority"]');if(select)select.innerHTML=cmsProductPriorityOptions(value||1);
+}
+function cmsRenderProductFormRedirects(form,values){
+  var wrap=form&&form.querySelector('.product-form-redirect-list');if(!wrap)return;
+  var list=Array.isArray(values)?values:[];
+  wrap.innerHTML=list.map(function(value,index){return cmsProductRedirectRow(value,index);}).join('');
+  var rows=wrap.querySelectorAll('.product-redirect-row');
+  rows.forEach(function(row,index){var label=row.querySelector('label');if(label)label.textContent='URL '+(index+1);});
+}
+function cmsAddProductFormRedirect(screenName){
+  var form=cmsGetProductForm(screenName),wrap=form&&form.querySelector('.product-form-redirect-list');if(!wrap)return;
+  var index=wrap.querySelectorAll('.product-redirect-row').length;
+  wrap.insertAdjacentHTML('beforeend',cmsProductRedirectRow('',index));
+  var rows=wrap.querySelectorAll('.product-redirect-row'),input=rows.length?rows[rows.length-1].querySelector('input'):null;if(input)input.focus();
+}
+function cmsGetProductFormRedirects(form){
+  var inputs=form?form.querySelectorAll('.product-form-redirect-list .product-redirect-input'):[];
+  var values=[];
+  for(var i=0;i<inputs.length;i++){
+    var value=String(inputs[i].value||'').trim();
+    if(!value){inputs[i].focus();alert('Vui lòng nhập đầy đủ Redirect URL hoặc xóa dòng đang để trống.');return null;}
+    if(!/^https?:\/\//i.test(value)){inputs[i].focus();alert('Redirect URL phải bắt đầu bằng http:// hoặc https://');return null;}
+    if(values.indexOf(value)>=0){inputs[i].focus();alert('Redirect URL không được trùng nhau.');return null;}
+    values.push(value);
+  }
+  return values;
+}
+function cmsPopulateProductFormBasic(form,item){
+  if(!form||!item)return;
+  ['id','name','type','distributor','provider','account','profile','description','webUrl','facebookUrl','androidUrl','iosUrl'].forEach(function(key){
+    cmsProductFormValue(form,'[data-product-field="'+key+'"]',item[key]||'');
+  });
+  cmsProductFormValue(form,'[data-product-field="active"]',cmsNormalizeText(item.status)!=='không hoạt động');
+}
+function cmsPopulateProductFormIntegration(form,item){
+  if(!form)return;
+  var data=item||{id:'',serviceKey:'',redirectUrls:[],Authentication:{Google:{},Facebook:{},Apple:{}},display:{home:{},service:{},shop:{}}};
+  if(item)cmsEnsureProductIntegrationData(data);
+  var auth=data.Authentication||{Google:{},Facebook:{},Apple:{}},fields={
+    serviceId:data.id||'',serviceKey:data.serviceKey||'',
+    googleClientId:(auth.Google||{}).ClientID||'',googleClientSecret:(auth.Google||{}).ClientSecret||'',
+    facebookAppId:(auth.Facebook||{}).AppID||'',facebookAppSecret:(auth.Facebook||{}).AppSecret||'',
+    appleClientId:(auth.Apple||{}).ClientID||'',appleTeamId:(auth.Apple||{}).TeamID||'',appleKeyId:(auth.Apple||{}).KeyID||'',appleRedirectUri:(auth.Apple||{}).RedirectUri||'',applePrivateKey:(auth.Apple||{}).PrivateKey||''
+  };
+  Object.keys(fields).forEach(function(key){cmsProductFormValue(form,'[data-integration-field="'+key+'"]',fields[key]);});
+  cmsRenderProductFormRedirects(form,data.redirectUrls||[]);
+  ['home','service','shop'].forEach(function(key){
+    var row=form.querySelector('[data-display-page="'+key+'"]'),cfg=(data.display&&data.display[key])||{web:false,app:false,priority:1};if(!row)return;
+    var web=row.querySelector('[data-channel="web"]'),app=row.querySelector('[data-channel="app"]');if(web)web.checked=!!cfg.web;if(app)app.checked=!!cfg.app;cmsProductFormSetPriority(row,cfg.priority||1);
+  });
+}
+function cmsOpenProductAdd(){
+  cmsCurrentProductDetailId=null;showScreen('product-form-add');cmsResetProductForm('product-form-add');
+}
+function cmsOpenProductEdit(id){
+  var item=cmsProductDetailData[Number(id)];if(!item)return;
+  cmsCurrentProductDetailId=Number(id);showScreen('product-form-edit');cmsPopulateProductFormBasic(cmsGetProductForm('product-form-edit'),item);cmsPopulateProductFormIntegration(cmsGetProductForm('product-form-edit'),item);cmsActivateFirstProductFormTab('product-form-edit');
+}
+function cmsResetProductForm(screenName){
+  var form=cmsGetProductForm(screenName);if(!form)return;
+  if(screenName==='product-form-edit'&&cmsCurrentProductDetailId&&cmsProductDetailData[cmsCurrentProductDetailId]){
+    var item=cmsProductDetailData[cmsCurrentProductDetailId];cmsPopulateProductFormBasic(form,item);cmsPopulateProductFormIntegration(form,item);
+  }else{
+    form.querySelectorAll('[data-product-field]').forEach(function(el){if(el.type==='checkbox')el.checked=true;else if(el.tagName==='SELECT')el.selectedIndex=0;else if(el.tagName!=='DIV')el.value='';});
+    cmsPopulateProductFormIntegration(form,null);
+  }
+  cmsActivateFirstProductFormTab(screenName);
+}
+function cmsReadProductFormIntegration(form,item){
+  var redirects=cmsGetProductFormRedirects(form);if(redirects===null)return false;
+  function v(name){return String(cmsProductFormValue(form,'[data-integration-field="'+name+'"]')||'').trim();}
+  var appleRedirect=v('appleRedirectUri');
+  if(appleRedirect&&!/^https?:\/\//i.test(appleRedirect)){var apple=form.querySelector('[data-integration-field="appleRedirectUri"]');if(apple)apple.focus();alert('Apple Redirect URL phải bắt đầu bằng http:// hoặc https://');return false;}
+  item.redirectUrls=redirects;
+  item.Authentication={Google:{ClientID:v('googleClientId'),ClientSecret:v('googleClientSecret')},Facebook:{AppID:v('facebookAppId'),AppSecret:v('facebookAppSecret')},Apple:{ClientID:v('appleClientId'),TeamID:v('appleTeamId'),KeyID:v('appleKeyId'),RedirectUri:appleRedirect,PrivateKey:v('applePrivateKey')}};
+  item.display=item.display||{};
+  ['home','service','shop'].forEach(function(key){var row=form.querySelector('[data-display-page="'+key+'"]');if(!row)return;var web=row.querySelector('[data-channel="web"]'),app=row.querySelector('[data-channel="app"]'),priority=row.querySelector('[data-channel="priority"]');item.display[key]={web:!!(web&&web.checked),app:!!(app&&app.checked),priority:Number(priority&&priority.value)||1};});
+  return true;
+}
+function cmsSaveProductForm(screenName){
+  var form=cmsGetProductForm(screenName);if(!form)return false;
+  var required=['name','type','distributor','provider','account','profile'];
+  for(var i=0;i<required.length;i++){var el=form.querySelector('[data-product-field="'+required[i]+'"]'),value=el?String(el.value||'').trim():'';if(!value||value==='Tùy chọn'){cmsActivateFirstProductFormTab(screenName);if(el)el.focus();alert('Vui lòng nhập đầy đủ thông tin bắt buộc.');return false;}}
+  var isEdit=screenName==='product-form-edit',id=isEdit?Number(cmsCurrentProductDetailId):Math.max.apply(null,Object.keys(cmsProductDetailData).map(Number))+1;
+  var item=isEdit?cmsProductDetailData[id]:{id:id};if(!item)return false;
+  ['name','type','distributor','provider','account','profile','description','webUrl','facebookUrl','androidUrl','iosUrl'].forEach(function(key){item[key]=cmsProductFormValue(form,'[data-product-field="'+key+'"]');});
+  item.status=cmsProductFormValue(form,'[data-product-field="active"]')?'Hoạt động':'Không hoạt động';
+  if(!item.serviceKey)item.serviceKey='MYVTC_'+String(id).padStart(4,'0')+'_KEY';
+  if(!cmsReadProductFormIntegration(form,item))return false;
+  cmsProductDetailData[id]=item;cmsCurrentProductDetailId=id;
+  cmsProductFormValue(form,'[data-integration-field="serviceId"]',id);cmsProductFormValue(form,'[data-integration-field="serviceKey"]',item.serviceKey);
+  return true;
 }
 
 function cmsProductIntegrationSetText(id,value){
@@ -3361,7 +3473,7 @@ function cmsSaveProductIntegration(){
   var id=Number(cmsCurrentProductDetailId); var item=cmsProductDetailData[id]; if(!item)return false;
   var redirects=cmsGetProductRedirectUrls(); if(redirects===null)return false;
   var appleRedirect=String((document.getElementById('pi_apple_redirect_uri')||{}).value||'').trim();
-  if(appleRedirect&&!/^https?:\/\//i.test(appleRedirect)){var ar=document.getElementById('pi_apple_redirect_uri');if(ar)ar.focus();alert('Apple RedirectUri phải bắt đầu bằng http:// hoặc https://');return false;}
+  if(appleRedirect&&!/^https?:\/\//i.test(appleRedirect)){var ar=document.getElementById('pi_apple_redirect_uri');if(ar)ar.focus();alert('Apple Redirect URL phải bắt đầu bằng http:// hoặc https://');return false;}
   item.redirectUrls=redirects;
   item.Authentication=cmsReadProductIntegrationAuth();
   ['home','service','shop'].forEach(function(key){
@@ -3376,60 +3488,14 @@ function cmsResetProductIntegration(){
 }
 
 function cmsOpenProductInfo(id){
-  var item=cmsProductDetailData[id]; if(!item) return;
-  cmsCurrentProductDetailId=id;
-  item.redirectUrls=Array.isArray(item.redirectUrls)?item.redirectUrls:[];
-  item.Authentication=item.Authentication||{};
-  item.Authentication.Google=item.Authentication.Google||{ClientID:'',ClientSecret:''};
-  item.Authentication.Facebook=item.Authentication.Facebook||{AppID:'',AppSecret:''};
-  item.Authentication.Apple=item.Authentication.Apple||{ClientID:'',TeamID:'',KeyID:'',PrivateKey:'',RedirectUri:''};
-  var integration='<div class="product-popup-panel" id="productPopupIntegration">'+
-    '<div class="product-integration-grid">'+
-      '<div><span>Mã sản phẩm</span><strong>'+cmsSafeText(item.id)+'</strong></div>'+
-      '<div><span>Tên sản phẩm</span><strong>'+cmsSafeText(item.name)+'</strong></div>'+
-      '<div><span>Loại sản phẩm</span><strong>'+cmsSafeText(item.type)+'</strong></div>'+
-      '<div><span>Đơn vị phân phối</span><strong>'+cmsSafeText(item.distributor)+'</strong></div>'+
-      '<div><span>Nhà cung cấp</span><strong>'+cmsSafeText(item.provider)+'</strong></div>'+
-      '<div><span>Loại tài khoản</span><strong>'+cmsSafeText(item.account)+'</strong></div>'+
-      '<div><span>Loại hồ sơ</span><strong>'+cmsSafeText(item.profile)+'</strong></div>'+
-      '<div><span>Trạng thái</span><strong>'+cmsSafeText(item.status)+'</strong></div>'+
-      '<div class="product-integration-wide"><span>Link Web</span><strong>'+cmsSafeText(item.webUrl||'-')+'</strong></div>'+
-    '</div></div>';
-  var redirects='<div class="product-popup-panel" id="productPopupRedirects">'+
-    '<div class="product-redirect-toolbar"><div><strong>Authorized redirect URLs</strong><span>Danh sách URL được phép nhận kết quả xác thực của sản phẩm.</span></div><button type="button" class="btn blue product-add-uri" onclick="cmsAddProductRedirect()"><i class="fa fa-plus"></i> Thêm URI</button></div>'+
-    '<div id="productRedirectList" class="product-redirect-list"></div>'+
+  var item=cmsProductDetailData[Number(id)];if(!item)return;
+  cmsEnsureProductIntegrationData(item);
+  var body='<div class="product-credential-view">'+
+    '<div><span>ID Service</span><strong>'+cmsSafeText(item.id)+'</strong></div>'+
+    '<div><span>Key Service</span><strong>'+cmsSafeText(item.serviceKey)+'</strong></div>'+
   '</div>';
-  var auth=item.Authentication;
-  var social='<div class="product-popup-panel" id="productPopupSocial">'+
-    cmsProductAuthSection('Google','fa-google',
-      cmsProductAuthField('pa_google_client_id','ClientID',auth.Google.ClientID,'text')+
-      cmsProductAuthField('pa_google_client_secret','ClientSecret',auth.Google.ClientSecret,'password'))+
-    cmsProductAuthSection('Facebook','fa-facebook',
-      cmsProductAuthField('pa_facebook_app_id','AppID',auth.Facebook.AppID,'text')+
-      cmsProductAuthField('pa_facebook_app_secret','AppSecret',auth.Facebook.AppSecret,'password'))+
-    cmsProductAuthSection('Apple','fa-apple',
-      cmsProductAuthField('pa_apple_client_id','ClientID',auth.Apple.ClientID,'text')+
-      cmsProductAuthField('pa_apple_team_id','TeamID',auth.Apple.TeamID,'text')+
-      cmsProductAuthField('pa_apple_key_id','KeyID',auth.Apple.KeyID,'text')+
-      cmsProductAuthField('pa_apple_redirect_uri','RedirectUri',auth.Apple.RedirectUri,'url')+
-      cmsProductAuthField('pa_apple_private_key','PrivateKey',auth.Apple.PrivateKey,'textarea',true))+
-  '</div>';
-  var display='<div class="product-popup-panel active" id="productPopupDisplay">'+
-    '<div class="product-popup-display-head"><span>Trang hiển thị</span><span>Kênh hiển thị</span><span>Thứ tự ưu tiên</span></div>'+ 
-    cmsProductDisplayRow('home','Trang chủ',item.display.home)+
-    cmsProductDisplayRow('service','Trang Dịch vụ',item.display.service)+
-    cmsProductDisplayRow('shop','Trang Cửa hàng',item.display.shop)+
-  '</div>';
-  var body='<div class="product-popup-tabs">'+
-    '<button type="button" onclick="cmsProductPopupTab(\'integration\',this)"><i class="fa fa-plug"></i> Thông tin tích hợp</button>'+
-    '<button type="button" onclick="cmsProductPopupTab(\'redirects\',this)"><i class="fa fa-link"></i> Redirect URLs</button>'+
-    '<button type="button" onclick="cmsProductPopupTab(\'social\',this)"><i class="fa fa-sign-in"></i> Đăng nhập MXH</button>'+
-    '<button class="active" type="button" onclick="cmsProductPopupTab(\'display\',this)"><i class="fa fa-eye"></i> Thông tin hiển thị</button>'+
-    '</div>'+integration+redirects+social+display;
-  cmsOpenProductModal('Thông tin sản phẩm - '+item.name,body,'Cập nhật',cmsSaveProductDetailConfig,'blue');
-  cmsRenderProductRedirectRows(item.redirectUrls);
-  var modal=document.getElementById('cmsProductModal');
-  if(modal){var card=modal.querySelector('.cms-modal-card');if(card)card.classList.add('product-info-modal-card');var cancel=modal.querySelector('.cms-modal-actions .btn.gray');if(cancel)cancel.textContent='Đóng';}
+  cmsOpenProductModal('Thông tin tích hợp - '+item.name,body);
+  var modal=document.getElementById('cmsProductModal');if(modal){var cancel=modal.querySelector('.cms-modal-actions .btn.gray');if(cancel)cancel.textContent='Đóng';}
 }
 function cmsProductPopupTab(tab,button){
   var panels={integration:'productPopupIntegration',redirects:'productPopupRedirects',social:'productPopupSocial',display:'productPopupDisplay'};
